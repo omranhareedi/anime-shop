@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    initDarkMode();
     updateCartCount();
 
     const addForm = document.getElementById('add-to-cart-form');
@@ -111,4 +112,27 @@ function showToast(message, type) {
     toast.innerHTML = `<i class="bi bi-check-circle-fill me-2"></i> ${message}`;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
+}
+
+function initDarkMode() {
+    const toggle = document.getElementById('dark-toggle');
+    if (!toggle) return;
+    const stored = localStorage.getItem('narmo-theme');
+    if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        toggle.innerHTML = '<i class="bi bi-sun-fill"></i>';
+    }
+    toggle.addEventListener('click', function () {
+        const html = document.documentElement;
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+            html.removeAttribute('data-theme');
+            localStorage.setItem('narmo-theme', 'light');
+            this.innerHTML = '<i class="bi bi-moon-fill"></i>';
+        } else {
+            html.setAttribute('data-theme', 'dark');
+            localStorage.setItem('narmo-theme', 'dark');
+            this.innerHTML = '<i class="bi bi-sun-fill"></i>';
+        }
+    });
 }
