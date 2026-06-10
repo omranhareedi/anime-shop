@@ -12,6 +12,7 @@
     <div class="row g-5">
         <div class="col-md-7">
             <form method="POST" id="checkout-form" novalidate>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                 <div class="checkout-card mb-4">
                     <div class="card-header">
                         <h5><i class="bi bi-person"></i> Customer Details</h5>
@@ -175,7 +176,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
+<script nonce="{{ csp_nonce }}">
 document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
     radio.addEventListener('change', function () {
         document.querySelectorAll('.payment-fields').forEach(el => el.style.display = 'none');

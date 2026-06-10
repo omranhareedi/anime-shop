@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, g
 from app import db
 from app.models import Order, OrderItem, Customer, Product
 from app.payment import process_payment
+from app.security import make_token, sanitize_form_data
 from datetime import datetime
 
 checkout_bp = Blueprint('checkout', __name__)
@@ -14,14 +15,29 @@ def checkout():
         return redirect(url_for('cart.view_cart'))
 
     if request.method == 'POST':
+        csrf_token = request.form.get('csrf_token', '')
+        if not csrf_token or csrf_token != session.get('csrf_token'):
+            flash('Security token invalid. Please try again.', 'danger')
+            return redirect(url_for('checkout.checkout'))
+
+        sanitized = sanitize_form_data(request.form, {
+            'first_name': {'max_length': 100},
+            'last_name': {'max_length': 100},
+            'email': {'type': 'email', 'max_length': 254},
+            'phone': {'type': 'phone', 'max_length': 20},
+            'address': {'max_length': 500},
+            'city': {'max_length': 100},
+            'postal_code': {'max_length': 20},
+        })
+
         customer = Customer(
-            first_name=request.form['first_name'],
-            last_name=request.form['last_name'],
-            email=request.form['email'],
-            phone=request.form.get('phone', ''),
-            address=request.form['address'],
-            city=request.form['city'],
-            postal_code=request.form['postal_code'],
+            first_name=sanitized['first_name'],
+            last_name=sanitized['last_name'],
+            email=sanitized['email'],
+            phone=sanitized.get('phone', ''),
+            address=sanitized['address'],
+            city=sanitized['city'],
+            postal_code=sanitized['postal_code'],
         )
         db.session.add(customer)
         db.session.flush()
@@ -87,7 +103,9 @@ def checkout():
             total += subtotal
             items.append({'product': product, 'quantity': qty, 'subtotal': subtotal})
 
-    return render_template('checkout.html', items=items, total=total)
+    session['csrf_token'] = make_token()
+    return render_template('checkout.html', items=items, total=total,
+                           csrf_token=session['csrf_token'])
 
 
 @checkout_bp.route('/confirmation/<int:order_id>')

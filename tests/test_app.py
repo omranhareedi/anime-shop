@@ -264,6 +264,54 @@ def test_recommender_genre_affinity(app):
         assert len(results) <= 3
 
 
+def test_security_headers(client):
+    resp = client.get('/')
+    assert resp.headers.get('X-Content-Type-Options') == 'nosniff'
+    assert resp.headers.get('X-Frame-Options') == 'DENY'
+    assert resp.headers.get('X-XSS-Protection') == '1; mode=block'
+    assert resp.headers.get('Referrer-Policy') == 'strict-origin-when-cross-origin'
+    assert 'Content-Security-Policy' in resp.headers
+    assert 'default-src' in resp.headers['Content-Security-Policy']
+
+
+def test_security_csp_nonce(client):
+    resp = client.get('/')
+    csp = resp.headers.get('Content-Security-Policy', '')
+    assert 'nonce-' in csp
+    html = resp.data.decode()
+    assert 'nonce="' in html
+
+
+def test_security_rate_limit(client):
+    from app.security import sanitize_input, sanitize_email, make_token
+    assert sanitize_input('<script>alert(1)</script>') == '&lt;script&gt;alert(1)&lt;/script&gt;'
+    assert sanitize_email(' UPPER@Me.COM ') == 'upper@me.com'
+    assert len(make_token()) == 32
+
+
+def test_security_sanitize_length(client):
+    from app.security import sanitize_input
+    long = 'a' * 1000
+    assert len(sanitize_input(long, max_length=10)) == 10
+
+
+def test_checkout_csrf_protection(client):
+    with client.session_transaction() as sess:
+        sess['cart'] = {'1': 1}
+    resp = client.post('/checkout/', data={
+        'first_name': 'Hacker',
+        'last_name': 'Bad',
+        'email': 'x@x.com',
+        'address': 'x',
+        'city': 'x',
+        'postal_code': 'x',
+        'payment_method': 'stripe',
+        'card_number': '4242 4242 4242 4242',
+    })
+    assert resp.status_code == 302
+    assert '/checkout/' in resp.location
+
+
 def test_recommender_popular_all_time(app):
     with app.app_context():
         from app.recommender import get_popular_all_time

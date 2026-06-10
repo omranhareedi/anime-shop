@@ -1,4 +1,5 @@
-from flask import Flask
+import secrets
+from flask import Flask, g
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 
@@ -23,6 +24,9 @@ def create_app(config_class=Config):
     app.register_blueprint(checkout_bp, url_prefix='/checkout')
     app.register_blueprint(admin_bp, url_prefix='/admin')
 
+    from app.security import configure_session, apply_security_headers, limiter
+    configure_session(app)
+
     with app.app_context():
         from app import models
         db.create_all()
@@ -31,6 +35,23 @@ def create_app(config_class=Config):
             from app.seeds import seed_database
             seed_database()
 
+    @app.before_request
+    def security_check():
+        g.csp_nonce = secrets.token_hex(16)
+        if not limiter.check(limit=120, window=60):
+            from flask import abort
+            abort(429)
+
+    @app.after_request
+    def add_security_headers(response):
+        nonce = getattr(g, 'csp_nonce', None)
+        return apply_security_headers(response, nonce=nonce)
+
+    @app.errorhandler(429)
+    def ratelimit_handler(e):
+        from flask import jsonify
+        return jsonify(error='Too many requests. Please slow down.'), 429
+
     @app.context_processor
     def inject_globals():
         from app.models import Category
@@ -38,6 +59,6 @@ def create_app(config_class=Config):
             categories = Category.query.all()
         except Exception:
             categories = []
-        return dict(categories=categories)
+        return dict(categories=categories, csp_nonce=g.get('csp_nonce', ''))
 
     return app

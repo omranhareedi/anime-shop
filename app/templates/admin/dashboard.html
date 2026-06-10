@@ -100,7 +100,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
+<script nonce="{{ csp_nonce }}">
 const genreLabels = {{ revenue_by_genre|map(attribute='genre')|list|tojson }};
 const genreRevenue = {{ revenue_by_genre|map(attribute='revenue')|list|tojson }};
 const genreSold = {{ revenue_by_genre|map(attribute='sold')|list|tojson }};
