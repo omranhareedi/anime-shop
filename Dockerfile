@@ -21,10 +21,11 @@ RUN pip install --no-cache-dir /wheels/*
 COPY . .
 
 RUN adduser --disabled-password --gecos "" appuser && \
-    chown -R appuser:appuser /app
+    chown -R appuser:appuser /app && \
+    chmod +x start.sh
 
 USER appuser
 
 EXPOSE 5000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "run:app"]
+CMD ["./start.sh"]

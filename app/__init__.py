@@ -23,15 +23,16 @@ def create_app(config_class=Config):
     app.register_blueprint(checkout_bp, url_prefix='/checkout')
     app.register_blueprint(admin_bp, url_prefix='/admin')
 
-    from app.models import Category
+    with app.app_context():
+        from app import models
 
     @app.context_processor
     def inject_globals():
-        categories = Category.query.all()
+        from app.models import Category
+        try:
+            categories = Category.query.all()
+        except Exception:
+            categories = []
         return dict(categories=categories)
-
-    with app.app_context():
-        from app import models
-        db.create_all()
 
     return app
