@@ -711,6 +711,82 @@ a:hover { color: var(--accent-hover); }
     color: #fff;
 }
 
+/* ---- Payment Options ---- */
+.payment-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.payment-option {
+    display: block;
+    cursor: pointer;
+}
+
+.payment-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.payment-option-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+}
+
+.payment-option input[type="radio"]:checked + .payment-option-content {
+    border-color: var(--accent);
+    background: rgba(255,110,45,0.04);
+}
+
+.payment-option-content i {
+    font-size: 1.5rem;
+    color: var(--gray);
+    width: 28px;
+    text-align: center;
+}
+
+.payment-option input[type="radio"]:checked + .payment-option-content i {
+    color: var(--accent);
+}
+
+.payment-option-content div { flex: 1; }
+.payment-option-content strong { display: block; font-size: 0.9rem; }
+.payment-option-content small { display: block; font-size: 0.75rem; color: var(--gray); margin-top: 0.1rem; }
+
+.payment-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.2rem 0.55rem;
+    border-radius: 100px;
+    background: rgba(255,110,45,0.08);
+    color: var(--accent);
+}
+
+.payment-badge.paypal { background: rgba(0,115,185,0.08); color: #0073b9; }
+.payment-badge.momo { background: rgba(5,150,105,0.08); color: #059669; }
+
+.payment-fields {
+    padding: 1rem 1rem 1rem 2.75rem;
+}
+
+.secure-notice {
+    font-size: 0.75rem;
+    color: var(--gray);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.secure-notice i { color: var(--accent); }
+
+select.form-control-narmo {
+    appearance: auto;
+}
+
 /* ---- Confirmation ---- */
 .confirmation-icon { font-size: 4rem; color: #059669; }
 

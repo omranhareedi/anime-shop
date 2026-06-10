@@ -61,6 +61,8 @@ class Order(db.Model):
     order_date = db.Column(db.DateTime, default=datetime.utcnow)
     total_amount = db.Column(db.Float, nullable=False, default=0.0)
     status = db.Column(db.String(20), nullable=False, default='Pending')
+    payment_method = db.Column(db.String(30), nullable=True)
+    payment_transaction_id = db.Column(db.String(100), nullable=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable=False)
     items = db.relationship('OrderItem', backref='order', lazy=True, cascade='all, delete-orphan')
 

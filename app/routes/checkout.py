@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from app import db
 from app.models import Order, OrderItem, Customer, Product
+from app.payment import process_payment
 from datetime import datetime
 
 checkout_bp = Blueprint('checkout', __name__)
@@ -25,29 +26,55 @@ def checkout():
         db.session.add(customer)
         db.session.flush()
 
-        order_num = f'ORD-{datetime.utcnow().strftime("%Y%m%d%H%M%S")}-{customer.id}'
         total = 0.0
-        order = Order(order_number=order_num, customer_id=customer.id)
+        for product_id, qty in cart.items():
+            product = Product.query.get(int(product_id))
+            if product:
+                total += product.price * qty
+
+        payment_method = request.form.get('payment_method', 'stripe')
+        payment_details = {}
+        if payment_method == 'stripe':
+            payment_details['card_number'] = request.form.get('card_number', '')
+            payment_details['card_name'] = request.form.get('card_name', '')
+            payment_details['card_expiry'] = request.form.get('card_expiry', '')
+            payment_details['card_cvc'] = request.form.get('card_cvc', '')
+        elif payment_method == 'paypal':
+            payment_details['paypal_email'] = request.form.get('paypal_email', '')
+        elif payment_method == 'mobile_money':
+            payment_details['mobile_provider'] = request.form.get('mobile_provider', '')
+            payment_details['mobile_phone'] = request.form.get('mobile_phone', '')
+
+        result = process_payment(payment_method, total, payment_details)
+        if not result.success:
+            flash(f'Payment failed: {result.message}', 'danger')
+            return redirect(url_for('checkout.checkout'))
+
+        order_num = f'ORD-{datetime.utcnow().strftime("%Y%m%d%H%M%S")}-{customer.id}'
+        order = Order(
+            order_number=order_num,
+            customer_id=customer.id,
+            total_amount=total,
+            payment_method=payment_method,
+            payment_transaction_id=result.transaction_id,
+            status='Paid',
+        )
         db.session.add(order)
         db.session.flush()
 
         for product_id, qty in cart.items():
             product = Product.query.get(int(product_id))
             if product:
-                item_total = product.price * qty
-                total += item_total
                 order_item = OrderItem(
                     order_id=order.id,
                     product_id=product.id,
                     quantity=qty,
-                    unit_price=product.price
+                    unit_price=product.price,
                 )
                 db.session.add(order_item)
                 product.stock -= qty
 
-        order.total_amount = total
         db.session.commit()
-
         session.pop('cart', None)
         return redirect(url_for('checkout.confirmation', order_id=order.id))
 
