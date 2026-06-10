@@ -4,6 +4,12 @@ from app.models import Product
 cart_bp = Blueprint('cart', __name__)
 
 
+@cart_bp.route('/count')
+def cart_count():
+    cart = session.get('cart', {})
+    return jsonify({'count': sum(cart.values())})
+
+
 @cart_bp.route('/')
 def view_cart():
     cart = session.get('cart', {})
