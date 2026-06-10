@@ -81,29 +81,6 @@ def api_recommendations():
     } for p in recs])
 
 
-@products_bp.route('/api/product/<int:product_id>')
-def api_product_detail(product_id):
-    product = Product.query.get_or_404(product_id)
-    from app.recommender import compute_similarity
-    scored = compute_similarity(product, limit=4)
-    related = [{'id': p.id, 'name': p.name, 'slug': p.slug, 'price': p.price,
-                'image': p.image_url, 'genre': p.genre} for _, p in scored]
-    return jsonify({
-        'id': product.id,
-        'name': product.name,
-        'slug': product.slug,
-        'description': product.description,
-        'price': product.price,
-        'image': product.image_url,
-        'stock': product.stock,
-        'genre': product.genre,
-        'category': product.category.name,
-        'vendor': product.vendor.name if product.vendor else None,
-        'vendor_slug': product.vendor.slug if product.vendor else None,
-        'related': related,
-    })
-
-
 @products_bp.route('/<slug>')
 def product_detail(slug):
     product = Product.query.filter_by(slug=slug).first_or_404()

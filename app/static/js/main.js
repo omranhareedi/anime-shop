@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
     initPageTransition();
     initBackToTop();
     initTypingEffect();
-    initQuickView();
     initCartPreview();
     initSeasonalBanner();
     initAddToCart();
@@ -185,54 +184,6 @@ function initTypingEffect() {
     }
     setTimeout(type, 600);
 }
-
-function initQuickView() {
-    document.addEventListener('click', function (e) {
-        const btn = e.target.closest('.quick-view-btn');
-        if (!btn) return;
-        const pid = btn.dataset.productId;
-        const modal = document.getElementById('quick-view-modal');
-        const body = modal.querySelector('.modal-body-narmo');
-        body.innerHTML = '<div class="quick-view-loader" style="grid-column:1/-1;"><i class="bi bi-arrow-repeat" style="font-size:2rem;display:block;margin-bottom:0.5rem;animation:spin 1s linear infinite;"></i>Loading…</div>';
-        modal.classList.add('open');
-        document.body.style.overflow = 'hidden';
-        fetch('/products/api/product/' + pid)
-        .then(r => r.json())
-        .then(p => {
-            const stockClass = p.stock > 10 ? 'badge bg-success' : p.stock > 0 ? 'badge bg-warning text-dark' : 'badge bg-danger';
-            const relatedHtml = p.related.map(r =>
-                '<a href="/products/' + r.slug + '" style="font-size:0.8rem;color:var(--accent);text-decoration:none;">' + r.name + '</a>'
-            ).join(', ');
-            body.innerHTML =
-                '<img class="modal-image" src="/static/images/products/' + p.image + '" alt="' + p.name + '" onerror="this.src=\'https://placehold.co/400x400/F1F5F9/64748B?text=' + encodeURIComponent(p.name) + '\'">' +
-                '<div class="modal-info">' +
-                    '<span class="category-badge">' + p.category + '</span>' +
-                    '<h5 style="font-weight:700;">' + p.name + '</h5>' +
-                    '<div class="price">$' + p.price.toFixed(2) + '</div>' +
-                    '<span class="' + stockClass + '">' + p.stock + ' in stock</span>' +
-                    '<p style="font-size:0.85rem;color:var(--gray);line-height:1.6;">' + (p.description || '').substring(0, 200) + '</p>' +
-                    (p.vendor ? '<span style="font-size:0.8rem;color:var(--gray);"><i class="bi bi-shop"></i> <a href="/vendors/' + p.vendor_slug + '" style="color:var(--accent);">' + p.vendor + '</a></span>' : '') +
-                    (p.genre ? '<span class="detail-badge genre">' + p.genre + '</span>' : '') +
-                    (p.related.length ? '<div style="font-size:0.8rem;color:var(--gray);">Similar: ' + relatedHtml + '</div>' : '') +
-                    '<a href="/products/' + p.slug + '" class="btn-primary-narmo" style="margin-top:auto;"><i class="bi bi-eye"></i> View Details</a>' +
-                '</div>';
-        })
-        .catch(function () {
-            body.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--gray);">Failed to load.</div>';
-        });
-    });
-    function closeModal() {
-        document.getElementById('quick-view-modal').classList.remove('open');
-        document.body.style.overflow = '';
-    }
-    document.querySelectorAll('.modal-close, .modal-backdrop').forEach(function (el) {
-        el.addEventListener('click', closeModal);
-    });
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') closeModal();
-    });
-}
-
 function initCartPreview() {
     const wrap = document.querySelector('.cart-preview-wrap');
     if (!wrap) return;
