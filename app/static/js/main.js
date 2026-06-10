@@ -195,6 +195,7 @@ function initQuickView() {
         const body = modal.querySelector('.modal-body-narmo');
         body.innerHTML = '<div class="quick-view-loader" style="grid-column:1/-1;"><i class="bi bi-arrow-repeat" style="font-size:2rem;display:block;margin-bottom:0.5rem;animation:spin 1s linear infinite;"></i>Loading…</div>';
         modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
         fetch('/products/api/product/' + pid)
         .then(r => r.json())
         .then(p => {
@@ -220,15 +221,15 @@ function initQuickView() {
             body.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--gray);">Failed to load.</div>';
         });
     });
+    function closeModal() {
+        document.getElementById('quick-view-modal').classList.remove('open');
+        document.body.style.overflow = '';
+    }
     document.querySelectorAll('.modal-close, .modal-backdrop').forEach(function (el) {
-        el.addEventListener('click', function () {
-            document.getElementById('quick-view-modal').classList.remove('open');
-        });
+        el.addEventListener('click', closeModal);
     });
     document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-            document.getElementById('quick-view-modal').classList.remove('open');
-        }
+        if (e.key === 'Escape') closeModal();
     });
 }
 

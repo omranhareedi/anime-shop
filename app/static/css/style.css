@@ -1216,11 +1216,12 @@ body.page-ready { animation: pageFadeIn 0.35s ease-out both; }
 /* ---- Quick View Modal ---- */
 .modal-narmo { display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; }
 .modal-narmo.open { display:flex; }
-.modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); animation:fadeIn 0.2s; }
-.modal-content-narmo { position:relative; background:var(--bg); border-radius:var(--radius-md); max-width:720px; width:90%; max-height:85vh; overflow-y:auto; box-shadow:0 25px 80px rgba(0,0,0,0.5); animation:scaleIn 0.25s ease-out; z-index:1; }
+.modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(6px); animation:fadeIn 0.2s; }
+.modal-content-narmo { position:relative; background:var(--bg); border-radius:var(--radius-md); max-width:900px; width:95%; max-height:90vh; overflow-y:auto; box-shadow:0 25px 80px rgba(0,0,0,0.5); animation:scaleIn 0.25s ease-out; z-index:1; }
 .modal-close { position:absolute; top:0.75rem; right:1rem; background:none; border:none; font-size:1.5rem; color:var(--gray); cursor:pointer; z-index:2; padding:0.25rem; line-height:1; }
 .modal-close:hover { color:var(--text); }
 .modal-body-narmo { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; padding:1.5rem; }
+@media (max-width: 640px) { .modal-body-narmo { grid-template-columns:1fr; } .modal-content-narmo { width:98%; } }
 .modal-image { width:100%; border-radius:var(--radius-sm); aspect-ratio:1; object-fit:cover; background:var(--slate-100); }
 .modal-info { display:flex; flex-direction:column; gap:0.75rem; }
 .modal-info .price { font-size:1.75rem; }
