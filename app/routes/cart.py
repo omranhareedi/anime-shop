@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify, session
+from app import db
 from app.models import Product
 
 cart_bp = Blueprint('cart', __name__)
@@ -11,7 +12,7 @@ def cart_preview():
     total = 0.0
     count = 0
     for product_id, quantity in cart.items():
-        product = Product.query.get(int(product_id))
+        product = db.session.get(Product, int(product_id))
         if product:
             subtotal = product.price * quantity
             total += subtotal
@@ -34,7 +35,7 @@ def view_cart():
     items = []
     total = 0.0
     for product_id, quantity in cart.items():
-        product = Product.query.get(int(product_id))
+        product = db.session.get(Product, int(product_id))
         if product:
             subtotal = product.price * quantity
             total += subtotal
@@ -68,7 +69,7 @@ def update_cart():
     session['cart'] = cart
     total = 0.0
     for pid, qty in cart.items():
-        product = Product.query.get(int(pid))
+        product = db.session.get(Product, int(pid))
         if product:
             total += product.price * qty
     return jsonify({'status': 'ok', 'cart_count': sum(cart.values()), 'total': round(total, 2)})

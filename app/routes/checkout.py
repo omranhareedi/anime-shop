@@ -3,7 +3,7 @@ from app import db
 from app.models import Order, OrderItem, Customer, Product
 from app.payment import process_payment
 from app.security import make_token, sanitize_form_data
-from datetime import datetime
+from datetime import datetime, timezone
 
 checkout_bp = Blueprint('checkout', __name__)
 
@@ -44,7 +44,7 @@ def checkout():
 
         total = 0.0
         for product_id, qty in cart.items():
-            product = Product.query.get(int(product_id))
+            product = db.session.get(Product, int(product_id))
             if product:
                 total += product.price * qty
 
@@ -66,7 +66,7 @@ def checkout():
             flash(f'Payment failed: {result.message}', 'danger')
             return redirect(url_for('checkout.checkout'))
 
-        order_num = f'ORD-{datetime.utcnow().strftime("%Y%m%d%H%M%S")}-{customer.id}'
+        order_num = f'ORD-{datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")}-{customer.id}'
         order = Order(
             order_number=order_num,
             customer_id=customer.id,
@@ -79,7 +79,7 @@ def checkout():
         db.session.flush()
 
         for product_id, qty in cart.items():
-            product = Product.query.get(int(product_id))
+            product = db.session.get(Product, int(product_id))
             if product:
                 order_item = OrderItem(
                     order_id=order.id,
@@ -97,7 +97,7 @@ def checkout():
     items = []
     total = 0.0
     for product_id, qty in cart.items():
-        product = Product.query.get(int(product_id))
+        product = db.session.get(Product, int(product_id))
         if product:
             subtotal = product.price * qty
             total += subtotal

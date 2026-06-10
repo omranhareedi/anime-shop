@@ -1,7 +1,7 @@
 import re
 import math
 from collections import Counter, defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from app import db
 from app.models import Product, OrderItem, Order
@@ -70,7 +70,7 @@ def compute_similarity(product, limit=4):
 
 
 def get_trending(limit=6, days=30):
-    cutoff = datetime.utcnow() - timedelta(days=days)
+    cutoff = datetime.now(timezone.utc) - timedelta(days=days)
     results = (
         db.session.query(
             OrderItem.product_id,
@@ -96,7 +96,7 @@ def get_trending(limit=6, days=30):
 def get_genre_affinity(cart_product_ids, limit=6):
     genre_scores = Counter()
     for pid in cart_product_ids:
-        product = Product.query.get(pid)
+        product = db.session.get(Product, pid)
         if product and product.genre:
             genre_scores[product.genre] += 1
 
@@ -163,7 +163,7 @@ def get_personalized_recommendations(cart_product_ids=None, limit=6):
     scored = []
 
     for pid in cart_product_ids:
-        product = Product.query.get(pid)
+        product = db.session.get(Product, pid)
         if not product:
             continue
         collab = get_collaborative_recommendations(pid, limit=3)

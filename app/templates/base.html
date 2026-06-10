@@ -60,6 +60,15 @@
                         </button>
                     </div>
                 </form>
+                {% if user_id %}
+                <a href="{{ url_for('auth.logout') }}" class="btn btn-cart me-2" title="Logout" style="background:transparent;border:1px solid rgba(255,255,255,0.15);padding:0.5rem 0.7rem;">
+                    <i class="bi bi-box-arrow-right"></i>
+                </a>
+                {% else %}
+                <a href="{{ url_for('auth.login') }}" class="btn btn-cart me-2" title="Login" style="background:transparent;border:1px solid rgba(255,255,255,0.15);padding:0.5rem 0.7rem;">
+                    <i class="bi bi-person"></i>
+                </a>
+                {% endif %}
                 <button id="dark-toggle" class="btn btn-cart me-2" aria-label="Toggle dark mode" style="background:transparent;border:1px solid rgba(255,255,255,0.15);padding:0.5rem 0.7rem;">
                     <i class="bi bi-moon-fill"></i>
                 </button>

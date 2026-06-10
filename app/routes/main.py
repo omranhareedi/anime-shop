@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, session
+from app import db
 from app.models import Product, Category
 from app.recommender import (
     get_personalized_recommendations, get_trending,
@@ -29,7 +30,7 @@ def index():
     viewed_ids = session.get('recently_viewed', [])
     recently_viewed = []
     for vid in viewed_ids:
-        p = Product.query.get(vid)
+        p = db.session.get(Product, vid)
         if p:
             recently_viewed.append(p)
             if len(recently_viewed) == 4:

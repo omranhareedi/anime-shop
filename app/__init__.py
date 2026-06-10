@@ -1,5 +1,5 @@
 import secrets
-from flask import Flask, g
+from flask import Flask, g, session
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 
@@ -24,6 +24,7 @@ def create_app(config_class=Config, testing=False):
     from app.routes.checkout import checkout_bp
     from app.routes.admin import admin_bp
     from app.routes.vendors import vendors_bp
+    from app.routes.auth import auth_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(products_bp, url_prefix='/products')
@@ -31,6 +32,7 @@ def create_app(config_class=Config, testing=False):
     app.register_blueprint(checkout_bp, url_prefix='/checkout')
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(vendors_bp, url_prefix='/vendors')
+    app.register_blueprint(auth_bp, url_prefix='/auth')
 
     from app.security import configure_session, apply_security_headers, limiter
     configure_session(app)
@@ -39,7 +41,7 @@ def create_app(config_class=Config, testing=False):
         from app import models
         db.create_all()
         from app.models import Product
-        if Product.query.count() == 0:
+        if db.session.query(Product).count() == 0:
             from app.seeds import seed_database
             seed_database()
 
@@ -69,9 +71,10 @@ def create_app(config_class=Config, testing=False):
     def inject_globals():
         from app.models import Category
         try:
-            categories = Category.query.all()
+            categories = db.session.query(Category).all()
         except Exception:
             categories = []
-        return dict(categories=categories, csp_nonce=g.get('csp_nonce', ''))
+        return dict(categories=categories, csp_nonce=g.get('csp_nonce', ''),
+                    user_id=session.get('user_id'), username=session.get('username'))
 
     return app

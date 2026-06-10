@@ -1,5 +1,23 @@
 from app import db
-from datetime import datetime
+from datetime import datetime, timezone
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask import session
+from functools import wraps
+
+
+def _utcnow():
+    return datetime.now(timezone.utc)
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if 'user_id' not in session:
+            from flask import redirect, url_for, flash
+            flash('Please log in to access this page.', 'warning')
+            return redirect(url_for('auth.login'))
+        return f(*args, **kwargs)
+    return decorated
 
 
 class Category(db.Model):
@@ -26,7 +44,7 @@ class Vendor(db.Model):
     logo_url = db.Column(db.String(300), nullable=True, default='vendor_default.jpg')
     location = db.Column(db.String(200), nullable=True)
     rating = db.Column(db.Float, default=4.5)
-    joined_at = db.Column(db.DateTime, default=datetime.utcnow)
+    joined_at = db.Column(db.DateTime, default=_utcnow)
     is_active = db.Column(db.Boolean, default=True)
     products = db.relationship('Product', backref='vendor', lazy=True)
 
@@ -46,7 +64,7 @@ class Product(db.Model):
     stock = db.Column(db.Integer, nullable=False, default=0)
     is_featured = db.Column(db.Boolean, default=False)
     genre = db.Column(db.String(100), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
     vendor_id = db.Column(db.Integer, db.ForeignKey('vendors.id'), nullable=True)
     order_items = db.relationship('OrderItem', backref='product', lazy=True)
@@ -66,7 +84,7 @@ class Customer(db.Model):
     address = db.Column(db.Text, nullable=False)
     city = db.Column(db.String(100), nullable=False)
     postal_code = db.Column(db.String(20), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
     orders = db.relationship('Order', backref='customer', lazy=True)
 
     def __repr__(self):
@@ -78,7 +96,7 @@ class Order(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     order_number = db.Column(db.String(20), unique=True, nullable=False)
-    order_date = db.Column(db.DateTime, default=datetime.utcnow)
+    order_date = db.Column(db.DateTime, default=_utcnow)
     total_amount = db.Column(db.Float, nullable=False, default=0.0)
     status = db.Column(db.String(20), nullable=False, default='Pending')
     payment_method = db.Column(db.String(30), nullable=True)
@@ -101,3 +119,21 @@ class OrderItem(db.Model):
 
     def __repr__(self):
         return f'<OrderItem Order:{self.order_id} Product:{self.product_id}>'
+
+
+class User(db.Model):
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(200), unique=True, nullable=False)
+    password_hash = db.Column(db.String(200), nullable=False)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    def __repr__(self):
+        return f'<User {self.username}>'

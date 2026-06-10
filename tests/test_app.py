@@ -407,7 +407,7 @@ def test_admin_product_edit_submit(client):
     assert '/admin/products' in resp.location
 
     with client.application.app_context():
-        p = Product.query.get(1)
+        p = db.session.get(Product, 1)
         assert p.name == 'Naruto Sage Mode Figure - Updated'
         assert p.price == 54.99
         assert p.stock == 20

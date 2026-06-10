@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, jsonify, session
+from flask import Blueprint, render_template, request, jsonify, session, current_app
+from app import db
 from app.models import Product, Category
 from app.recommender import (
     get_content_based_recommendations, get_collaborative_recommendations,
@@ -11,13 +12,15 @@ products_bp = Blueprint('products', __name__)
 
 @products_bp.route('/')
 def product_list():
+    page = request.args.get('page', 1, type=int)
+    per_page = current_app.config.get('PRODUCTS_PER_PAGE', 12)
     category_slug = request.args.get('category')
     genre = request.args.get('genre')
     search = request.args.get('q', '').strip()
     query = Product.query
 
     if category_slug:
-        cat = Category.query.filter_by(slug=category_slug).first()
+        cat = db.session.query(Category).filter_by(slug=category_slug).first()
         if cat:
             query = query.filter_by(category_id=cat.id)
 
@@ -32,8 +35,8 @@ def product_list():
             Product.genre.ilike(like)
         )
 
-    products = query.all()
-    categories = Category.query.all()
+    products = query.paginate(page=page, per_page=per_page, error_out=False)
+    categories = db.session.query(Category).all()
     genres = ['Action', 'Adventure', 'Comedy', 'Sci-Fi', 'Fantasy']
     return render_template('products.html', products=products,
                            categories=categories, genres=genres,
@@ -49,7 +52,7 @@ def api_recommendations():
     limit = int(request.args.get('limit', 6))
 
     if product_id:
-        product = Product.query.get(int(product_id))
+        product = db.session.get(Product, int(product_id))
         if product:
             recs = get_collaborative_recommendations(product.id, limit=limit)
             if not recs:
