@@ -1,0 +1,32 @@
+﻿DOCKER EXECUTION LOGS - Otaku Haven
+====================================
+Date: 2026-06-10 16:06:54
+
+=== Docker Image ===
+REPOSITORY               TAG       SIZE otaku-haven/anime-shop   latest    307MB
+
+=== Docker Compose Services ===
+NAME             IMAGE                COMMAND                  SERVICE   CREATED          STATUS                    PORTS
+anime-shop-db    postgres:16-alpine   "docker-entrypoint.sΓÇª"   db        39 seconds ago   Up 38 seconds (healthy)   0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp
+anime-shop-web   anime-shop-web       "./start.sh"             web       39 seconds ago   Up 32 seconds             0.0.0.0:5000->5000/tcp, [::]:5000->5000/tcp
+
+
+=== Web Container Logs ===
+anime-shop-web  | === Initializing database ===
+anime-shop-web  | Database initialized and seeded successfully.
+anime-shop-web  | === Starting gunicorn ===
+anime-shop-web  | [2026-06-10 14:06:23 +0000] [1] [INFO] Starting gunicorn 21.2.0
+anime-shop-web  | [2026-06-10 14:06:23 +0000] [1] [INFO] Listening at: http://0.0.0.0:5000 (1)
+anime-shop-web  | [2026-06-10 14:06:23 +0000] [1] [INFO] Using worker: sync
+anime-shop-web  | [2026-06-10 14:06:23 +0000] [8] [INFO] Booting worker with pid: 8
+anime-shop-web  | [2026-06-10 14:06:23 +0000] [9] [INFO] Booting worker with pid: 9
+anime-shop-web  | [2026-06-10 14:06:23 +0000] [10] [INFO] Booting worker with pid: 10
+anime-shop-web  | [2026-06-10 14:06:23 +0000] [11] [INFO] Booting worker with pid: 11
+
+
+=== API Tests ===
+Homepage: 200
+Products: 200
+Cart:     200
+Dashboard: 404
+Rec API:  200
