@@ -1,8 +1,14 @@
 from app import db
-from app.models import Category, Product, Vendor
+from app.models import Category, Product, Vendor, User
 
 
 def seed_database():
+    if User.query.count() == 0:
+        admin = User(username='admin', email='admin@narmo.com', is_admin=True)
+        admin.set_password('admin123')
+        db.session.add(admin)
+        db.session.commit()
+
     if Category.query.first() is not None and Product.query.count() > 0:
         return
 
