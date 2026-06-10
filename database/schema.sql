@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS vendors (
     email       VARCHAR(200) NOT NULL,
     logo_url    VARCHAR(300) DEFAULT 'vendor_default.jpg',
     location    VARCHAR(200),
+    rating      FLOAT        DEFAULT 4.5 CHECK (rating >= 0 AND rating <= 5),
     joined_at   TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
     is_active   BOOLEAN      DEFAULT TRUE
 );
