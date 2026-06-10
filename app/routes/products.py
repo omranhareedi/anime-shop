@@ -1,6 +1,10 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, session
 from app.models import Product, Category
-from app.recommender import get_content_based_recommendations, get_collaborative_recommendations, get_personalized_recommendations
+from app.recommender import (
+    get_content_based_recommendations, get_collaborative_recommendations,
+    get_personalized_recommendations, compute_similarity,
+    get_trending, get_genre_affinity, get_popular_all_time
+)
 
 products_bp = Blueprint('products', __name__)
 
@@ -29,6 +33,7 @@ def product_list():
 
 @products_bp.route('/api/recommendations', methods=['GET'])
 def api_recommendations():
+    method = request.args.get('method', 'hybrid')
     genre = request.args.get('genre')
     product_id = request.args.get('product_id')
     limit = int(request.args.get('limit', 6))
@@ -43,8 +48,14 @@ def api_recommendations():
             recs = Product.query.limit(limit).all()
     elif genre:
         recs = Product.query.filter_by(genre=genre).limit(limit).all()
+    elif method == 'trending':
+        recs = get_trending(limit=limit)
+    elif method == 'popular':
+        recs = get_popular_all_time(limit=limit)
     else:
-        recs = Product.query.filter_by(is_featured=True).limit(limit).all()
+        cart = session.get('cart', {})
+        cart_ids = [int(k) for k in cart.keys()] if cart else None
+        recs = get_personalized_recommendations(cart_product_ids=cart_ids, limit=limit)
 
     return jsonify([{
         'id': p.id,
@@ -62,5 +73,7 @@ def product_detail(slug):
     product = Product.query.filter_by(slug=slug).first_or_404()
     content_recs = get_content_based_recommendations(product, limit=4)
     collab_recs = get_collaborative_recommendations(product.id, limit=4)
+    scored = compute_similarity(product, limit=6)
     return render_template('product_detail.html', product=product,
-                           related=content_recs, collab_recs=collab_recs)
+                           related=content_recs, collab_recs=collab_recs,
+                           ai_scores=[(p, round(s * 100)) for s, p in scored])

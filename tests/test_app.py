@@ -224,3 +224,48 @@ def test_payment_unsupported_gateway(app):
     from app.payment import process_payment
     result = process_payment('bitcoin', 99.99, {})
     assert not result.success
+
+
+def test_trending_api(client):
+    resp = client.get('/products/api/recommendations?method=trending&limit=3')
+    assert resp.status_code == 200
+    data = resp.get_json()
+    assert isinstance(data, list)
+    assert len(data) <= 3
+
+
+def test_popular_api(client):
+    resp = client.get('/products/api/recommendations?method=popular&limit=3')
+    assert resp.status_code == 200
+
+
+def test_recommender_compute_similarity(app):
+    with app.app_context():
+        from app.recommender import compute_similarity
+        product = Product.query.first()
+        scored = compute_similarity(product, limit=3)
+        assert len(scored) <= 3
+        if scored:
+            score, other = scored[0]
+            assert 0 <= score <= 1
+
+
+def test_recommender_get_trending(app):
+    with app.app_context():
+        from app.recommender import get_trending
+        results = get_trending(limit=3)
+        assert len(results) <= 3
+
+
+def test_recommender_genre_affinity(app):
+    with app.app_context():
+        from app.recommender import get_genre_affinity
+        results = get_genre_affinity([1], limit=3)
+        assert len(results) <= 3
+
+
+def test_recommender_popular_all_time(app):
+    with app.app_context():
+        from app.recommender import get_popular_all_time
+        results = get_popular_all_time(limit=3)
+        assert len(results) <= 3

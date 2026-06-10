@@ -18,7 +18,42 @@
 </section>
 
 <div class="container py-5">
+    {% if trending %}
     <div class="section-title">
+        <span class="accent-bar"></span>
+        <h2>Trending Now</h2>
+        <span class="rec-badge ms-2"><i class="bi bi-graph-up-arrow"></i> AI</span>
+    </div>
+    <p class="section-sub"><i class="bi bi-cpu"></i> Most purchased in the last 30 days</p>
+    <div class="row g-4 product-grid">
+        {% for product in trending %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="product-card h-100">
+                <div class="position-relative">
+                    <img src="{{ url_for('static', filename='images/products/' + product.image_url) }}"
+                         class="card-img-top"
+                         alt="{{ product.name }}"
+                         loading="lazy"
+                         onerror="this.src='https://placehold.co/400x400/F1F5F9/64748B?text={{ product.name|urlencode }}'">
+                    <span class="rec-badge position-absolute top-0 end-0 m-2">
+                        <i class="bi bi-fire"></i> Trending
+                    </span>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <span class="category-badge">{{ product.category.name }}</span>
+                    <h6 class="card-title">{{ product.name }}</h6>
+                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                        <span class="price">${{ "%.2f"|format(product.price) }}</span>
+                        <a href="{{ url_for('products.product_detail', slug=product.slug) }}" class="btn-outline">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="section-title mt-5">
         <span class="accent-bar"></span>
         <h2>Featured</h2>
     </div>
@@ -48,9 +83,10 @@
     {% if recommendations %}
     <div class="section-title mt-5">
         <span class="accent-bar"></span>
-        <h2>Recommended for You</h2>
+        <h2>AI Picks for You</h2>
+        <span class="rec-badge ms-2"><i class="bi bi-stars"></i> AI</span>
     </div>
-    <p class="section-sub"><i class="bi bi-cpu"></i> AI-powered picks based on your taste</p>
+    <p class="section-sub"><i class="bi bi-cpu"></i> Personalized recommendations based on your cart and browsing</p>
     <div class="row g-4 product-grid">
         {% for product in recommendations %}
         <div class="col-6 col-md-3">
