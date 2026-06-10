@@ -75,6 +75,7 @@ def create_app(config_class=Config, testing=False):
         except Exception:
             categories = []
         return dict(categories=categories, csp_nonce=g.get('csp_nonce', ''),
-                    user_id=session.get('user_id'), username=session.get('username'))
+                    user_id=session.get('user_id'), username=session.get('username'),
+                    is_admin=session.get('is_admin', False))
 
     return app

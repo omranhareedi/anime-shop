@@ -2,7 +2,7 @@ import os
 from werkzeug.utils import secure_filename
 from flask import Blueprint, render_template, request, redirect, url_for, flash, make_response, current_app
 from app import db
-from app.models import Product, Order, OrderItem, Category, Vendor, login_required
+from app.models import Product, Order, OrderItem, Category, Vendor, admin_required
 from app.security import make_token, sanitize_form_data
 from sqlalchemy import func
 
@@ -32,14 +32,14 @@ def slugify(text):
 
 
 @admin_bp.route('/products')
-@login_required
+@admin_required
 def product_list():
     products = Product.query.order_by(Product.id).all()
     return render_template('admin/products.html', products=products)
 
 
 @admin_bp.route('/products/<int:product_id>/edit', methods=['GET', 'POST'])
-@login_required
+@admin_required
 def product_edit(product_id):
     product = Product.query.get_or_404(product_id)
     categories = Category.query.order_by(Category.name).all()
@@ -92,7 +92,7 @@ def product_edit(product_id):
 
 
 @admin_bp.route('/dashboard')
-@login_required
+@admin_required
 def dashboard():
     top_products = db.session.query(
         Product.name,

@@ -20,6 +20,22 @@ def login_required(f):
     return decorated
 
 
+def admin_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        from flask import redirect, url_for, flash
+        user_id = session.get('user_id')
+        if not user_id:
+            flash('Please log in to access this page.', 'warning')
+            return redirect(url_for('auth.login'))
+        user = db.session.get(User, user_id)
+        if not user or not user.is_admin:
+            flash('You do not have permission to access this page.', 'danger')
+            return redirect(url_for('main.index'))
+        return f(*args, **kwargs)
+    return decorated
+
+
 class Category(db.Model):
     __tablename__ = 'categories'
 
@@ -128,6 +144,7 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(200), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

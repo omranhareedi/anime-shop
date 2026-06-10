@@ -23,6 +23,21 @@ def client(app):
     return app.test_client()
 
 
+@pytest.fixture
+def admin_client(client):
+    client.post('/auth/register', data={
+        'username': 'admin',
+        'email': 'admin@example.com',
+        'password': 'admin123',
+        'confirm_password': 'admin123',
+    })
+    client.post('/auth/login', data={
+        'username': 'admin',
+        'password': 'admin123',
+    })
+    return client
+
+
 def test_homepage(client):
     resp = client.get('/')
     assert resp.status_code == 200
@@ -154,8 +169,8 @@ def test_checkout_payment_failure(client):
     assert resp.status_code == 302
 
 
-def test_admin_dashboard(client):
-    resp = client.get('/admin/dashboard')
+def test_admin_dashboard(admin_client):
+    resp = admin_client.get('/admin/dashboard')
     assert resp.status_code == 200
     assert b'Admin' in resp.data
 
@@ -364,14 +379,14 @@ def test_recommender_popular_all_time(app):
         assert len(results) <= 3
 
 
-def test_admin_product_list(client):
-    resp = client.get('/admin/products')
+def test_admin_product_list(admin_client):
+    resp = admin_client.get('/admin/products')
     assert resp.status_code == 200
     assert b'Naruto' in resp.data
 
 
-def test_admin_product_edit_page(client):
-    resp = client.get('/admin/products/1/edit')
+def test_admin_product_edit_page(admin_client):
+    resp = admin_client.get('/admin/products/1/edit')
     assert resp.status_code == 200
     assert b'Sage Mode' in resp.data or b'Edit' in resp.data
 
@@ -387,11 +402,11 @@ def test_search_no_results(client):
     assert b'No matches' in resp.data
 
 
-def test_admin_product_edit_submit(client):
-    resp = client.get('/admin/products/1/edit')
+def test_admin_product_edit_submit(admin_client):
+    resp = admin_client.get('/admin/products/1/edit')
     csrf_token = resp.data.decode().split('name="csrf_token" value="')[1].split('"')[0]
-    client.set_cookie('csrf_token', csrf_token)
-    resp = client.post('/admin/products/1/edit', data={
+    admin_client.set_cookie('csrf_token', csrf_token)
+    resp = admin_client.post('/admin/products/1/edit', data={
         'csrf_token': csrf_token,
         'name': 'Naruto Sage Mode Figure - Updated',
         'price': '54.99',
@@ -406,13 +421,13 @@ def test_admin_product_edit_submit(client):
     assert resp.status_code == 302
     assert '/admin/products' in resp.location
 
-    with client.application.app_context():
+    with admin_client.application.app_context():
         p = db.session.get(Product, 1)
         assert p.name == 'Naruto Sage Mode Figure - Updated'
         assert p.price == 54.99
         assert p.stock == 20
 
 
-def test_admin_product_edit_not_found(client):
-    resp = client.get('/admin/products/999/edit')
+def test_admin_product_edit_not_found(admin_client):
+    resp = admin_client.get('/admin/products/999/edit')
     assert resp.status_code == 404

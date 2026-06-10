@@ -32,7 +32,8 @@ def register():
                 flash(e, 'danger')
             return render_template('auth/register.html', username=username, email=email)
 
-        user = User(username=username, email=email)
+        is_first = db.session.query(User).count() == 0
+        user = User(username=username, email=email, is_admin=is_first)
         user.set_password(password)
         db.session.add(user)
         db.session.commit()
@@ -53,6 +54,7 @@ def login():
             return render_template('auth/login.html', username=username)
         session['user_id'] = user.id
         session['username'] = user.username
+        session['is_admin'] = user.is_admin
         flash(f'Welcome back, {user.username}!', 'success')
         next_url = request.args.get('next') or url_for('main.index')
         return redirect(next_url)
@@ -64,5 +66,6 @@ def login():
 def logout():
     session.pop('user_id', None)
     session.pop('username', None)
+    session.pop('is_admin', None)
     flash('You have been logged out.', 'info')
     return redirect(url_for('main.index'))

@@ -125,9 +125,11 @@
                     <ul class="list-unstyled">
                         <li><a href="mailto:hareedi15@gmail.com">hareedi15@gmail.com</a></li>
                         <li><span class="text-muted">Akihabara, Tokyo</span></li>
+                        {% if is_admin %}
                         <li class="mt-2">
                             <a href="{{ url_for('admin.dashboard') }}" class="admin-link" title="Admin Dashboard">Dashboard</a>
                         </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
