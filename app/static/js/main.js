@@ -225,6 +225,11 @@ function initQuickView() {
             document.getElementById('quick-view-modal').classList.remove('open');
         });
     });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            document.getElementById('quick-view-modal').classList.remove('open');
+        }
+    });
 }
 
 function initCartPreview() {
