@@ -25,6 +25,11 @@ def create_app(config_class=Config):
 
     with app.app_context():
         from app import models
+        db.create_all()
+        from app.models import Product
+        if Product.query.count() == 0:
+            from app.seeds import seed_database
+            seed_database()
 
     @app.context_processor
     def inject_globals():
