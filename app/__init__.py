@@ -49,6 +49,17 @@ def create_app(config_class=Config, testing=False):
         except Exception:
             db.session.rollback()
 
+        admin = db.session.query(User).filter_by(username='admin').first()
+        if admin:
+            if not admin.is_admin:
+                admin.is_admin = True
+                db.session.commit()
+        else:
+            admin = User(username='admin', email='admin@narmo.com', is_admin=True)
+            admin.set_password('admin123')
+            db.session.add(admin)
+            db.session.commit()
+
         if db.session.query(Product).count() == 0:
             from app.seeds import seed_database
             seed_database()
