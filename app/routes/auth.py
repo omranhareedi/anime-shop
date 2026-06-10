@@ -56,6 +56,8 @@ def login():
         session['username'] = user.username
         session['is_admin'] = user.is_admin
         flash(f'Welcome back, {user.username}!', 'success')
+        if user.is_admin:
+            return redirect(url_for('admin.dashboard'))
         next_url = request.args.get('next') or url_for('main.index')
         return redirect(next_url)
 
