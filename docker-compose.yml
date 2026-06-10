@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: anime-shop-web
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=${SECRET_KEY:-anime-shop-prod-key-change-me}
+      - DATABASE_URL=postgresql://anime_user:anime_pass@db:5432/anime_shop
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - static_data:/app/app/static/images/products
+
+  db:
+    image: postgres:16-alpine
+    container_name: anime-shop-db
+    environment:
+      - POSTGRES_USER=anime_user
+      - POSTGRES_PASSWORD=anime_pass
+      - POSTGRES_DB=anime_shop
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U anime_user -d anime_shop"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  static_data:
