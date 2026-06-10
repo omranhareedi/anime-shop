@@ -40,7 +40,15 @@ def create_app(config_class=Config, testing=False):
     with app.app_context():
         from app import models
         db.create_all()
-        from app.models import Product
+
+        from app.models import User, Product
+        import sqlalchemy as sa
+        try:
+            db.session.execute(sa.text('ALTER TABLE users ADD COLUMN is_admin BOOLEAN DEFAULT 0'))
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+
         if db.session.query(Product).count() == 0:
             from app.seeds import seed_database
             seed_database()
