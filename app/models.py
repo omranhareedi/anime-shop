@@ -15,6 +15,25 @@ class Category(db.Model):
         return f'<Category {self.name}>'
 
 
+class Vendor(db.Model):
+    __tablename__ = 'vendors'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    slug = db.Column(db.String(120), unique=True, nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    email = db.Column(db.String(200), nullable=False)
+    logo_url = db.Column(db.String(300), nullable=True, default='vendor_default.jpg')
+    location = db.Column(db.String(200), nullable=True)
+    rating = db.Column(db.Float, default=4.5)
+    joined_at = db.Column(db.DateTime, default=datetime.utcnow)
+    is_active = db.Column(db.Boolean, default=True)
+    products = db.relationship('Product', backref='vendor', lazy=True)
+
+    def __repr__(self):
+        return f'<Vendor {self.name}>'
+
+
 class Product(db.Model):
     __tablename__ = 'products'
 
@@ -29,6 +48,7 @@ class Product(db.Model):
     genre = db.Column(db.String(100), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
+    vendor_id = db.Column(db.Integer, db.ForeignKey('vendors.id'), nullable=True)
     order_items = db.relationship('OrderItem', backref='product', lazy=True)
 
     def __repr__(self):

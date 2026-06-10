@@ -1,15 +1,12 @@
 import pytest
 from app import create_app, db
-from app.models import Product, Category, Customer, Order, OrderItem
+from app.models import Product, Category, Customer, Order, OrderItem, Vendor
 from app.seeds import seed_database
 
 
 @pytest.fixture
 def app():
-    app = create_app()
-    app.config['TESTING'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
-    app.config['WTF_CSRF_ENABLED'] = False
+    app = create_app(testing=True)
 
     with app.app_context():
         db.create_all()
@@ -295,6 +292,54 @@ def test_security_sanitize_length(client):
     assert len(sanitize_input(long, max_length=10)) == 10
 
 
+def test_vendor_list(client):
+    resp = client.get('/vendors/')
+    assert resp.status_code == 200
+    assert b'OtakuCraft' in resp.data or b'Vendors' in resp.data
+
+
+def test_vendor_store(client):
+    resp = client.get('/vendors/otakucraft')
+    assert resp.status_code == 200
+    assert b'OtakuCraft' in resp.data
+
+
+def test_vendor_store_not_found(client):
+    resp = client.get('/vendors/nonexistent-vendor')
+    assert resp.status_code == 404
+
+
+def test_vendor_register_page(client):
+    resp = client.get('/vendors/register')
+    assert resp.status_code == 200
+    assert b'Open Your Store' in resp.data or b'Vendor' in resp.data
+
+
+def test_vendor_register_submit(client):
+    resp = client.post('/vendors/register', data={
+        'name': 'TestVendor',
+        'email': 'test@vendor.com',
+        'description': 'A test vendor store.',
+        'location': 'Test City',
+    })
+    assert resp.status_code == 302
+    assert '/vendors/testvendor' in resp.location
+
+
+def test_vendor_model(app):
+    with app.app_context():
+        vendor = Vendor.query.filter_by(slug='otakucraft').first()
+        assert vendor is not None
+        assert hasattr(vendor, 'products')
+        assert len(vendor.products) > 0
+
+
+def test_product_has_vendor(app):
+    with app.app_context():
+        product = Product.query.first()
+        assert hasattr(product, 'vendor')
+
+
 def test_checkout_csrf_protection(client):
     with client.session_transaction() as sess:
         sess['cart'] = {'1': 1}
@@ -317,3 +362,57 @@ def test_recommender_popular_all_time(app):
         from app.recommender import get_popular_all_time
         results = get_popular_all_time(limit=3)
         assert len(results) <= 3
+
+
+def test_admin_product_list(client):
+    resp = client.get('/admin/products')
+    assert resp.status_code == 200
+    assert b'Naruto' in resp.data
+
+
+def test_admin_product_edit_page(client):
+    resp = client.get('/admin/products/1/edit')
+    assert resp.status_code == 200
+    assert b'Sage Mode' in resp.data or b'Edit' in resp.data
+
+
+def test_search_results(client):
+    resp = client.get('/products/?q=Naruto')
+    assert resp.status_code == 200
+    assert b'Naruto' in resp.data
+
+def test_search_no_results(client):
+    resp = client.get('/products/?q=xyznonexistent')
+    assert resp.status_code == 200
+    assert b'No matches' in resp.data
+
+
+def test_admin_product_edit_submit(client):
+    resp = client.get('/admin/products/1/edit')
+    csrf_token = resp.data.decode().split('name="csrf_token" value="')[1].split('"')[0]
+    client.set_cookie('csrf_token', csrf_token)
+    resp = client.post('/admin/products/1/edit', data={
+        'csrf_token': csrf_token,
+        'name': 'Naruto Sage Mode Figure - Updated',
+        'price': '54.99',
+        'stock': '20',
+        'category_id': '1',
+        'vendor_id': '1',
+        'description': 'Updated description.',
+        'genre': 'Action',
+        'image_url': 'naruto_updated.jpg',
+        'is_featured': 'on',
+    })
+    assert resp.status_code == 302
+    assert '/admin/products' in resp.location
+
+    with client.application.app_context():
+        p = Product.query.get(1)
+        assert p.name == 'Naruto Sage Mode Figure - Updated'
+        assert p.price == 54.99
+        assert p.stock == 20
+
+
+def test_admin_product_edit_not_found(client):
+    resp = client.get('/admin/products/999/edit')
+    assert resp.status_code == 404

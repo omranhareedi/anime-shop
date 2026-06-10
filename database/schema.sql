@@ -12,6 +12,19 @@ CREATE TABLE IF NOT EXISTS categories (
     description TEXT
 );
 
+-- Vendors table: marketplace sellers
+CREATE TABLE IF NOT EXISTS vendors (
+    id          SERIAL PRIMARY KEY,
+    name        VARCHAR(120) NOT NULL,
+    slug        VARCHAR(120) NOT NULL UNIQUE,
+    description TEXT,
+    email       VARCHAR(200) NOT NULL,
+    logo_url    VARCHAR(300) DEFAULT 'vendor_default.jpg',
+    location    VARCHAR(200),
+    joined_at   TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+    is_active   BOOLEAN      DEFAULT TRUE
+);
+
 -- Products table: core inventory with pricing and metadata
 CREATE TABLE IF NOT EXISTS products (
     id          SERIAL PRIMARY KEY,
@@ -24,7 +37,8 @@ CREATE TABLE IF NOT EXISTS products (
     is_featured BOOLEAN      DEFAULT FALSE,
     genre       VARCHAR(100),
     created_at  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
-    category_id INTEGER     NOT NULL REFERENCES categories(id) ON DELETE CASCADE
+    category_id INTEGER     NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
+    vendor_id   INTEGER     REFERENCES vendors(id) ON DELETE SET NULL
 );
 
 -- Customers table: captures checkout information

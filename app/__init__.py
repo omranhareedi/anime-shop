@@ -6,9 +6,15 @@ from config import Config
 db = SQLAlchemy()
 
 
-def create_app(config_class=Config):
+def create_app(config_class=Config, testing=False):
     app = Flask(__name__)
     app.config.from_object(config_class)
+
+    if testing:
+        app.config['TESTING'] = True
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+        app.config['WTF_CSRF_ENABLED'] = False
+        app.config['SECRET_KEY'] = 'test-secret'
 
     db.init_app(app)
 
@@ -17,12 +23,14 @@ def create_app(config_class=Config):
     from app.routes.cart import cart_bp
     from app.routes.checkout import checkout_bp
     from app.routes.admin import admin_bp
+    from app.routes.vendors import vendors_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(products_bp, url_prefix='/products')
     app.register_blueprint(cart_bp, url_prefix='/cart')
     app.register_blueprint(checkout_bp, url_prefix='/checkout')
     app.register_blueprint(admin_bp, url_prefix='/admin')
+    app.register_blueprint(vendors_bp, url_prefix='/vendors')
 
     from app.security import configure_session, apply_security_headers, limiter
     configure_session(app)
@@ -46,6 +54,11 @@ def create_app(config_class=Config):
     def add_security_headers(response):
         nonce = getattr(g, 'csp_nonce', None)
         return apply_security_headers(response, nonce=nonce)
+
+    @app.errorhandler(404)
+    def not_found(e):
+        from flask import render_template as rt
+        return rt('404.html'), 404
 
     @app.errorhandler(429)
     def ratelimit_handler(e):

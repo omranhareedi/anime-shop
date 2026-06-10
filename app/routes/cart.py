@@ -4,6 +4,24 @@ from app.models import Product
 cart_bp = Blueprint('cart', __name__)
 
 
+@cart_bp.route('/preview')
+def cart_preview():
+    cart = session.get('cart', {})
+    items = []
+    total = 0.0
+    count = 0
+    for product_id, quantity in cart.items():
+        product = Product.query.get(int(product_id))
+        if product:
+            subtotal = product.price * quantity
+            total += subtotal
+            count += quantity
+            items.append({'id': product.id, 'name': product.name[:40],
+                          'image': product.image_url, 'price': product.price,
+                          'quantity': quantity, 'subtotal': round(subtotal, 2)})
+    return jsonify({'items': items[:5], 'total': round(total, 2), 'count': count})
+
+
 @cart_bp.route('/count')
 def cart_count():
     cart = session.get('cart', {})

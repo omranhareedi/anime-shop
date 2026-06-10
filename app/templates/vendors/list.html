@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Scouting Divisions — Narmo{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="section-title">
+        <span class="accent-bar"></span>
+        <h2>Scouting Divisions</h2>
+    </div>
+    <p class="section-sub">Trusted merchant divisions reporting to the Survey Corps</p>
+
+    <div class="row g-4">
+        {% for vendor in vendors %}
+        <div class="col-md-6 col-lg-4">
+            <a href="{{ url_for('vendors.vendor_store', slug=vendor.slug) }}" class="text-decoration-none">
+                <div class="vendor-card h-100">
+                    <div class="vendor-card-header">
+                        <div class="vendor-avatar">{{ vendor.name[0] }}</div>
+                        <div>
+                            <h5 class="mb-1">{{ vendor.name }}</h5>
+                            {% if vendor.location %}
+                            <span class="vendor-location"><i class="bi bi-geo-alt"></i> {{ vendor.location }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="vendor-card-body">
+                        <p>{{ vendor.description[:120] }}{% if vendor.description|length > 120 %}…{% endif %}</p>
+                    </div>
+                    <div class="vendor-card-footer">
+                        <span class="vendor-badge"><i class="bi bi-box-seam"></i> {{ vendor.product_count }} products</span>
+                        <span class="vendor-badge"><i class="bi bi-shield-check"></i> Verified</span>
+                        {% set r = vendor.rating or 4.5 %}
+                        <span class="vendor-rating ms-auto">
+                            <span class="stars">
+                                {% for i in range(5) %}
+                                {% if i < r|int %}
+                                <i class="bi bi-star-fill"></i>
+                                {% elif i == r|int and (r - r|int) * 10 >= 5 %}
+                                <i class="bi bi-star-half"></i>
+                                {% else %}
+                                <i class="bi bi-star empty"></i>
+                                {% endif %}
+                                {% endfor %}
+                            </span>
+                            <span>{{ r }}</span>
+                        </span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% else %}
+        <div class="col-12">
+            <div class="empty-state">
+                <div class="icon"><i class="bi bi-shop"></i></div>
+                <h4>No vendors yet</h4>
+                <p>Be the first to open a store!</p>
+                <a href="{{ url_for('vendors.vendor_register') }}" class="btn-primary-narmo mt-3">
+                    <i class="bi bi-plus-circle"></i> Register as Vendor
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="{{ url_for('vendors.vendor_register') }}" class="btn-primary-narmo">
+            <i class="bi bi-shop"></i> Open Your Store
+        </a>
+    </div>
+</div>
+{% endblock %}

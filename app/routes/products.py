@@ -13,6 +13,7 @@ products_bp = Blueprint('products', __name__)
 def product_list():
     category_slug = request.args.get('category')
     genre = request.args.get('genre')
+    search = request.args.get('q', '').strip()
     query = Product.query
 
     if category_slug:
@@ -23,12 +24,21 @@ def product_list():
     if genre:
         query = query.filter_by(genre=genre)
 
+    if search:
+        like = f'%{search}%'
+        query = query.filter(
+            Product.name.ilike(like) |
+            Product.description.ilike(like) |
+            Product.genre.ilike(like)
+        )
+
     products = query.all()
     categories = Category.query.all()
     genres = ['Action', 'Adventure', 'Comedy', 'Sci-Fi', 'Fantasy']
     return render_template('products.html', products=products,
                            categories=categories, genres=genres,
-                           current_category=category_slug, current_genre=genre)
+                           current_category=category_slug, current_genre=genre,
+                           search=search)
 
 
 @products_bp.route('/api/recommendations', methods=['GET'])
@@ -68,9 +78,36 @@ def api_recommendations():
     } for p in recs])
 
 
+@products_bp.route('/api/product/<int:product_id>')
+def api_product_detail(product_id):
+    product = Product.query.get_or_404(product_id)
+    from app.recommender import compute_similarity
+    scored = compute_similarity(product, limit=4)
+    related = [{'id': p.id, 'name': p.name, 'slug': p.slug, 'price': p.price,
+                'image': p.image_url, 'genre': p.genre} for _, p in scored]
+    return jsonify({
+        'id': product.id,
+        'name': product.name,
+        'slug': product.slug,
+        'description': product.description,
+        'price': product.price,
+        'image': product.image_url,
+        'stock': product.stock,
+        'genre': product.genre,
+        'category': product.category.name,
+        'vendor': product.vendor.name if product.vendor else None,
+        'vendor_slug': product.vendor.slug if product.vendor else None,
+        'related': related,
+    })
+
+
 @products_bp.route('/<slug>')
 def product_detail(slug):
     product = Product.query.filter_by(slug=slug).first_or_404()
+    viewed = session.get('recently_viewed', [])
+    viewed = [v for v in viewed if v != product.id]
+    viewed.insert(0, product.id)
+    session['recently_viewed'] = viewed[:8]
     content_recs = get_content_based_recommendations(product, limit=4)
     collab_recs = get_collaborative_recommendations(product.id, limit=4)
     scored = compute_similarity(product, limit=6)

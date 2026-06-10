@@ -8,6 +8,11 @@ from app.recommender import (
 main_bp = Blueprint('main', __name__)
 
 
+@main_bp.route('/about')
+def about():
+    return render_template('about.html')
+
+
 @main_bp.route('/')
 def index():
     featured = Product.query.filter_by(is_featured=True).limit(6).all()
@@ -21,7 +26,17 @@ def index():
         limit=4
     )
 
+    viewed_ids = session.get('recently_viewed', [])
+    recently_viewed = []
+    for vid in viewed_ids:
+        p = Product.query.get(vid)
+        if p:
+            recently_viewed.append(p)
+            if len(recently_viewed) == 4:
+                break
+
     return render_template('index.html', featured=featured,
                            categories=categories,
                            recommendations=recommendations,
-                           trending=trending)
+                           trending=trending,
+                           recently_viewed=recently_viewed)

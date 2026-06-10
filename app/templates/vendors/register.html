@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Enlist Your Division — Narmo{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="section-title">
+                <span class="accent-bar"></span>
+                <h2>Enlist Your Division</h2>
+            </div>
+            <p style="color:var(--gray);margin-bottom:2rem;">Join the Survey Corps Supply Depot and equip thousands of collectors.</p>
+
+            <div class="checkout-card">
+                <div class="card-header">
+                    <h5><i class="bi bi-shop"></i> Vendor Details</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label" for="name">Store Name *</label>
+                            <input type="text" class="form-control-narmo" id="name" name="name" required
+                                   placeholder="e.g. OtakuCraft" maxlength="120">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="email">Email *</label>
+                            <input type="email" class="form-control-narmo" id="email" name="email" required
+                                   placeholder="you@example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="location">Location</label>
+                            <input type="text" class="form-control-narmo" id="location" name="location"
+                                   placeholder="e.g. Tokyo, Japan" maxlength="200">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="description">Description</label>
+                            <textarea class="form-control-narmo" id="description" name="description"
+                                      rows="4" placeholder="Tell buyers about your store…" maxlength="1000"></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">
+                            <i class="bi bi-check-lg"></i> Register Store
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
