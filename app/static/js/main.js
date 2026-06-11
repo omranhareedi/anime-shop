@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
     initPageTransition();
     initBackToTop();
     initTypingEffect();
-    initQuickView();
     initCartPreview();
     initSeasonalBanner();
     initAddToCart();
@@ -185,63 +184,6 @@ function initTypingEffect() {
     }
     setTimeout(type, 600);
 }
-
-function initQuickView() {
-    document.addEventListener('click', function (e) {
-        const btn = e.target.closest('.qv-trigger');
-        if (!btn) return;
-        const pid = btn.dataset.pid;
-        const modal = document.getElementById('qv-modal');
-        const body = modal.querySelector('.qv-body');
-        modal.className = 'qv-modal';
-        body.innerHTML = '<div class="qv-loader"><i class="bi bi-arrow-repeat"></i>Loading…</div>';
-        document.body.style.overflow = 'hidden';
-        fetch('/products/api/product/' + pid)
-        .then(function (r) { return r.json(); })
-        .then(function (p) {
-            var stockHtml = p.stock > 10
-                ? '<span class="badge bg-success">' + p.stock + ' in stock</span>'
-                : p.stock > 0
-                ? '<span class="badge bg-warning text-dark">' + p.stock + ' in stock</span>'
-                : '<span class="badge bg-danger">Out of stock</span>';
-            var relatedHtml = '';
-            if (p.related && p.related.length) {
-                relatedHtml = '<div style="font-size:0.8rem;color:var(--gray);">Similar: ' +
-                    p.related.map(function (r) {
-                        return '<a href="/products/' + r.slug + '" style="font-size:0.8rem;color:var(--accent);text-decoration:none;">' + r.name + '</a>';
-                    }).join(', ') + '</div>';
-            }
-            body.innerHTML =
-                '<img class="qv-image" src="/static/images/products/' + p.image + '" alt="' + p.name + '" onerror="this.src=\'https://placehold.co/400x400/F1F5F9/64748B?text=' + encodeURIComponent(p.name) + '\'">' +
-                '<div class="qv-info">' +
-                    '<span class="category-badge">' + (p.category || '') + '</span>' +
-                    '<h5 style="font-weight:700;">' + p.name + '</h5>' +
-                    '<div class="price">$' + p.price.toFixed(2) + '</div>' +
-                    stockHtml +
-                    '<p style="font-size:0.85rem;color:var(--gray);line-height:1.6;">' + (p.description || '').substring(0, 200) + '</p>' +
-                    (p.vendor ? '<span style="font-size:0.8rem;color:var(--gray);"><i class="bi bi-shop"></i> <a href="/vendors/' + p.vendor_slug + '" style="color:var(--accent);">' + p.vendor + '</a></span>' : '') +
-                    (p.genre ? '<span class="detail-badge genre">' + p.genre + '</span>' : '') +
-                    relatedHtml +
-                    '<a href="/products/' + p.slug + '" class="btn-primary-narmo"><i class="bi bi-eye"></i> View Details</a>' +
-                '</div>';
-        })
-        .catch(function () {
-            body.innerHTML = '<div class="qv-error">Failed to load product details.</div>';
-        });
-    });
-    function closeQv() {
-        var modal = document.getElementById('qv-modal');
-        modal.className = 'qv-hidden';
-        document.body.style.overflow = '';
-    }
-    document.querySelectorAll('.qv-close, .qv-backdrop').forEach(function (el) {
-        el.addEventListener('click', closeQv);
-    });
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') closeQv();
-    });
-}
-
 function initCartPreview() {
     const wrap = document.querySelector('.cart-preview-wrap');
     if (!wrap) return;
