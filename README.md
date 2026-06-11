@@ -179,7 +179,7 @@ The repository contains 30+ meaningful commits with clear commit messages, follo
 
 ### 9. Deployment Link
 
-**Live URL:** *To be deployed on Render*
+**Live URL:** [https://narmo-store.onrender.com/](https://narmo-store.onrender.com/)
 
 The application is containerized with Docker and ready for deployment. Deployment steps:
 
@@ -189,7 +189,7 @@ The application is containerized with Docker and ready for deployment. Deploymen
 4. Add environment variable `SECRET_KEY`
 5. Deploy — Render builds the Docker image and serves the app
 
-*Once deployed, the URL will follow the pattern: `https://narmo-shop.onrender.com`*
+*Deployed at: `https://narmo-store.onrender.com/`*
 
 ---
 
