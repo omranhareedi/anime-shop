@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initAddToCart();
     initQtyControls();
     initRemoveItem();
+    initQuickAddToCart();
 });
 
 function initAddToCart() {
@@ -220,6 +221,29 @@ function initCartPreview() {
         hideTimer = setTimeout(function () {
             dropdown.classList.remove('show');
         }, 300);
+    });
+}
+
+function initQuickAddToCart() {
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('.add-to-cart-btn');
+        if (!btn) return;
+        const pid = btn.dataset.productId;
+        if (!pid) return;
+        const fd = new FormData();
+        fd.append('product_id', pid);
+        fd.append('quantity', 1);
+        fetch('/cart/add', {
+            method: 'POST',
+            body: new URLSearchParams(fd)
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                updateCartCount();
+                showToast('Added to cart!', 'success');
+            }
+        });
     });
 }
 
