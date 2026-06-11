@@ -44,18 +44,22 @@ Anime merchandise shopping platforms often lack immersion, personalization, and 
 
 **User Features**
 - Browse products by category (Figures, Apparel, Posters, Accessories, Manga) and genre (Action, Adventure, Comedy, Sci-Fi, Fantasy)
-- Search products by name, description, or genre
-- Session-based shopping cart with AJAX add/update/remove/remove-all
-- Checkout with Stripe, PayPal, or Mobile Money payment
+- Search products by name, description, or genre with inline filter bar (category/genre dropdowns)
+- Session-based shopping cart with AJAX add/update/remove, hover preview dropdown, badge count
+- Checkout with Stripe, PayPal, or Mobile Money payment (simulated)
 - Order confirmation with timeline tracking (Pending → Paid → Shipped → Delivered)
-- Recently viewed products ("Your Trajectory")
+- Recently viewed products ("Your Trajectory") with horizontal scroll carousel
 - Dark mode toggle with system preference detection
-- User registration and login
+- User registration and login with loading spinner, password visibility toggle, remember me
 - Vendor storefronts with star ratings
+- Toast notifications on cart actions
+- Seasonal dismissible banner
+- Back-to-top button
 
 **Admin Features**
 - Analytics dashboard with 6 stat cards and Chart.js charts (revenue, orders, status, top products)
-- Product management: list, edit, image upload
+- Product management: list table with inline status toggles, edit form with image upload, **add new product page** with live preview card, drag-drop upload, auto-slug, genre datalist
+- Order management: list with inline status dropdown + status filter buttons, detail page with status change and timeline
 - Admin auto-redirect on login
 - Admin-only route protection via `@admin_required` decorator
 
@@ -68,19 +72,21 @@ Anime merchandise shopping platforms often lack immersion, personalization, and 
 - Hybrid personalized engine combining all strategies
 
 **Security Features**
-- Content Security Policy (CSP) with per-request nonces
+- Content Security Policy (CSP) with per-request nonces — blocks all inline event handlers
 - Rate limiting (120 requests per 60 seconds)
-- CSRF token protection
-- Input sanitization (XSS prevention)
+- CSRF token protection (cookie-based for admin forms, session-based for checkout)
+- Input sanitization (XSS prevention, HTML escaping, email/phone sanitization)
 - HttpOnly/SameSite session cookies
 - Security headers: X-Frame-Options, X-Content-Type-Options, HSTS, Referrer-Policy, Permissions-Policy
 
 **Theming**
 - Attack on Titan full theme: Survey Corps teal (#2d8a76), gold (#c9952b), dark (#0f0f1a)
-- "Shinzou wo Sasageyo!" typing effect hero
-- Custom logo and favicon
-- Seasonal Scouting Legion banner
+- "Shinzou wo Sasageyo!" typing effect hero with cursor blink
+- Custom logo and favicon (Survey Corps-inspired wings)
+- Seasonal Scouting Legion banner (dismissible with localStorage)
 - AoT wings separator, Titan badges, Survey Corps terminology throughout
+- Full dark variant with automatic `prefers-color-scheme` detection
+- 20+ AoT-themed templates with consistent design language
 
 ---
 
@@ -173,7 +179,7 @@ The application follows the **Model-View-Controller (MVC)** pattern using Flask'
 
 **Repository:** [https://github.com/omranhareedi/anime-shop](https://github.com/omranhareedi/anime-shop)
 
-The repository contains 30+ meaningful commits with clear commit messages, following a logical development history from initial scaffold through feature completion, bug fixes, and optimizations.
+The repository contains 40+ meaningful commits with clear commit messages, following a logical development history from initial scaffold through feature completion, bug fixes, and optimizations.
 
 ---
 
@@ -181,13 +187,12 @@ The repository contains 30+ meaningful commits with clear commit messages, follo
 
 **Live URL:** [https://narmo-store.onrender.com/](https://narmo-store.onrender.com/)
 
-The application is containerized with Docker and ready for deployment. Deployment steps:
+The application is containerized with Docker and deployed via **Render Blueprint** (auto-deploys on push):
 
 1. Push the repository to GitHub
-2. Connect the repo to [Render](https://dashboard.render.com)
-3. Create a new Web Service with runtime **Docker**
-4. Add environment variable `SECRET_KEY`
-5. Deploy — Render builds the Docker image and serves the app
+2. Render automatically detects `render.yaml` and deploys
+3. PostgreSQL database provisioned automatically
+4. Environment variables configured in `render.yaml`
 
 *Deployed at: `https://narmo-store.onrender.com/`*
 
@@ -255,6 +260,12 @@ Pipeline stages:
 8. **Responsive Design**
    Ensuring the themed layout looks good across mobile, tablet, and desktop required extensive media queries at 991px, 768px, and 576px breakpoints.
 
+9. **CSP Blocking Inline Event Handlers**
+   Content Security Policy nonces block `onclick`/`onsubmit` HTML attributes. All event handlers were migrated to `addEventListener` in nonced `<script>` blocks, including password toggles, order row clicks, and form confirmation dialogs.
+
+10. **Jinja2 Variable Scoping in Loops**
+   `{% set %}` inside `{% for %}` loops doesn't leak outside the loop scope. The order confirmation timeline used this pattern for `current_index` — fixed with `namespace` object.
+
 ---
 
 ### 12. Future Work
@@ -279,15 +290,15 @@ Pipeline stages:
 Narmo successfully demonstrates a complete, production-ready e-commerce platform with a cohesive Attack on Titan theme. The application covers all rubric requirements across UI design, product management, shopping cart, checkout process, database integration, GitHub hosting, online deployment, CI/CD pipeline, and Docker containerization.
 
 Key achievements:
-- 46 passing automated tests with 0 warnings
+- 46 passing automated tests with 0 warnings (pytest with PostgreSQL service container in CI)
 - 7 database models with relationships and constraints
 - 3 payment gateways with simulated transactions
-- AI-powered recommendation engine with 5 algorithms
-- Full admin dashboard with analytics and product management
-- Responsive design with dark mode support
-- Docker containerization with docker-compose
-- CI/CD pipeline with automated testing and building
-- 30+ meaningful Git commits with clear history
+- AI-powered recommendation engine with 5 algorithms (TF-IDF, collaborative, trending, popularity, hybrid)
+- Full admin dashboard with analytics, charts, product CRUD, order management
+- Responsive design with dark mode and mobile-first layout
+- Docker containerization with docker-compose + Render Blueprint
+- CI/CD pipeline with automated linting, testing, and Docker building
+- 40+ meaningful Git commits with clear history
 
 The platform is ready for evaluation and can be extended with the future work items listed above.
 
