@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash, g
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, abort
 from app import db
 from app.models import Order, OrderItem, Customer, Product
 from app.payment import process_payment
@@ -110,5 +110,7 @@ def checkout():
 
 @checkout_bp.route('/confirmation/<int:order_id>')
 def confirmation(order_id):
-    order = Order.query.get_or_404(order_id)
+    order = db.session.get(Order, order_id)
+    if not order:
+        abort(404)
     return render_template('confirmation.html', order=order)

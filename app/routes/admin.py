@@ -1,6 +1,6 @@
 import os
 from werkzeug.utils import secure_filename
-from flask import Blueprint, render_template, request, redirect, url_for, flash, make_response, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, make_response, current_app, abort
 from app import db
 from app.models import Product, Order, OrderItem, Category, Vendor, admin_required
 from app.security import make_token, sanitize_form_data
@@ -41,7 +41,9 @@ def product_list():
 @admin_bp.route('/products/<int:product_id>/edit', methods=['GET', 'POST'])
 @admin_required
 def product_edit(product_id):
-    product = Product.query.get_or_404(product_id)
+    product = db.session.get(Product, product_id)
+    if not product:
+        abort(404)
     categories = Category.query.order_by(Category.name).all()
     vendors = Vendor.query.order_by(Vendor.name).all()
 

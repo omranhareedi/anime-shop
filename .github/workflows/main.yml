@@ -50,7 +50,7 @@ jobs:
           DATABASE_URL: postgresql://anime_user:anime_pass@localhost:5432/anime_shop_test
           SECRET_KEY: test-secret-key
         run: |
-          python -m pytest tests/ -v --tb=short 2>/dev/null || echo "No tests directory yet; skipping test run"
+          python -m pytest tests/ -v --tb=short
 
       - name: Verify app boots
         env:
