@@ -122,30 +122,20 @@ function updateCartCount() {
 
 function showToast(message, type) {
     const existing = document.querySelector('.toast-narmo');
-    const existingBackdrop = document.querySelector('.toast-narmo-backdrop');
     if (existing) { existing.classList.remove('show'); setTimeout(() => existing.remove(), 300); }
-    if (existingBackdrop) { existingBackdrop.classList.remove('show'); setTimeout(() => existingBackdrop.remove(), 300); }
-    const backdrop = document.createElement('div');
-    backdrop.className = 'toast-narmo-backdrop';
-    document.body.appendChild(backdrop);
     const toast = document.createElement('div');
     toast.className = 'toast-narmo';
     const icons = { success: 'bi-check-circle-fill', error: 'bi-exclamation-circle-fill', info: 'bi-info-circle-fill' };
     toast.innerHTML = '<i class="bi ' + (icons[type] || icons.success) + '"></i><span>' + message + '</span>';
     document.body.appendChild(toast);
-    requestAnimationFrame(() => {
-        backdrop.classList.add('show');
-        toast.classList.add('show');
-    });
+    requestAnimationFrame(() => toast.classList.add('show'));
     toast.addEventListener('click', function () {
         toast.classList.remove('show');
-        backdrop.classList.remove('show');
-        setTimeout(() => { toast.remove(); backdrop.remove(); }, 300);
+        setTimeout(() => toast.remove(), 300);
     });
     setTimeout(() => {
         toast.classList.remove('show');
-        backdrop.classList.remove('show');
-        setTimeout(() => { toast.remove(); backdrop.remove(); }, 300);
+        setTimeout(() => toast.remove(), 300);
     }, 2000);
 }
 
