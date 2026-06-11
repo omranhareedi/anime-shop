@@ -142,25 +142,41 @@ function pulseCartBadge() {
 
 function initDarkMode() {
     const toggle = document.getElementById('dark-toggle');
+    const toggleMobile = document.getElementById('dark-toggle-mobile');
     if (!toggle) return;
     const stored = localStorage.getItem('narmo-theme');
-    if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    var isDark = stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    if (isDark) {
         document.documentElement.setAttribute('data-theme', 'dark');
         toggle.innerHTML = '<i class="bi bi-sun-fill"></i>';
+        if (toggleMobile) toggleMobile.innerHTML = '<i class="bi bi-sun-fill me-1"></i> Light Mode';
+    } else {
+        if (toggleMobile) toggleMobile.innerHTML = '<i class="bi bi-moon-fill me-1"></i> Dark Mode';
     }
-    toggle.addEventListener('click', function () {
-        const html = document.documentElement;
-        const isDark = html.getAttribute('data-theme') === 'dark';
+    function apply(isDark) {
+        var html = document.documentElement;
         if (isDark) {
-            html.removeAttribute('data-theme');
-            localStorage.setItem('narmo-theme', 'light');
-            this.innerHTML = '<i class="bi bi-moon-fill"></i>';
-        } else {
             html.setAttribute('data-theme', 'dark');
             localStorage.setItem('narmo-theme', 'dark');
-            this.innerHTML = '<i class="bi bi-sun-fill"></i>';
+            toggle.innerHTML = '<i class="bi bi-sun-fill"></i>';
+            if (toggleMobile) toggleMobile.innerHTML = '<i class="bi bi-sun-fill me-1"></i> Light Mode';
+        } else {
+            html.removeAttribute('data-theme');
+            localStorage.setItem('narmo-theme', 'light');
+            toggle.innerHTML = '<i class="bi bi-moon-fill"></i>';
+            if (toggleMobile) toggleMobile.innerHTML = '<i class="bi bi-moon-fill me-1"></i> Dark Mode';
         }
+    }
+    toggle.addEventListener('click', function () {
+        isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        apply(!isDark);
     });
+    if (toggleMobile) {
+        toggleMobile.addEventListener('click', function () {
+            isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            apply(!isDark);
+        });
+    }
 }
 
 function initPageTransition() {

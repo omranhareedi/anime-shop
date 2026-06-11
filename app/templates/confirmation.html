@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
-
 {% block title %}Mission Confirmed — Narmo{% endblock %}
-
 {% block content %}
 <div class="container py-5">
     <div class="text-center mb-4">
@@ -13,12 +11,12 @@
     <div class="timeline">
         {% set steps = ['Pending', 'Paid', 'Shipped', 'Delivered'] %}
         {% set icons = ['clock', 'check-circle', 'truck', 'box-seam'] %}
-        {% set current_index = 0 %}
+        {% set status_order = namespace(current=0) %}
         {% for s in steps %}
-        {% if order.status == s %}{% set current_index = loop.index0 %}{% endif %}
+            {% if order.status == s %}{% set status_order.current = loop.index0 %}{% endif %}
         {% endfor %}
         {% for s in steps %}
-        {% set step_class = 'done' if loop.index0 < current_index else ('active' if loop.index0 == current_index else '') %}
+        {% set step_class = 'done' if loop.index0 < status_order.current else ('active' if loop.index0 == status_order.current else '') %}
         <div class="timeline-step {{ step_class }}">
             <div class="timeline-dot"><i class="bi bi-{{ icons[loop.index0] }}"></i></div>
             <div class="timeline-label">{{ s }}</div>
@@ -27,54 +25,23 @@
     </div>
 
     <div class="confirmation-card">
-        <div class="card-header">
-            <h5><i class="bi bi-receipt"></i> {{ order.order_number }}</h5>
-        </div>
+        <div class="card-header"><h5><i class="bi bi-receipt"></i> {{ order.order_number }}</h5></div>
         <div class="card-body">
-
-            <div class="d-flex justify-content-between mb-2">
-                <span class="text-gray">Date</span>
-                <span class="fw-500">{{ order.order_date.strftime('%B %d, %Y at %H:%M') }}</span>
-            </div>
-
-            <div class="d-flex justify-content-between mb-2">
-                <span class="text-gray">Status</span>
-                <span class="badge bg-success">{{ order.status }}</span>
-            </div>
-
+            <div class="d-flex justify-content-between mb-2"><span class="text-gray">Date</span><span class="fw-500">{{ order.order_date.strftime('%B %d, %Y at %H:%M') }}</span></div>
+            <div class="d-flex justify-content-between mb-2"><span class="text-gray">Status</span><span class="status-badge {{ order.status|lower }}">{{ order.status }}</span></div>
             {% set method_icons = {'stripe': 'bi-credit-card-2-front', 'paypal': 'bi-paypal', 'mobile_money': 'bi-phone'} %}
             {% set method_labels = {'stripe': 'Credit Card (Stripe)', 'paypal': 'PayPal', 'mobile_money': 'Mobile Money'} %}
-            <div class="d-flex justify-content-between mb-3">
-                <span class="text-gray">Payment</span>
-                <span class="fw-500">
-                    <i class="{{ method_icons.get(order.payment_method, 'bi-credit-card') }} text-accent"></i>
-                    {{ method_labels.get(order.payment_method, order.payment_method|title) }}
-                </span>
-            </div>
-
+            <div class="d-flex justify-content-between mb-3"><span class="text-gray">Payment</span><span class="fw-500"><i class="{{ method_icons.get(order.payment_method, 'bi-credit-card') }} text-accent"></i> {{ method_labels.get(order.payment_method, order.payment_method|title) }}</span></div>
             {% if order.payment_transaction_id %}
-            <div class="d-flex justify-content-between mb-3">
-                <span class="text-gray">Transaction</span>
-                <span class="fw-500 text-sm mono">{{ order.payment_transaction_id }}</span>
-            </div>
+            <div class="d-flex justify-content-between mb-3"><span class="text-gray">Transaction</span><span class="fw-500 text-sm mono">{{ order.payment_transaction_id }}</span></div>
             {% endif %}
-
             <hr class="border-accent">
-
             <h6 class="text-gray text-sm text-uppercase mb-3" style="letter-spacing:0.04em;">Items</h6>
             {% for item in order.items %}
-            <div class="d-flex justify-content-between mb-2">
-                <span>{{ item.product.name }} <small class="text-gray">x{{ item.quantity }}</small></span>
-                <span class="fw-500">${{ "%.2f"|format(item.unit_price * item.quantity) }}</span>
-            </div>
+            <div class="d-flex justify-content-between mb-2"><span>{{ item.product.name }} <small class="text-gray">x{{ item.quantity }}</small></span><span class="fw-500">${{ "%.2f"|format(item.unit_price * item.quantity) }}</span></div>
             {% endfor %}
-
             <hr class="border-accent">
-            <div class="d-flex justify-content-between">
-                <span class="fw-700" style="font-size:1.1rem;">Total Charged</span>
-                <span class="fw-800" style="font-size:1.25rem;">${{ "%.2f"|format(order.total_amount) }}</span>
-            </div>
-
+            <div class="d-flex justify-content-between"><span class="fw-700 fs-6">Total Charged</span><span class="fw-800 text-accent fs-5">${{ "%.2f"|format(order.total_amount) }}</span></div>
             <hr class="border-accent">
             <h6 class="text-gray text-sm text-uppercase mb-2" style="letter-spacing:0.04em;">Shipping To</h6>
             <p class="text-sm" style="line-height:1.6;">
@@ -87,9 +54,7 @@
     </div>
 
     <div class="text-center mt-4">
-        <a href="{{ url_for('products.product_list') }}" class="btn-primary-narmo">
-            <i class="bi bi-arrow-left"></i> Continue Shopping
-        </a>
+        <a href="{{ url_for('products.product_list') }}" class="btn-primary-narmo"><i class="bi bi-arrow-left"></i> Continue Shopping</a>
     </div>
 </div>
 {% endblock %}

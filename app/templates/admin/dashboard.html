@@ -10,13 +10,13 @@
             <p class="text-gray text-sm mb-0">Monitor your store's performance</p>
         </div>
         <div class="d-flex gap-2">
-            <a href="{{ url_for('admin.product_list') }}" class="btn" style="background:var(--accent);color:#fff;border-radius:var(--radius-sm);padding:0.45rem 1.2rem;font-size:0.85rem;">
+            <a href="{{ url_for('admin.product_list') }}" class="btn-submit" style="width:auto;">
                 <i class="bi bi-box-seam"></i> Products
             </a>
-            <a href="{{ url_for('admin.product_add') }}" class="btn btn-outline-secondary" style="border-radius:var(--radius-sm);padding:0.45rem 1.2rem;font-size:0.85rem;">
+            <a href="{{ url_for('admin.product_add') }}" class="btn-cancel">
                 <i class="bi bi-plus-lg"></i> New Product
             </a>
-            <a href="{{ url_for('vendors.vendor_list') }}" class="btn btn-outline-secondary" style="border-radius:var(--radius-sm);padding:0.45rem 1.2rem;font-size:0.85rem;">
+            <a href="{{ url_for('vendors.vendor_list') }}" class="btn-cancel">
                 <i class="bi bi-shop"></i> Vendors
             </a>
         </div>
@@ -135,7 +135,7 @@
                         </thead>
                         <tbody>
                             {% for order in recent_orders %}
-                            <tr class="order-row" onclick="window.location='{{ url_for('admin.order_detail', order_id=order.id) }}'">
+                            <tr class="order-row" data-href="{{ url_for('admin.order_detail', order_id=order.id) }}">
                                 <td style="font-family:monospace;font-size:0.8rem;">#{{ order.order_number }}</td>
                                 <td>{{ order.customer.first_name }} {{ order.customer.last_name }}</td>
                                 <td>{{ order.items|length }}</td>
@@ -253,6 +253,10 @@ const catColors = [
     'rgba(45,138,118,0.7)', 'rgba(201,149,43,0.7)', 'rgba(232,224,208,0.7)',
     'rgba(59,130,246,0.7)', 'rgba(244,63,94,0.7)'
 ];
+
+document.querySelectorAll('.order-row').forEach(function(row) {
+    row.addEventListener('click', function() { window.location = this.dataset.href; });
+});
 
 new Chart(document.getElementById('categoryChart'), {
     type: 'polarArea',
