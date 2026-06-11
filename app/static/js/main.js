@@ -166,6 +166,7 @@ function initDarkMode() {
 function initPageTransition() {
     document.body.classList.remove('page-loading');
     document.body.classList.add('page-ready');
+    setTimeout(function () { document.body.classList.remove('page-ready'); }, 400);
 }
 
 function initBackToTop() {
