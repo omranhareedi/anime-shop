@@ -74,10 +74,7 @@
                     <h6 class="card-title">{{ product.name }}</h6>
                     <div class="d-flex justify-content-between align-items-center mt-auto">
                         <span class="price">${{ "%.2f"|format(product.price) }}</span>
-                        <div class="d-flex gap-1">
                             <button class="add-to-cart-btn btn-outline" data-product-id="{{ product.id }}" title="Add to cart"><i class="bi bi-cart-plus"></i></button>
-                            <a href="{{ url_for('products.product_detail', slug=product.slug) }}" class="btn-outline">View</a>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -108,10 +105,7 @@
                     <p class="card-text flex-grow-1">{{ product.description[:80] }}{% if product.description|length > 80 %}…{% endif %}</p>
                     <div class="d-flex justify-content-between align-items-center mt-2">
                         <span class="price">${{ "%.2f"|format(product.price) }}</span>
-                        <div class="d-flex gap-1">
                             <button class="add-to-cart-btn btn-outline" data-product-id="{{ product.id }}" title="Add to cart"><i class="bi bi-cart-plus"></i></button>
-                            <a href="{{ url_for('products.product_detail', slug=product.slug) }}" class="btn-outline">View</a>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -178,10 +172,7 @@
                     <p class="card-text flex-grow-1">{{ product.description[:60] }}…</p>
                     <div class="d-flex justify-content-between align-items-center mt-2">
                         <span class="price">${{ "%.2f"|format(product.price) }}</span>
-                        <div class="d-flex gap-1">
                             <button class="add-to-cart-btn btn-outline" data-product-id="{{ product.id }}" title="Add to cart"><i class="bi bi-cart-plus"></i></button>
-                            <a href="{{ url_for('products.product_detail', slug=product.slug) }}" class="btn-outline">View</a>
-                        </div>
                     </div>
                 </div>
             </div>
