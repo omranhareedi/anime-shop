@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: anime-shop
+    runtime: docker
+    repo: https://github.com/omranhareedi/anime-shop
+    region: ohio
+    plan: free
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        value: sqlite:///anime_shop.db
