@@ -47,7 +47,7 @@
             <form id="add-to-cart-form" class="d-flex gap-2 align-items-center flex-wrap">
                 <input type="hidden" name="product_id" value="{{ product.id }}">
                 <div class="qty-input-group">
-                    <button type="button" class="qty-minus">−</button>
+                    <button type="button" class="qty-minus">&minus;</button>
                     <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" class="qty-input">
                     <button type="button" class="qty-plus">+</button>
                 </div>
@@ -96,7 +96,7 @@
                 <div class="card-body d-flex flex-column">
                     <span class="category-badge">{{ rel.category.name }}</span>
                     <h6 class="card-title">{{ rel.name }}</h6>
-                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                    <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
                         <span class="price">${{ "%.2f"|format(rel.price) }}</span>
                             <button class="add-to-cart-btn btn-outline" data-product-id="{{ rel.id }}" title="Add to cart"><i class="bi bi-cart-plus"></i></button>
                     </div>
@@ -130,7 +130,7 @@
                 <div class="card-body d-flex flex-column">
                     <span class="category-badge">{{ rel.genre or rel.category.name }}</span>
                     <h6 class="card-title">{{ rel.name }}</h6>
-                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                    <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
                         <span class="price">${{ "%.2f"|format(rel.price) }}</span>
                             <button class="add-to-cart-btn btn-outline" data-product-id="{{ rel.id }}" title="Add to cart"><i class="bi bi-cart-plus"></i></button>
                     </div>

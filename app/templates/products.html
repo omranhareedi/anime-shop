@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
-
 {% block title %}Supply Depot — Narmo{% endblock %}
-
 {% block content %}
 <div class="container py-4">
     <div class="section-title">
@@ -12,27 +10,38 @@
         {% endif %}
     </div>
 
-    <div class="row g-4">
-        <div class="col-md-3">
-            <div class="filter-card">
-                <div class="card-header"><i class="bi bi-funnel me-1"></i> Category</div>
-                <div class="list-group list-group-flush">
-                    <a href="{{ url_for('products.product_list') }}" class="list-group-item {% if not current_category %}active{% endif %}">All</a>
+    <form method="GET" action="{{ url_for('products.product_list') }}" class="filter-bar mb-4" id="filter-form">
+        {% if search %}<input type="hidden" name="q" value="{{ search }}">{% endif %}
+        <div class="row g-2 align-items-end">
+            <div class="col-auto">
+                <label class="text-xs text-gray">Category</label>
+                <select name="category" class="form-select-narmo" id="filter-category">
+                    <option value="">All Categories</option>
                     {% for cat in categories %}
-                    <a href="{{ url_for('products.product_list', category=cat.slug) }}" class="list-group-item {% if current_category == cat.slug %}active{% endif %}">{{ cat.name }}</a>
+                    <option value="{{ cat.slug }}" {% if current_category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
                     {% endfor %}
-                </div>
-                <div class="card-header border-top"><i class="bi bi-tag me-1"></i> Genre</div>
-                <div class="list-group list-group-flush">
-                    <a href="{{ url_for('products.product_list', category=current_category) }}" class="list-group-item {% if not current_genre %}active{% endif %}">All</a>
+                </select>
+            </div>
+            <div class="col-auto">
+                <label class="text-xs text-gray">Genre</label>
+                <select name="genre" class="form-select-narmo" id="filter-genre">
+                    <option value="">All Genres</option>
                     {% for genre in genres %}
-                    <a href="{{ url_for('products.product_list', category=current_category, genre=genre) }}" class="list-group-item {% if current_genre == genre %}active{% endif %}">{{ genre }}</a>
+                    <option value="{{ genre }}" {% if current_genre == genre %}selected{% endif %}>{{ genre }}</option>
                     {% endfor %}
-                </div>
+                </select>
+            </div>
+            <div class="col-auto">
+                <label class="text-xs text-gray">&nbsp;</label>
+                <a href="{{ url_for('products.product_list') }}" class="btn btn-sm d-flex align-items-center" style="border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.45rem 0.9rem;color:var(--gray);font-size:0.8rem;">
+                    <i class="bi bi-x-lg"></i>
+                </a>
             </div>
         </div>
+    </form>
 
-        <div class="col-md-9">
+    <div class="row">
+        <div class="col-12">
             <div class="row g-4 product-grid">
                 {% for product in products.items %}
                 <div class="col-6 col-lg-4">
@@ -54,8 +63,7 @@
                             </span>
                             {% endif %}
                             <h6 class="card-title">{{ product.name }}</h6>
-                            <p class="card-text flex-grow-1">{{ product.description[:80] }}{% if product.description|length > 80 %}…{% endif %}</p>
-                            <div class="d-flex justify-content-between align-items-center mt-2">
+                            <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
                                 <span class="price">${{ "%.2f"|format(product.price) }}</span>
                                     <button class="add-to-cart-btn btn-outline" data-product-id="{{ product.id }}" title="Add to cart"><i class="bi bi-cart-plus"></i></button>
                             </div>
@@ -96,4 +104,12 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script nonce="{{ csp_nonce }}">
+document.getElementById('filter-category').addEventListener('change', function() { this.form.submit(); });
+document.getElementById('filter-genre').addEventListener('change', function() { this.form.submit(); });
+</script>
 {% endblock %}

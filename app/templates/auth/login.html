@@ -5,27 +5,62 @@
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="section-title">
-                <span class="accent-bar"></span>
-                <h2>Login</h2>
+        <div class="col-md-5 col-lg-4">
+            <div class="text-center mb-4">
+                <div class="auth-icon mb-3"><i class="bi bi-shield-fill-check"></i></div>
+                <h4 class="fw-800 mb-1">Welcome Back</h4>
+                <p class="text-gray text-sm">Sign in to continue to the Supply Depot</p>
             </div>
-            <p class="text-gray">Sign in to access the admin dashboard.</p>
-            <div class="checkout-card">
-                <form method="POST">
+            <div class="auth-card">
+                <form method="POST" id="login-form">
                     <div class="mb-3">
                         <label class="form-label-narmo">Username</label>
-                        <input type="text" name="username" class="form-control-narmo" value="{{ username or '' }}" required>
+                        <div class="input-wrap">
+                            <i class="bi bi-person input-icon"></i>
+                            <input type="text" name="username" class="form-control-narmo" value="{{ username or '' }}" placeholder="Enter your username" required autofocus>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label-narmo">Password</label>
-                        <input type="password" name="password" class="form-control-narmo" required>
+                        <div class="input-wrap">
+                            <i class="bi bi-lock input-icon"></i>
+                            <input type="password" name="password" id="login-password" class="form-control-narmo" placeholder="Enter your password" required>
+                            <button type="button" class="pw-toggle" onclick="togglePW()" tabindex="-1" aria-label="Toggle password"><i class="bi bi-eye-slash" id="pw-eye"></i></button>
+                        </div>
                     </div>
-                    <button type="submit" class="btn-primary-narmo w-100 justify-content-center">Sign In</button>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="remember" checked> <span>Remember me</span>
+                        </label>
+                        <a href="#" class="text-sm" style="color:var(--gray);">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn-primary-narmo w-100 justify-content-center" id="login-btn">
+                        <span id="login-text">Sign In</span>
+                        <span id="login-spinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                    </button>
                 </form>
             </div>
-            <p class="text-center mt-3 text-gray">Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a>.</p>
+            <p class="text-center mt-3 text-sm text-gray">New recruit? <a href="{{ url_for('auth.register') }}" style="color:var(--accent);font-weight:600;">Create account</a></p>
         </div>
     </div>
 </div>
+
+<script nonce="{{ csp_nonce }}">
+function togglePW() {
+    const pw = document.getElementById('login-password');
+    const eye = document.getElementById('pw-eye');
+    if (pw.type === 'password') {
+        pw.type = 'text';
+        eye.className = 'bi bi-eye';
+    } else {
+        pw.type = 'password';
+        eye.className = 'bi bi-eye-slash';
+    }
+}
+document.getElementById('login-form').addEventListener('submit', function() {
+    document.getElementById('login-text').textContent = 'Signing in…';
+    document.getElementById('login-spinner').classList.remove('d-none');
+    document.getElementById('login-btn').disabled = true;
+});
+</script>
 {% endblock %}
