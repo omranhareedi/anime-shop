@@ -9,7 +9,7 @@
             <h4 class="fw-800 mb-1">Supply Depot HQ</h4>
             <p class="text-gray text-sm mb-0">Monitor your store's performance</p>
         </div>
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2 flex-wrap dashboard-head-btns">
             <a href="{{ url_for('admin.product_list') }}" class="btn-submit" style="width:auto;">
                 <i class="bi bi-box-seam"></i> Products
             </a>
@@ -86,7 +86,7 @@
         <div class="col-md-7">
             <div class="dashboard-card h-100">
                 <div class="card-header"><h5><i class="bi bi-trophy"></i> Top Selling Products</h5></div>
-                <div class="card-body p-0">
+                <div class="card-body p-0 table-responsive">
                     <table class="dash-table mb-0">
                         <thead>
                             <tr>
@@ -121,14 +121,14 @@
                     <h5><i class="bi bi-clock-history"></i> Recent Orders</h5>
                     <a href="{{ url_for('admin.order_list') }}" class="text-sm" style="color:var(--accent);">View all</a>
                 </div>
-                <div class="card-body p-0">
+                <div class="card-body p-0 table-responsive">
                     {% if recent_orders %}
                     <table class="dash-table mb-0">
                         <thead>
                             <tr>
                                 <th>Order</th>
-                                <th>Customer</th>
-                                <th>Items</th>
+                                <th class="d-none d-sm-table-cell">Customer</th>
+                                <th class="d-none d-sm-table-cell">Items</th>
                                 <th>Amount</th>
                                 <th>Status</th>
                             </tr>
@@ -137,8 +137,8 @@
                             {% for order in recent_orders %}
                             <tr class="order-row" data-href="{{ url_for('admin.order_detail', order_id=order.id) }}">
                                 <td style="font-family:monospace;font-size:0.8rem;">#{{ order.order_number }}</td>
-                                <td>{{ order.customer.first_name }} {{ order.customer.last_name }}</td>
-                                <td>{{ order.items|length }}</td>
+                                <td class="d-none d-sm-table-cell">{{ order.customer.first_name }} {{ order.customer.last_name }}</td>
+                                <td class="d-none d-sm-table-cell">{{ order.items|length }}</td>
                                 <td class="fw-700">${{ "%.2f"|format(order.total_amount) }}</td>
                                 <td><span class="status-badge {{ order.status|lower }}">{{ order.status }}</span></td>
                             </tr>
@@ -154,7 +154,7 @@
         <div class="col-md-5">
             <div class="dashboard-card h-100">
                 <div class="card-header"><h5><i class="bi bi-shop"></i> Vendor Performance</h5></div>
-                <div class="card-body p-0">
+                <div class="card-body p-0 table-responsive">
                     {% if vendor_revenue %}
                     <table class="dash-table mb-0">
                         <thead>

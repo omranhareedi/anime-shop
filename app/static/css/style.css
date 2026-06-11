@@ -1361,6 +1361,13 @@ a:hover .stat-card { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,
 .text-link { color: var(--text); text-decoration: none; }
 .text-link:hover { color: var(--accent); }
 
+.filter-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 0.75rem; }
+.filter-scroll::-webkit-scrollbar { height: 0; }
+.filter-scroll > div { padding-bottom: 0.25rem; }
+
+.table-responsive { -webkit-overflow-scrolling: touch; }
+.table-responsive > .dash-table { margin-bottom: 0 !important; }
+
 /* ---- Footer ---- */
 .footer {
     background: var(--dark);
@@ -1597,6 +1604,8 @@ a:hover .stat-card { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,
     .cart-product { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
     .cart-product img { width: 40px; height: 40px; }
     .footer { padding: 2.5rem 0 1.5rem; }
+    .dashboard-head-btns .btn-submit,
+    .dashboard-head-btns .btn-cancel { font-size: 0.8rem; padding: 0.35rem 0.7rem; }
     .filter-card { margin-bottom: 1rem; }
     .section-title h2 { font-size: 1.25rem; }
     .detail-price { font-size: 1.5rem; }
