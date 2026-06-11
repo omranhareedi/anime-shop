@@ -96,7 +96,7 @@ Anime merchandise shopping platforms often lack immersion, personalization, and 
 |----------|-----------|
 | Backend | Python 3.11+, Flask 3.0.0, SQLAlchemy 2.0, WTForms |
 | Frontend | Bootstrap 5, Chart.js, Bootstrap Icons, Custom CSS/JS |
-| Database | SQLite (development), PostgreSQL (production) |
+| Database | SQLite / MySQL (development), PostgreSQL / Neon Postgres (production) |
 | Container | Docker, docker-compose |
 | CI/CD | GitHub Actions (lint → test → build) |
 | Payment | Stripe (card), PayPal (email), Mobile Money (MTN/AirtelTigo) |
@@ -179,22 +179,28 @@ The application follows the **Model-View-Controller (MVC)** pattern using Flask'
 
 **Repository:** [https://github.com/omranhareedi/anime-shop](https://github.com/omranhareedi/anime-shop)
 
-The repository contains 40+ meaningful commits with clear commit messages, following a logical development history from initial scaffold through feature completion, bug fixes, and optimizations.
+The repository contains 55+ meaningful commits with clear commit messages, following a logical development history from initial scaffold through feature completion, bug fixes, and optimizations.
 
 ---
 
 ### 9. Deployment Link
 
-**Live URL:** [https://narmo-store.onrender.com/](https://narmo-store.onrender.com/)
+**Live URL (Vercel):** [https://anime-shop-ten.vercel.app/](https://anime-shop-ten.vercel.app/)  
+**Legacy URL (Render):** [https://narmo-store.onrender.com/](https://narmo-store.onrender.com/)
 
-The application is containerized with Docker and deployed via **Render Blueprint** (auto-deploys on push):
+The application is deployed on **Vercel** (serverless) with **Neon Postgres** as the production database:
 
-1. Push the repository to GitHub
-2. Render automatically detects `render.yaml` and deploys
-3. PostgreSQL database provisioned automatically
-4. Environment variables configured in `render.yaml`
+1. Push the repository to GitHub — Vercel auto-deploys from the linked repo
+2. Flask app is served via `api/index.py` with Vercel Python runtime
+3. `vercel.json` configures build and routing
+4. Neon Postgres connection string set as `DATABASE_URL` environment variable
 
-*Deployed at: `https://narmo-store.onrender.com/`*
+Also containerized with Docker for Render Blueprint deployment (`render.yaml`):
+
+1. Render automatically detects `render.yaml` and deploys
+2. PostgreSQL database provisioned automatically
+
+*Deployed at: `https://anime-shop-ten.vercel.app/`*
 
 ---
 
@@ -298,7 +304,9 @@ Key achievements:
 - Responsive design with dark mode and mobile-first layout
 - Docker containerization with docker-compose + Render Blueprint
 - CI/CD pipeline with automated linting, testing, and Docker building
-- 40+ meaningful Git commits with clear history
+- 55+ meaningful Git commits with clear history
+- Deployed on Vercel + Neon Postgres with serverless architecture
+- MySQL support for local development with MySQL Workbench compatibility
 
 The platform is ready for evaluation and can be extended with the future work items listed above.
 
@@ -306,6 +314,7 @@ The platform is ready for evaluation and can be extended with the future work it
 
 ### Quick Start
 
+**SQLite (no setup needed):**
 ```bash
 git clone https://github.com/omranhareedi/anime-shop.git
 cd anime-shop
@@ -316,6 +325,13 @@ pip install -r requirements.txt
 python run.py
 ```
 
+**MySQL (optional — for MySQL Workbench users):**
+Create a `.env` file in the project root:
+```
+DATABASE_URL=mysql+pymysql://root:yourpassword@localhost/narmo_store
+```
+Then `python run.py` — auto-creates tables and seeds data.
+
 Visit **http://localhost:5000**
 
 **Admin Login:** `admin` / `admin123`
@@ -324,6 +340,15 @@ Visit **http://localhost:5000**
 
 ```bash
 docker compose up --build
+```
+
+### Vercel Deployment
+
+```bash
+npm install -g vercel
+vercel
+# Set DATABASE_URL env var: vercel env add DATABASE_URL
+vercel deploy --prod
 ```
 
 ### Tests
