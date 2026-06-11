@@ -3,8 +3,10 @@
 {% block title %}Narmo — Survey Corps Supply Depot{% endblock %}
 
 {% block content %}
+{% set hero_img = url_for('static', filename='images/products/hero-bg.jpg') %}
+<style nonce="{{ csp_nonce }}">.hero-bg{background-image:url('{{ hero_img }}')}</style>
 <section class="hero">
-    <div class="hero-bg" style="background-image: url('{{ url_for('static', filename='images/products/hero-bg.jpg') }}');"></div>
+    <div class="hero-bg"></div>
     <div class="hero-overlay"></div>
     <div class="hero-accent-line"></div>
     <div class="container">
@@ -30,7 +32,7 @@
                 </div>
                 <div>
                     <div class="hero-stat-value">{{ categories|length }}</div>
-                    <div class="hero-stat-label">hassan</div>
+                    <div class="hero-stat-label">Divisions</div>
                 </div>
                 <div>
                     <div class="hero-stat-value">100%</div>
@@ -180,7 +182,7 @@
 
     <div class="section-title mt-5">
         <span class="accent-bar"></span>
-        <h2>Divisions</h2>
+        <h2>Hassan</h2>
     </div>
     <div class="row g-3">
         {% for cat in categories %}
