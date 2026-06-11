@@ -26,6 +26,7 @@ function initAddToCart() {
         .then(data => {
             if (data.status === 'ok') {
                 updateCartCount();
+                pulseCartBadge();
                 showToast('Added to cart!', 'success');
             }
         });
@@ -120,11 +121,26 @@ function updateCartCount() {
 }
 
 function showToast(message, type) {
+    const existing = document.querySelector('.toast-narmo');
+    if (existing) existing.remove();
     const toast = document.createElement('div');
     toast.className = 'toast-narmo';
-    toast.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> ' + message;
+    const icons = { success: 'bi-check-circle-fill', error: 'bi-exclamation-circle-fill', info: 'bi-info-circle-fill' };
+    toast.innerHTML = '<i class="bi ' + (icons[type] || icons.success) + ' me-2"></i> ' + message;
     document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
+    requestAnimationFrame(() => toast.classList.add('show'));
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 2500);
+}
+
+function pulseCartBadge() {
+    const el = document.getElementById('cart-count');
+    if (!el) return;
+    el.style.transition = 'transform 0.15s';
+    el.style.transform = 'scale(1.4)';
+    setTimeout(() => { el.style.transform = 'scale(1)'; }, 200);
 }
 
 function initDarkMode() {
@@ -241,6 +257,7 @@ function initQuickAddToCart() {
         .then(data => {
             if (data.status === 'ok') {
                 updateCartCount();
+                pulseCartBadge();
                 showToast('Added to cart!', 'success');
             }
         });
