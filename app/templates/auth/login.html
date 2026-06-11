@@ -25,7 +25,7 @@
                         <div class="input-wrap">
                             <i class="bi bi-lock input-icon"></i>
                             <input type="password" name="password" id="login-password" class="form-control-narmo" placeholder="Enter your password" required>
-                            <button type="button" class="pw-toggle" onclick="togglePW()" tabindex="-1" aria-label="Toggle password"><i class="bi bi-eye-slash" id="pw-eye"></i></button>
+                            <button type="button" id="login-pw-toggle" class="pw-toggle" tabindex="-1" aria-label="Toggle password"><i class="bi bi-eye-slash"></i></button>
                         </div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -46,17 +46,12 @@
 </div>
 
 <script nonce="{{ csp_nonce }}">
-function togglePW() {
-    const pw = document.getElementById('login-password');
-    const eye = document.getElementById('pw-eye');
-    if (pw.type === 'password') {
-        pw.type = 'text';
-        eye.className = 'bi bi-eye';
-    } else {
-        pw.type = 'password';
-        eye.className = 'bi bi-eye-slash';
-    }
-}
+document.getElementById('login-pw-toggle').addEventListener('click', function() {
+    var pw = document.getElementById('login-password');
+    var eye = this.querySelector('i');
+    if (pw.type === 'password') { pw.type = 'text'; eye.className = 'bi bi-eye'; }
+    else { pw.type = 'password'; eye.className = 'bi bi-eye-slash'; }
+});
 document.getElementById('login-form').addEventListener('submit', function() {
     document.getElementById('login-text').textContent = 'Signing in…';
     document.getElementById('login-spinner').classList.remove('d-none');

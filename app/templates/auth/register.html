@@ -32,7 +32,7 @@
                         <div class="input-wrap">
                             <i class="bi bi-lock input-icon"></i>
                             <input type="password" name="password" id="reg-password" class="form-control-narmo" placeholder="Min 6 characters" required minlength="6">
-                            <button type="button" class="pw-toggle" onclick="togglePW('reg-password', 'reg-eye')" tabindex="-1" aria-label="Toggle password"><i class="bi bi-eye-slash" id="reg-eye"></i></button>
+                            <button type="button" id="reg-pw-toggle" class="pw-toggle" tabindex="-1" aria-label="Toggle password"><i class="bi bi-eye-slash"></i></button>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -51,11 +51,11 @@
 </div>
 
 <script nonce="{{ csp_nonce }}">
-function togglePW(id, eyeId) {
-    const pw = document.getElementById(id);
-    const eye = document.getElementById(eyeId);
+document.getElementById('reg-pw-toggle').addEventListener('click', function() {
+    var pw = document.getElementById('reg-password');
+    var eye = this.querySelector('i');
     if (pw.type === 'password') { pw.type = 'text'; eye.className = 'bi bi-eye'; }
     else { pw.type = 'password'; eye.className = 'bi bi-eye-slash'; }
-}
+});
 </script>
 {% endblock %}
