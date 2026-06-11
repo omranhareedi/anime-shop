@@ -121,22 +121,15 @@ function updateCartCount() {
 }
 
 function showToast(message, type) {
-    const existing = document.querySelector('.toast-narmo');
-    if (existing) { existing.classList.remove('show'); setTimeout(() => existing.remove(), 300); }
+    const old = document.querySelector('.toast-narmo');
+    if (old) old.remove();
     const toast = document.createElement('div');
-    toast.className = 'toast-narmo';
+    toast.className = 'toast-narmo show';
     const icons = { success: 'bi-check-circle-fill', error: 'bi-exclamation-circle-fill', info: 'bi-info-circle-fill' };
     toast.innerHTML = '<i class="bi ' + (icons[type] || icons.success) + '"></i><span>' + message + '</span>';
     document.body.appendChild(toast);
-    requestAnimationFrame(() => toast.classList.add('show'));
-    toast.addEventListener('click', function () {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-    });
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-    }, 2000);
+    toast.onclick = function () { toast.remove(); };
+    setTimeout(function () { if (toast.parentNode) toast.remove(); }, 2000);
 }
 
 function pulseCartBadge() {
