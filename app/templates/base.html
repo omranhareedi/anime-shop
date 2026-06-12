@@ -93,7 +93,7 @@
                             <i class="bi bi-collection-fill me-1 d-lg-none"></i>Categories
                         </a>
                         <ul class="dropdown-menu">
-                            {% set cat_icons = {'figures':'bi-person-arms-up','apparel':'bi-hoodie','posters':'bi-image','accessories':'bi-watch','manga':'bi-book'} %}
+                            {% set cat_icons = {'figures':'bi-person-arms-up','apparel':'bi-tags','posters':'bi-image','accessories':'bi-watch','manga':'bi-book'} %}
                             {% for cat in categories %}
                             <li><a class="dropdown-item" href="{{ url_for('products.product_list', category=cat.slug) }}"><i class="bi {{ cat_icons.get(cat.slug, 'bi-dot') }} me-2"></i>{{ cat.name }}</a></li>
                             {% endfor %}
