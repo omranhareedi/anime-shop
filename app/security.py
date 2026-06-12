@@ -59,7 +59,7 @@ def build_csp(nonce):
         f"style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; "
         f"font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com https://fonts.googleapis.com; "
         f"img-src 'self' https://placehold.co data: https:; "
-        f"connect-src 'self'; "
+        f"connect-src 'self' https://cdn.jsdelivr.net; "
         f"frame-src 'none'; "
         f"object-src 'none'; "
         f"base-uri 'self'; "

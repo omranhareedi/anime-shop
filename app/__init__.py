@@ -91,17 +91,16 @@ def create_app(config_class=Config, testing=False):
 
     @app.route('/uploads/<path:filename>')
     def serve_upload(filename):
-        from flask import send_file, abort
-        import os
-        paths = [
-            '/tmp/narmo-uploads',
-            os.path.join(current_app.static_folder, 'images', 'products'),
-        ]
-        for base in paths:
-            filepath = os.path.normpath(os.path.join(base, filename))
-            if filepath.startswith(os.path.normpath(base)) and os.path.exists(filepath):
-                return send_file(filepath)
-        abort(404)
+        from flask import Response, abort
+        import os, mimetypes
+        filepath = os.path.join('/tmp/narmo-uploads', filename)
+        filepath = os.path.normpath(filepath)
+        if not filepath.startswith('/tmp/narmo-uploads') or not os.path.exists(filepath):
+            abort(404)
+        with open(filepath, 'rb') as f:
+            data = f.read()
+        mime = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
+        return Response(data, mimetype=mime)
 
     @app.errorhandler(404)
     def not_found(e):

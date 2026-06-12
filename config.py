@@ -15,3 +15,4 @@ class Config:
     WTF_CSRF_ENABLED = True
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max upload
     PRODUCTS_PER_PAGE = 12
+
