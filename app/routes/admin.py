@@ -12,9 +12,12 @@ def save_upload(file):
     if file and file.filename:
         filename = secure_filename(file.filename)
         folder = os.path.join(current_app.static_folder, 'images', 'products')
-        os.makedirs(folder, exist_ok=True)
-        file.save(os.path.join(folder, filename))
-        return filename
+        try:
+            os.makedirs(folder, exist_ok=True)
+            file.save(os.path.join(folder, filename))
+            return filename
+        except OSError:
+            current_app.logger.warning('Read-only filesystem — upload skipped')
     return None
 
 admin_bp = Blueprint('admin', __name__)
@@ -83,6 +86,8 @@ def product_add():
         uploaded = save_upload(request.files.get('image'))
         if uploaded:
             product.image_url = uploaded
+        elif request.form.get('image_url'):
+            product.image_url = request.form.get('image_url').strip()
 
         db.session.add(product)
         db.session.commit()
@@ -133,6 +138,8 @@ def product_edit(product_id):
         uploaded = save_upload(request.files.get('image'))
         if uploaded:
             product.image_url = uploaded
+        elif request.form.get('image_url'):
+            product.image_url = request.form.get('image_url').strip()
 
         product.price = float(request.form.get('price', product.price))
         product.stock = int(request.form.get('stock', product.stock))

@@ -133,6 +133,10 @@
                             <input type="file" name="image" id="image-input" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
                             <div class="form-hint mt-2 text-center">Leave empty to keep the current image</div>
                         </div>
+                        <div class="mt-2">
+                            <label class="form-label-narmo small">Or use a URL</label>
+                            <input type="text" name="image_url" class="form-control-narmo" placeholder="https://example.com/image.jpg" value="{{ product.image_url if product.image_url and product.image_url.startswith('http') else '' }}">
+                        </div>
                     </div>
                 </div>
 
