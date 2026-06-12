@@ -1,4 +1,11 @@
-# Narmo — Attack on Titan Themed Anime Marketplace
+# Narmo — Anime-Shop E-Commerce Application
+
+## Student Information
+* **Name:** Omran Nasir Abdelmoniem Mohamed
+* **RegNo:** 28249/2024
+* **Institution:** UNILAK
+* **Course:** E-Commerce And Web Application Course | EWA408510
+* **Academic Year:** 2025-2026 | Semester: II
 
 ## Project Report
 
