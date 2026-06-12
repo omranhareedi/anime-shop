@@ -75,29 +75,30 @@
                 </form>
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint and request.endpoint == 'main.index' %}active{% endif %}" href="{{ url_for('main.index') }}">Home</a>
+                        <a class="nav-link {% if request.endpoint and request.endpoint == 'main.index' %}active{% endif %}" href="{{ url_for('main.index') }}"><i class="bi bi-house-fill me-1 d-lg-none"></i>Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('products.product_list') }}">Products</a>
+                        <a class="nav-link" href="{{ url_for('products.product_list') }}"><i class="bi bi-grid-fill me-1 d-lg-none"></i>Products</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            Categories
+                            <i class="bi bi-collection-fill me-1 d-lg-none"></i>Categories
                         </a>
                         <ul class="dropdown-menu">
+                            {% set cat_icons = {'figures':'bi-person-arms-up','apparel':'bi-hoodie','posters':'bi-image','accessories':'bi-watch','manga':'bi-book'} %}
                             {% for cat in categories %}
-                            <li><a class="dropdown-item" href="{{ url_for('products.product_list', category=cat.slug) }}">{{ cat.name }}</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('products.product_list', category=cat.slug) }}"><i class="bi {{ cat_icons.get(cat.slug, 'bi-dot') }} me-2"></i>{{ cat.name }}</a></li>
                             {% endfor %}
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('vendors.vendor_list') }}">Vendors</a>
+                        <a class="nav-link" href="{{ url_for('vendors.vendor_list') }}"><i class="bi bi-shop me-1 d-lg-none"></i>Vendors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.about') }}"><i class="bi bi-info-circle me-1 d-lg-none"></i>About</a>
                     </li>
                     <li class="nav-item d-lg-none">
                         <hr class="nav-mobile-divider">
-                    </li>
-                    <li class="nav-item d-lg-none">
-                        <a class="nav-link" href="{{ url_for('main.about') }}"><i class="bi bi-info-circle me-1"></i> About</a>
                     </li>
                     <li class="nav-item d-lg-none">
                         <button id="dark-toggle-mobile" class="nav-link w-100 text-start" style="background:none;border:none;">
@@ -137,6 +138,12 @@
                     </li>
                     {% endif %}
                 </ul>
+                <form action="{{ url_for('products.product_list') }}" method="GET" class="navbar-search d-none d-lg-flex ms-lg-3" role="search">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" placeholder="Search products…" aria-label="Search">
+                        <button type="submit" class="search-btn"><i class="bi bi-search"></i></button>
+                    </div>
+                </form>
             </div>
         </div>
     </nav>
