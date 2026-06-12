@@ -160,18 +160,18 @@ The application follows the **Model-View-Controller (MVC)** pattern using Flask'
 
 ### 7. Screenshots
 
-*Screenshots will be added after deployment. Key pages include:*
-
-- **Homepage**: AoT hero with typing effect, featured products, recently viewed, category grid
-- **Products Page**: Filter sidebar, product grid with cards, pagination
-- **Product Detail**: Image, description, price, stock, vendor info, quantity selector, add to cart
-- **Cart Page**: Session-based cart with quantities, totals, remove buttons
-- **Checkout**: Customer form, payment method selection, order summary
-- **Confirmation**: Order timeline, transaction ID, order summary
-- **Admin Dashboard**: 6 stat cards, revenue/order charts, recent orders
-- **Admin Products**: Product list table, edit form with image upload
-- **Vendors List**: Vendor cards with star ratings
-- **Login/Register**: Auth forms with themed styling
+| | |
+|---|---|
+| **Homepage** — AoT hero with typing effect, featured products, category grid, recently viewed | **Products Page** — Filter sidebar, product grid with cards, pagination |
+| ![Homepage](screenshots/homepage.png) | ![Products Page](screenshots/product_page.png) |
+| **Product Detail** — Image, description, price, vendor info, add to cart | **Cart Page** — Session-based cart with quantities, totals, remove buttons |
+| ![Product Detail](screenshots/product_detail.png) | ![Cart Page](screenshots/cart_page.png) |
+| **Checkout** — Customer form, payment method selection, order summary | **Confirmation** — Order timeline with transaction details |
+| ![Checkout](screenshots/checkout.png) | ![Confirmation](screenshots/confirmation.png) |
+| **Admin Dashboard** — Stat cards, revenue/order charts, recent orders | **Admin Products** — Product list with CRUD actions |
+| ![Admin Dashboard](screenshots/admin_dashboard.png) | ![Admin Products](screenshots/admin_products.png) |
+| **Vendors List** — Vendor cards with ratings | **Login Page** — Auth forms with themed styling |
+| ![Vendors List](screenshots/vendors_list.png) | ![Login](screenshots/login.png) |
 
 ---
 
