@@ -120,6 +120,18 @@ def seed_database():
                 category_id=categories['posters'].id, vendor_id=vendors['posterpulse'].id, is_featured=False,
                 image_url='Cowboy_Bebop_-_Spike_Spiegel_Poster.jpg'),
     ]
+    removed_slugs = [
+        'aot-eren-yeager-figure', 'aot-mikasa-ackerman-figure', 'aot-armored-titan-figure',
+        'survey-corps-jacket', 'aot-scout-regiment-tee',
+        'aot-colossal-titan-poster', 'aot-wall-maria-poster',
+        'aot-3dmg-keychain', 'aot-patch-set',
+        'aot-vol-2-manga', 'aot-vol-3-manga',
+    ]
+    for slug in removed_slugs:
+        p = Product.query.filter_by(slug=slug).first()
+        if p:
+            db.session.delete(p)
+    db.session.commit()
     for pd in products_data:
         existing = Product.query.filter_by(slug=pd.slug).first()
         if existing is None:
