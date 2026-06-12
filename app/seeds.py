@@ -2,6 +2,14 @@ from app import db
 from app.models import Category, Product, Vendor, User
 
 
+def _get_or_create(model, **kwargs):
+    instance = model.query.filter_by(**kwargs).first()
+    if instance is None:
+        instance = model(**kwargs)
+        db.session.add(instance)
+    return instance
+
+
 def seed_database():
     if User.query.count() == 0:
         admin = User(username='admin', email='admin@narmo.com', is_admin=True)
@@ -9,176 +17,178 @@ def seed_database():
         db.session.add(admin)
         db.session.commit()
 
-    if Category.query.first() is not None and Product.query.count() > 0:
-        return
-
-    categories = [
-        Category(name='Figures', slug='figures', description='High-quality anime figures and statues'),
-        Category(name='Apparel', slug='apparel', description='Anime-themed clothing and accessories'),
-        Category(name='Posters', slug='posters', description='Anime posters and wall art'),
-        Category(name='Accessories', slug='accessories', description='Keychains, badges, and more'),
-        Category(name='Manga', slug='manga', description='Japanese comics and graphic novels'),
+    categories_data = [
+        {'name': 'Figures', 'slug': 'figures', 'description': 'High-quality anime figures and statues'},
+        {'name': 'Apparel', 'slug': 'apparel', 'description': 'Anime-themed clothing and accessories'},
+        {'name': 'Posters', 'slug': 'posters', 'description': 'Anime posters and wall art'},
+        {'name': 'Accessories', 'slug': 'accessories', 'description': 'Keychains, badges, and more'},
+        {'name': 'Manga', 'slug': 'manga', 'description': 'Japanese comics and graphic novels'},
     ]
-    db.session.add_all(categories)
+    categories = {}
+    for cd in categories_data:
+        cat = _get_or_create(Category, slug=cd['slug'])
+        for k, v in cd.items():
+            setattr(cat, k, v)
+        categories[cat.slug] = cat
     db.session.commit()
 
-    vendors = [
-        Vendor(name='OtakuCraft', slug='otakucraft', rating=4.9,
-               description='Hand-crafted figures and statues from master artisans.',
-               email='hello@otakucraft.com', location='Osaka, Japan', is_active=True),
-        Vendor(name='WeebWear', slug='weebwear', rating=4.3,
-               description='Streetwear meets anime. Premium apparel for fans.',
-               email='support@weebwear.com', location='Tokyo, Japan', is_active=True),
-        Vendor(name='PosterPulse', slug='posterpulse', rating=4.7,
-               description='High-definition posters and wall art prints.',
-               email='info@posterpulse.com', location='Kyoto, Japan', is_active=True),
-        Vendor(name='MangaMart', slug='mangamart', rating=4.6,
-               description='Your one-stop shop for manga and light novels.',
-               email='orders@mangamart.com', location='Shinjuku, Japan', is_active=True),
+    vendors_data = [
+        {'name': 'OtakuCraft', 'slug': 'otakucraft', 'rating': 4.9, 'description': 'Hand-crafted figures and statues from master artisans.', 'email': 'hello@otakucraft.com', 'location': 'Osaka, Japan', 'is_active': True},
+        {'name': 'WeebWear', 'slug': 'weebwear', 'rating': 4.3, 'description': 'Streetwear meets anime. Premium apparel for fans.', 'email': 'support@weebwear.com', 'location': 'Tokyo, Japan', 'is_active': True},
+        {'name': 'PosterPulse', 'slug': 'posterpulse', 'rating': 4.7, 'description': 'High-definition posters and wall art prints.', 'email': 'info@posterpulse.com', 'location': 'Kyoto, Japan', 'is_active': True},
+        {'name': 'MangaMart', 'slug': 'mangamart', 'rating': 4.6, 'description': 'Your one-stop shop for manga and light novels.', 'email': 'orders@mangamart.com', 'location': 'Shinjuku, Japan', 'is_active': True},
     ]
-    db.session.add_all(vendors)
+    vendors = {}
+    for vd in vendors_data:
+        ven = _get_or_create(Vendor, slug=vd['slug'])
+        for k, v in vd.items():
+            setattr(ven, k, v)
+        vendors[ven.slug] = ven
     db.session.commit()
 
-    products = [
+    products_data = [
         Product(name='Naruto Shippuden - Sage Mode Figure',
                 slug='naruto-sage-mode-figure',
                 description='Highly detailed 25cm figure of Naruto in Sage Mode.',
                 price=49.99, stock=15, genre='Action',
-                category_id=categories[0].id, vendor_id=vendors[0].id, is_featured=True,
+                category_id=categories['figures'].id, vendor_id=vendors['otakucraft'].id, is_featured=True,
                 image_url='Naruto_Shippuden-Sage_Mode_Figure.jpg'),
         Product(name='Attack on Titan - Levi Ackerman Figure',
                 slug='levi-ackerman-figure',
                 description='Premium PVC figure of Captain Levi.',
                 price=59.99, stock=10, genre='Action',
-                category_id=categories[0].id, vendor_id=vendors[0].id, is_featured=True,
+                category_id=categories['figures'].id, vendor_id=vendors['otakucraft'].id, is_featured=True,
                 image_url='Attack_on_Titan-Levi_Ackerman_Figure.jpg'),
         Product(name='Demon Slayer - Tanjiro Hoodie',
                 slug='tanjiro-hoodie',
                 description='Comfortable cotton hoodie with Tanjiro Kamado design.',
                 price=44.99, stock=25, genre='Adventure',
-                category_id=categories[1].id, vendor_id=vendors[1].id, is_featured=True,
+                category_id=categories['apparel'].id, vendor_id=vendors['weebwear'].id, is_featured=True,
                 image_url='Demon_Slayer-Tanjiro_Hoodie.jpg'),
         Product(name='My Hero Academia - Class 1-A T-Shirt',
                 slug='mha-class-1a-tshirt',
                 description='Official MHA t-shirt featuring all your favorite heroes.',
                 price=24.99, stock=30, genre='Action',
-                category_id=categories[1].id, vendor_id=vendors[1].id, is_featured=True,
+                category_id=categories['apparel'].id, vendor_id=vendors['weebwear'].id, is_featured=True,
                 image_url='My_Hero_Academia-Class_1-A_T-Shirt.jpg'),
         Product(name='Spy x Family - Anya Poster',
                 slug='anya-poster',
                 description='Colorful A2 poster of Anya Forger. Waku Waku!',
                 price=14.99, stock=50, genre='Comedy',
-                category_id=categories[2].id, vendor_id=vendors[2].id, is_featured=True,
+                category_id=categories['posters'].id, vendor_id=vendors['posterpulse'].id, is_featured=True,
                 image_url='Spy_x_Family_-_Anya_Poster.jpg'),
         Product(name='Jujutsu Kaisen - Gojo Poster',
                 slug='gojo-poster',
                 description='Limited edition A2 poster of Satoru Gojo.',
                 price=19.99, stock=40, genre='Action',
-                category_id=categories[2].id, vendor_id=vendors[2].id, is_featured=True,
+                category_id=categories['posters'].id, vendor_id=vendors['posterpulse'].id, is_featured=True,
                 image_url='Jujutsu_Kaisen_-_Gojo_Poster.jpg'),
         Product(name='Chainsaw Man - Pochita Keychain',
                 slug='pochita-keychain',
                 description='Cute acrylic keychain of Pochita.',
                 price=8.99, stock=100, genre='Action',
-                category_id=categories[3].id, vendor_id=vendors[0].id, is_featured=False,
+                category_id=categories['accessories'].id, vendor_id=vendors['otakucraft'].id, is_featured=False,
                 image_url='Chainsaw_Man_-_Pochita_Keychain.jpg'),
         Product(name='One Piece - Straw Hat Pins Set',
                 slug='straw-hat-pins',
                 description='Set of 10 enamel pins of the Straw Hat crew.',
                 price=18.99, stock=35, genre='Adventure',
-                category_id=categories[3].id, vendor_id=vendors[0].id, is_featured=False,
+                category_id=categories['accessories'].id, vendor_id=vendors['otakucraft'].id, is_featured=False,
                 image_url='One_Piece_-_Straw_Hat_Pins_Set.jpg'),
         Product(name='Demon Slayer Vol.1 - Manga',
                 slug='demon-slayer-vol1',
                 description='First volume of the hit series Demon Slayer.',
                 price=9.99, stock=60, genre='Adventure',
-                category_id=categories[4].id, vendor_id=vendors[3].id, is_featured=False,
+                category_id=categories['manga'].id, vendor_id=vendors['mangamart'].id, is_featured=False,
                 image_url='Demon_Slayer_Vol.1_-_Manga.jpg'),
         Product(name='Attack on Titan Vol.1 - Manga',
                 slug='aot-vol1',
                 description='First volume of the phenomenon Attack on Titan.',
                 price=9.99, stock=45, genre='Action',
-                category_id=categories[4].id, vendor_id=vendors[3].id, is_featured=True,
+                category_id=categories['manga'].id, vendor_id=vendors['mangamart'].id, is_featured=True,
                 image_url='Attack_on_Titan_Vol.1_-_Manga.jpg'),
         Product(name='Fullmetal Alchemist - Ed & Al Figure',
                 slug='fmab-brothers-figure',
                 description='Detailed figure of the Elric brothers.',
                 price=69.99, stock=8, genre='Adventure',
-                category_id=categories[0].id, vendor_id=vendors[0].id, is_featured=False,
+                category_id=categories['figures'].id, vendor_id=vendors['otakucraft'].id, is_featured=False,
                 image_url='Fullmetal_Alchemist_-_Ed__Al_Figure.jpg'),
         Product(name='Cowboy Bebop - Spike Spiegel Poster',
                 slug='spike-poster',
                 description='A2 poster featuring Spike Spiegel.',
                 price=16.99, stock=20, genre='Sci-Fi',
-                category_id=categories[2].id, vendor_id=vendors[2].id, is_featured=False,
+                category_id=categories['posters'].id, vendor_id=vendors['posterpulse'].id, is_featured=False,
                 image_url='Cowboy_Bebop_-_Spike_Spiegel_Poster.jpg'),
 
         Product(name='Attack on Titan - Eren Yeager Figure',
                 slug='aot-eren-yeager-figure',
                 description='Highly detailed Eren Yeager figure with Twin Blades and 3D Maneuver Gear.',
                 price=39.99, stock=12, genre='Action',
-                category_id=categories[0].id, vendor_id=vendors[0].id, is_featured=True,
+                category_id=categories['figures'].id, vendor_id=vendors['otakucraft'].id, is_featured=True,
                 image_url='aot-eren.jpg'),
         Product(name='Attack on Titan - Mikasa Ackerman Figure',
                 slug='aot-mikasa-ackerman-figure',
                 description='Premium Mikasa Ackerman figure with her iconic scarf and Scout Regiment uniform.',
                 price=44.99, stock=8, genre='Action',
-                category_id=categories[0].id, vendor_id=vendors[0].id, is_featured=True,
+                category_id=categories['figures'].id, vendor_id=vendors['otakucraft'].id, is_featured=True,
                 image_url='aot-mikasa.jpg'),
         Product(name='Attack on Titan - Armored Titan Figure',
                 slug='aot-armored-titan-figure',
                 description='The Armored Titan figure with hardened skin texture and towering presence.',
                 price=59.99, stock=5, genre='Action',
-                category_id=categories[0].id, vendor_id=vendors[0].id, is_featured=False,
+                category_id=categories['figures'].id, vendor_id=vendors['otakucraft'].id, is_featured=False,
                 image_url='aot-armored-titan.jpg'),
         Product(name='Survey Corps Jacket - Wings of Freedom',
                 slug='survey-corps-jacket',
                 description='Official-inspired Survey Corps jacket with embroidered Wings of Freedom emblem on the back.',
                 price=79.99, stock=20, genre='Anime',
-                category_id=categories[1].id, vendor_id=vendors[1].id, is_featured=True,
+                category_id=categories['apparel'].id, vendor_id=vendors['weebwear'].id, is_featured=True,
                 image_url='aot-jacket.jpg'),
         Product(name='Attack on Titan - Scout Regiment Tee',
                 slug='aot-scout-regiment-tee',
                 description='Comfortable cotton tee featuring the Scout Regiment insignia.',
                 price=24.99, stock=35, genre='Anime',
-                category_id=categories[1].id, vendor_id=vendors[1].id, is_featured=False,
+                category_id=categories['apparel'].id, vendor_id=vendors['weebwear'].id, is_featured=False,
                 image_url='aot-scout-tee.jpg'),
         Product(name='Attack on Titan - Colossal Titan Poster',
                 slug='aot-colossal-titan-poster',
                 description='Stunning art print of the Colossal Titan peering over Wall Maria.',
                 price=14.99, stock=30, genre='Action',
-                category_id=categories[2].id, vendor_id=vendors[2].id, is_featured=True,
+                category_id=categories['posters'].id, vendor_id=vendors['posterpulse'].id, is_featured=True,
                 image_url='aot-colossal-poster.jpg'),
         Product(name='Attack on Titan - Wall Maria Poster',
                 slug='aot-wall-maria-poster',
                 description='Beautiful landscape print of Wall Maria with the Survey Corps in formation.',
                 price=12.99, stock=25, genre='Adventure',
-                category_id=categories[2].id, vendor_id=vendors[2].id, is_featured=False,
+                category_id=categories['posters'].id, vendor_id=vendors['posterpulse'].id, is_featured=False,
                 image_url='aot-wall-maria-poster.jpg'),
         Product(name='3D Maneuver Gear Keychain',
                 slug='aot-3dmg-keychain',
                 description='Miniature 3D Maneuver Gear keychain — metal construction with fine detail.',
                 price=9.99, stock=50, genre='Action',
-                category_id=categories[3].id, vendor_id=vendors[0].id, is_featured=False,
+                category_id=categories['accessories'].id, vendor_id=vendors['otakucraft'].id, is_featured=False,
                 image_url='aot-3dmg-keychain.jpg'),
         Product(name='Survey Corps Emblem Patch Set',
                 slug='aot-patch-set',
                 description='Set of 4 embroidered Survey Corps patches (Wings of Freedom). Iron-on backing.',
                 price=11.99, stock=40, genre='Anime',
-                category_id=categories[3].id, vendor_id=vendors[0].id, is_featured=False,
+                category_id=categories['accessories'].id, vendor_id=vendors['otakucraft'].id, is_featured=False,
                 image_url='aot-patches.jpg'),
         Product(name='Attack on Titan Vol.2 - Manga',
                 slug='aot-vol-2-manga',
                 description='Volume 2 of the Attack on Titan manga. The battle for Trost District begins.',
                 price=10.99, stock=55, genre='Action',
-                category_id=categories[4].id, vendor_id=vendors[3].id, is_featured=False,
+                category_id=categories['manga'].id, vendor_id=vendors['mangamart'].id, is_featured=False,
                 image_url='aot-vol2.jpg'),
         Product(name='Attack on Titan Vol.3 - Manga',
                 slug='aot-vol-3-manga',
                 description='Volume 3 of the Attack on Titan manga. Eren faces impossible choices.',
                 price=10.99, stock=48, genre='Action',
-                category_id=categories[4].id, vendor_id=vendors[3].id, is_featured=False,
+                category_id=categories['manga'].id, vendor_id=vendors['mangamart'].id, is_featured=False,
                 image_url='aot-vol3.jpg'),
     ]
-    db.session.add_all(products)
+    for pd in products_data:
+        existing = Product.query.filter_by(slug=pd.slug).first()
+        if existing is None:
+            db.session.add(pd)
     db.session.commit()

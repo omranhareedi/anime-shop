@@ -66,9 +66,8 @@ def create_app(config_class=Config, testing=False):
             db.session.add(admin)
             db.session.commit()
 
-        if db.session.query(Product).count() == 0:
-            from app.seeds import seed_database
-            seed_database()
+        from app.seeds import seed_database
+        seed_database()
 
     @app.before_request
     def security_check():
