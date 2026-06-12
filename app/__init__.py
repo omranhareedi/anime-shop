@@ -91,12 +91,14 @@ def create_app(config_class=Config, testing=False):
 
     @app.route('/uploads/<path:filename>')
     def serve_upload(filename):
-        from flask import send_from_directory
+        from flask import send_file, abort
         import os
         tmp_dir = '/tmp/narmo-uploads'
-        if os.path.exists(os.path.join(tmp_dir, filename)):
-            return send_from_directory(tmp_dir, filename)
-        return send_from_directory(os.path.join(current_app.static_folder, 'images', 'products'), filename)
+        filepath = os.path.join(tmp_dir, filename)
+        filepath = os.path.normpath(filepath)
+        if filepath.startswith(tmp_dir) and os.path.exists(filepath):
+            return send_file(filepath)
+        abort(404)
 
     @app.errorhandler(404)
     def not_found(e):
