@@ -148,37 +148,31 @@ function initDarkMode() {
     var isDark = stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
     if (isDark) {
         document.documentElement.setAttribute('data-theme', 'dark');
-        toggle.innerHTML = '<i class="bi bi-sunrise-fill"></i>';
-        if (toggleMobile) toggleMobile.innerHTML = '<i class="bi bi-sunrise-fill me-1"></i> Light Mode';
+        toggle.innerHTML = '<i class="bi bi-sun"></i>';
+        if (toggleMobile) toggleMobile.innerHTML = '<i class="bi bi-sun me-1"></i> Light Mode';
     } else {
-        if (toggleMobile) toggleMobile.innerHTML = '<i class="bi bi-moon-stars-fill me-1"></i> Dark Mode';
+        if (toggleMobile) toggleMobile.innerHTML = '<i class="bi bi-moon me-1"></i> Dark Mode';
     }
     function apply(isDark) {
         var html = document.documentElement;
         if (isDark) {
             html.setAttribute('data-theme', 'dark');
             localStorage.setItem('narmo-theme', 'dark');
-            toggle.innerHTML = '<i class="bi bi-sunrise-fill"></i>';
-            if (toggleMobile) toggleMobile.innerHTML = '<i class="bi bi-sunrise-fill me-1"></i> Light Mode';
+            toggle.innerHTML = '<i class="bi bi-sun"></i>';
+            if (toggleMobile) toggleMobile.innerHTML = '<i class="bi bi-sun me-1"></i> Light Mode';
         } else {
             html.removeAttribute('data-theme');
             localStorage.setItem('narmo-theme', 'light');
-            toggle.innerHTML = '<i class="bi bi-moon-stars-fill"></i>';
-            if (toggleMobile) toggleMobile.innerHTML = '<i class="bi bi-moon-stars-fill me-1"></i> Dark Mode';
+            toggle.innerHTML = '<i class="bi bi-moon"></i>';
+            if (toggleMobile) toggleMobile.innerHTML = '<i class="bi bi-moon me-1"></i> Dark Mode';
         }
     }
-    function spinIcon(btn) {
-        btn.classList.add('dark-toggle-spin');
-        setTimeout(function () { btn.classList.remove('dark-toggle-spin'); }, 400);
-    }
     toggle.addEventListener('click', function () {
-        spinIcon(this);
         isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         apply(!isDark);
     });
     if (toggleMobile) {
         toggleMobile.addEventListener('click', function () {
-            spinIcon(this);
             isDark = document.documentElement.getAttribute('data-theme') === 'dark';
             apply(!isDark);
         });
