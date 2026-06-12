@@ -4,7 +4,7 @@ from app.models import Product, Category
 from app.recommender import (
     get_content_based_recommendations, get_collaborative_recommendations,
     get_personalized_recommendations, compute_similarity,
-    get_trending, get_genre_affinity, get_popular_all_time
+    get_trending, get_popular_all_time
 )
 
 products_bp = Blueprint('products', __name__)
@@ -79,7 +79,6 @@ def api_recommendations():
         'genre': p.genre,
         'category': p.category.name
     } for p in recs])
-
 
 
 @products_bp.route('/<slug>')

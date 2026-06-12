@@ -1,6 +1,6 @@
 import re
 import math
-from collections import Counter, defaultdict
+from collections import Counter
 from datetime import datetime, timedelta, timezone
 
 from app import db
@@ -43,10 +43,8 @@ def compute_similarity(product, limit=4):
     corpus = [p.description or '' for p in [product] + all_products]
     corpus_tokens = [_tokenize(d) for d in corpus]
     vocab = sorted(set(t for doc in corpus_tokens for t in doc))
-    vocab_index = {t: i for i, t in enumerate(vocab)}
 
     def vectorize(tokens):
-        counts = Counter(tokens)
         return [_tfidf_score(v, tokens, corpus_tokens) for v in vocab]
 
     query_vec = vectorize(corpus_tokens[0])
@@ -85,7 +83,7 @@ def get_trending(limit=6, days=30):
         .all()
     )
     if not results:
-        return Product.query.filter(Product.is_featured == True).limit(limit).all()
+        return Product.query.filter(Product.is_featured.is_(True)).limit(limit).all()
 
     product_ids = [r.product_id for r in results]
     products = Product.query.filter(Product.id.in_(product_ids)).all()
@@ -101,7 +99,7 @@ def get_genre_affinity(cart_product_ids, limit=6):
             genre_scores[product.genre] += 1
 
     if not genre_scores:
-        return Product.query.filter(Product.is_featured == True).limit(limit).all()
+        return Product.query.filter(Product.is_featured.is_(True)).limit(limit).all()
 
     weighted = {}
     total = sum(genre_scores.values())
@@ -157,7 +155,7 @@ def get_collaborative_recommendations(product_id, limit=4):
 
 def get_personalized_recommendations(cart_product_ids=None, limit=6):
     if not cart_product_ids:
-        return Product.query.filter(Product.is_featured == True).limit(limit).all()
+        return Product.query.filter(Product.is_featured.is_(True)).limit(limit).all()
 
     seen = set(cart_product_ids)
     scored = []
@@ -199,7 +197,7 @@ def get_popular_all_time(limit=6):
         .all()
     )
     if not results:
-        return Product.query.filter(Product.is_featured == True).limit(limit).all()
+        return Product.query.filter(Product.is_featured.is_(True)).limit(limit).all()
     product_ids = [r.product_id for r in results]
     products = Product.query.filter(Product.id.in_(product_ids)).all()
     order_map = {p.id: p for p in products}

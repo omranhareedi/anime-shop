@@ -3,7 +3,6 @@ from app import db
 from app.models import Product, Category
 from app.recommender import (
     get_personalized_recommendations, get_trending,
-    get_popular_all_time
 )
 
 main_bp = Blueprint('main', __name__)

@@ -396,6 +396,7 @@ def test_search_results(client):
     assert resp.status_code == 200
     assert b'Naruto' in resp.data
 
+
 def test_search_no_results(client):
     resp = client.get('/products/?q=xyznonexistent')
     assert resp.status_code == 200

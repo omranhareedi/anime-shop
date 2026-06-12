@@ -38,11 +38,11 @@ def create_app(config_class=Config, testing=False):
     configure_session(app)
 
     with app.app_context():
-        from app import models
+        from app import models  # noqa: F401
+        import sqlalchemy as sa
         db.create_all()
 
-        from app.models import User, Product
-        import sqlalchemy as sa
+        from app.models import User
         try:
             db.session.execute(sa.text('ALTER TABLE users ADD COLUMN is_admin BOOLEAN DEFAULT 0'))
             db.session.commit()
@@ -92,7 +92,8 @@ def create_app(config_class=Config, testing=False):
     @app.route('/uploads/<path:filename>')
     def serve_upload(filename):
         from flask import Response, abort
-        import os, mimetypes
+        import os
+        import mimetypes
         filepath = os.path.join('/tmp/narmo-uploads', filename)
         filepath = os.path.normpath(filepath)
         if not filepath.startswith('/tmp/narmo-uploads') or not os.path.exists(filepath):
@@ -120,7 +121,7 @@ def create_app(config_class=Config, testing=False):
         return jsonify(error='Internal server error', traceback=tb), 500
 
     @app.context_processor
-    def inject_globals():
+    def inject_nav_globals():
         from app.models import Category
         try:
             categories = db.session.query(Category).all()

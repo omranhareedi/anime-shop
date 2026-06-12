@@ -33,10 +33,18 @@ def seed_database():
     db.session.commit()
 
     vendors_data = [
-        {'name': 'OtakuCraft', 'slug': 'otakucraft', 'rating': 4.9, 'description': 'Hand-crafted figures and statues from master artisans.', 'email': 'hello@otakucraft.com', 'location': 'Osaka, Japan', 'is_active': True},
-        {'name': 'WeebWear', 'slug': 'weebwear', 'rating': 4.3, 'description': 'Streetwear meets anime. Premium apparel for fans.', 'email': 'support@weebwear.com', 'location': 'Tokyo, Japan', 'is_active': True},
-        {'name': 'PosterPulse', 'slug': 'posterpulse', 'rating': 4.7, 'description': 'High-definition posters and wall art prints.', 'email': 'info@posterpulse.com', 'location': 'Kyoto, Japan', 'is_active': True},
-        {'name': 'MangaMart', 'slug': 'mangamart', 'rating': 4.6, 'description': 'Your one-stop shop for manga and light novels.', 'email': 'orders@mangamart.com', 'location': 'Shinjuku, Japan', 'is_active': True},
+        {'name': 'OtakuCraft', 'slug': 'otakucraft', 'rating': 4.9,
+         'description': 'Hand-crafted figures and statues from master artisans.',
+         'email': 'hello@otakucraft.com', 'location': 'Osaka, Japan', 'is_active': True},
+        {'name': 'WeebWear', 'slug': 'weebwear', 'rating': 4.3,
+         'description': 'Streetwear meets anime. Premium apparel for fans.',
+         'email': 'support@weebwear.com', 'location': 'Tokyo, Japan', 'is_active': True},
+        {'name': 'PosterPulse', 'slug': 'posterpulse', 'rating': 4.7,
+         'description': 'High-definition posters and wall art prints.',
+         'email': 'info@posterpulse.com', 'location': 'Kyoto, Japan', 'is_active': True},
+        {'name': 'MangaMart', 'slug': 'mangamart', 'rating': 4.6,
+         'description': 'Your one-stop shop for manga and light novels.',
+         'email': 'orders@mangamart.com', 'location': 'Shinjuku, Japan', 'is_active': True},
     ]
     vendors = {}
     for vd in vendors_data:

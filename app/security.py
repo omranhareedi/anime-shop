@@ -3,7 +3,7 @@ import time
 import html
 import secrets
 from collections import defaultdict
-from flask import request, session, current_app
+from flask import request
 
 
 def sanitize_input(value, max_length=500):

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from app import db
 from app.models import Vendor, Product
-from app.security import make_token, sanitize_form_data
+from app.security import sanitize_form_data
 
 vendors_bp = Blueprint('vendors', __name__)
 

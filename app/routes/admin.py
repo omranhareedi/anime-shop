@@ -23,6 +23,7 @@ def save_upload(file):
             return '/uploads/' + filename
     return None
 
+
 admin_bp = Blueprint('admin', __name__)
 
 
@@ -100,9 +101,10 @@ def product_add():
         return redirect(url_for('admin.product_list'))
 
     token = make_token()
-    resp = make_response(render_template('admin/product_add.html',
-                          categories=categories, vendors=vendors,
-                          csrf_token=token))
+    resp = make_response(render_template(
+        'admin/product_add.html',
+        categories=categories, vendors=vendors, csrf_token=token,
+    ))
     resp.set_cookie('csrf_token', token, httponly=True, samesite='Lax')
     return resp
 
@@ -159,9 +161,10 @@ def product_edit(product_id):
         return redirect(url_for('admin.product_list'))
 
     token = make_token()
-    resp = make_response(render_template('admin/product_edit.html',
-                          product=product, categories=categories, vendors=vendors,
-                          csrf_token=token))
+    resp = make_response(render_template(
+        'admin/product_edit.html',
+        product=product, categories=categories, vendors=vendors, csrf_token=token,
+    ))
     resp.set_cookie('csrf_token', token, httponly=True, samesite='Lax')
     return resp
 
@@ -237,14 +240,17 @@ def update_order_status(order_id):
 @admin_bp.route('/dashboard')
 @admin_required
 def dashboard():
-    top_products = db.session.query(
-        Product.name,
-        func.sum(OrderItem.quantity).label('total_sold'),
-        func.sum(OrderItem.quantity * OrderItem.unit_price).label('revenue')
-    ).join(OrderItem, Product.id == OrderItem.product_id
-    ).group_by(Product.id
-    ).order_by(func.sum(OrderItem.quantity).desc()
-    ).limit(10).all()
+    top_products = (
+        db.session.query(
+            Product.name,
+            func.sum(OrderItem.quantity).label('total_sold'),
+            func.sum(OrderItem.quantity * OrderItem.unit_price).label('revenue'),
+        )
+        .join(OrderItem, Product.id == OrderItem.product_id)
+        .group_by(Product.id)
+        .order_by(func.sum(OrderItem.quantity).desc())
+        .limit(10).all()
+    )
 
     total_revenue = db.session.query(
         func.sum(Order.total_amount)
@@ -253,25 +259,31 @@ def dashboard():
     total_orders = Order.query.count()
     total_products = Product.query.count()
 
-    revenue_by_genre = db.session.query(
-        Product.genre,
-        func.sum(OrderItem.quantity * OrderItem.unit_price).label('revenue'),
-        func.sum(OrderItem.quantity).label('sold')
-    ).join(OrderItem, Product.id == OrderItem.product_id
-    ).filter(Product.genre.isnot(None)
-    ).group_by(Product.genre
-    ).order_by(func.sum(OrderItem.quantity * OrderItem.unit_price).desc()
-    ).all()
+    revenue_by_genre = (
+        db.session.query(
+            Product.genre,
+            func.sum(OrderItem.quantity * OrderItem.unit_price).label('revenue'),
+            func.sum(OrderItem.quantity).label('sold'),
+        )
+        .join(OrderItem, Product.id == OrderItem.product_id)
+        .filter(Product.genre.isnot(None))
+        .group_by(Product.genre)
+        .order_by(func.sum(OrderItem.quantity * OrderItem.unit_price).desc())
+        .all()
+    )
 
-    revenue_by_category = db.session.query(
-        Category.name,
-        func.sum(OrderItem.quantity * OrderItem.unit_price).label('revenue'),
-        func.sum(OrderItem.quantity).label('sold')
-    ).join(Product, Category.id == Product.category_id
-    ).join(OrderItem, Product.id == OrderItem.product_id
-    ).group_by(Category.id
-    ).order_by(func.sum(OrderItem.quantity * OrderItem.unit_price).desc()
-    ).all()
+    revenue_by_category = (
+        db.session.query(
+            Category.name,
+            func.sum(OrderItem.quantity * OrderItem.unit_price).label('revenue'),
+            func.sum(OrderItem.quantity).label('sold'),
+        )
+        .join(Product, Category.id == Product.category_id)
+        .join(OrderItem, Product.id == OrderItem.product_id)
+        .group_by(Category.id)
+        .order_by(func.sum(OrderItem.quantity * OrderItem.unit_price).desc())
+        .all()
+    )
 
     order_status_counts = db.session.query(
         Order.status,
@@ -297,15 +309,18 @@ def dashboard():
 
     low_stock = Product.query.filter(Product.stock < 10).count()
 
-    vendor_revenue = db.session.query(
-        Vendor.name,
-        func.sum(OrderItem.quantity * OrderItem.unit_price).label('revenue'),
-        func.sum(OrderItem.quantity).label('sold')
-    ).join(Product, Vendor.id == Product.vendor_id
-    ).join(OrderItem, Product.id == OrderItem.product_id
-    ).group_by(Vendor.id
-    ).order_by(func.sum(OrderItem.quantity * OrderItem.unit_price).desc()
-    ).all()
+    vendor_revenue = (
+        db.session.query(
+            Vendor.name,
+            func.sum(OrderItem.quantity * OrderItem.unit_price).label('revenue'),
+            func.sum(OrderItem.quantity).label('sold'),
+        )
+        .join(Product, Vendor.id == Product.vendor_id)
+        .join(OrderItem, Product.id == OrderItem.product_id)
+        .group_by(Vendor.id)
+        .order_by(func.sum(OrderItem.quantity * OrderItem.unit_price).desc())
+        .all()
+    )
 
     return render_template('admin/dashboard.html',
                            top_products=[row_to_dict(r) for r in top_products],
