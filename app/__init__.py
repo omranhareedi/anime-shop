@@ -1,5 +1,5 @@
 import secrets
-from flask import Flask, g, session
+from flask import Flask, g, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 
@@ -68,6 +68,14 @@ def create_app(config_class=Config, testing=False):
 
         from app.seeds import seed_database
         seed_database()
+
+    @app.context_processor
+    def inject_globals():
+        def product_img(url):
+            if url and url.startswith(('http://', 'https://', '//')):
+                return url
+            return url_for('static', filename='images/products/' + (url or ''))
+        return dict(product_img=product_img)
 
     @app.before_request
     def security_check():

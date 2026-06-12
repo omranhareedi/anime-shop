@@ -16,7 +16,7 @@
         <div class="col-md-6">
             <div class="colossal-hover" style="border-radius:var(--radius-lg);overflow:hidden;">
                 <div class="titan-steam" style="border-radius:inherit;">
-                    <img src="{{ url_for('static', filename='images/products/' + product.image_url) }}"
+                    <img src="{{ product_img(product.image_url) }}"
                          class="product-detail-img"
                          alt="{{ product.name }}"
                          style="width:100%;display:block;"
@@ -99,7 +99,7 @@
             <div class="product-card colossal-hover h-100">
                 <div class="position-relative titan-steam">
                     <a href="{{ url_for('products.product_detail', slug=rel.slug) }}">
-                        <img src="{{ url_for('static', filename='images/products/' + rel.image_url) }}"
+                        <img src="{{ product_img(rel.image_url) }}"
                              class="card-img-top"
                              alt="{{ rel.name }}"
                              loading="lazy"
@@ -143,7 +143,7 @@
             <div class="product-card colossal-hover h-100" style="border-color:var(--accent);">
                 <div class="position-relative titan-steam">
                     <a href="{{ url_for('products.product_detail', slug=rel.slug) }}">
-                        <img src="{{ url_for('static', filename='images/products/' + rel.image_url) }}"
+                        <img src="{{ product_img(rel.image_url) }}"
                              class="card-img-top"
                              alt="{{ rel.name }}"
                              loading="lazy"

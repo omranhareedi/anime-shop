@@ -67,7 +67,7 @@
                 <div class="position-relative titan-steam">
                     <span class="sc-badge" style="background:linear-gradient(135deg, var(--accent), #1a6b5a);"><i class="bi bi-shop"></i> {{ vendor.name }}</span>
                     <a href="{{ url_for('products.product_detail', slug=product.slug) }}">
-                        <img src="{{ url_for('static', filename='images/products/' + product.image_url) }}"
+                        <img src="{{ product_img(product.image_url) }}"
                              class="card-img-top" alt="{{ product.name }}"
                              loading="lazy"
                              onerror="this.src='https://placehold.co/400x400/F1F5F9/64748B?text={{ product.name|urlencode }}'">

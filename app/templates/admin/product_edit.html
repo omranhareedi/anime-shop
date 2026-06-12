@@ -126,7 +126,7 @@
                                 <p class="text-muted upload-formats">JPEG &middot; PNG &middot; WebP &middot; GIF &middot; max 16MB</p>
                             </div>
                             <div class="upload-preview" id="upload-preview">
-                                <img id="image-preview" src="{{ url_for('static', filename='images/products/' + product.image_url) }}"
+                                <img id="image-preview" src="{{ product_img(product.image_url) }}"
                                      alt="Preview" onerror="this.src='https://placehold.co/400x400/F1F5F9/64748B?text={{ product.name|urlencode }}'">
                                 <button type="button" id="remove-image" class="upload-remove" title="Remove image"><i class="bi bi-x-lg"></i></button>
                             </div>
@@ -155,7 +155,7 @@
                 <div class="preview-panel-body">
                     <div class="mini-card">
                         <div class="mini-card-img">
-                            <img id="preview-img" src="{{ url_for('static', filename='images/products/' + product.image_url) }}"
+                            <img id="preview-img" src="{{ product_img(product.image_url) }}"
                                  alt="Preview" onerror="this.src='https://placehold.co/400x400/F1F5F9/64748B?text={{ product.name|urlencode }}'">
                         </div>
                         <div class="mini-card-body">

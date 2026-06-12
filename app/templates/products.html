@@ -51,7 +51,7 @@
                         <div class="product-card colossal-hover h-100">
                             <div class="position-relative titan-steam">
                                 <a href="{{ url_for('products.product_detail', slug=product.slug) }}">
-                                    <img src="{{ url_for('static', filename='images/products/' + product.image_url) }}"
+                                    <img src="{{ product_img(product.image_url) }}"
                                          class="card-img-top"
                                          alt="{{ product.name }}"
                                          loading="lazy"
