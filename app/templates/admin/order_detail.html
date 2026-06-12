@@ -127,7 +127,29 @@
                     <div class="preview-meta-row"><span class="meta-label">Transaction</span><span class="meta-value" style="font-family:monospace;font-size:0.78rem;">{{ order.payment_transaction_id or 'N/A' }}</span></div>
                 </div>
             </div>
+
+            <div class="preview-panel mt-3">
+                <div class="preview-panel-header" style="color:#dc3545;">
+                    <i class="bi bi-exclamation-triangle"></i> Danger Zone
+                </div>
+                <div class="preview-panel-body">
+                    <form method="POST" action="{{ url_for('admin.delete_order', order_id=order.id) }}" class="delete-form" data-confirm="Permanently delete order #{{ order.order_number }}? This cannot be undone.">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <button type="submit" class="btn-submit w-100" style="background:#dc3545;"><i class="bi bi-trash"></i> Delete Order</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script nonce="{{ csp_nonce }}">
+document.querySelectorAll('.delete-form').forEach(function(form) {
+    form.addEventListener('submit', function(e) {
+        if (!confirm(this.dataset.confirm)) e.preventDefault();
+    });
+});
+</script>
 {% endblock %}

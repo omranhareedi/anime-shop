@@ -36,6 +36,7 @@
                         <th class="d-none d-sm-table-cell">Payment</th>
                         <th>Status</th>
                         <th class="d-none d-sm-table-cell">Date</th>
+                        <th class="text-end">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,9 +61,17 @@
                             </form>
                         </td>
                         <td class="text-gray text-sm d-none d-sm-table-cell">{{ order.order_date.strftime('%b %d, %Y') }}</td>
+                        <td class="text-end">
+                            <form method="POST" action="{{ url_for('admin.delete_order', order_id=order.id) }}" class="d-inline delete-form" data-confirm="Permanently delete order #{{ order.order_number }}?">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                <button type="submit" class="btn-check-sm" style="color:#dc3545;" title="Delete order">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                     {% else %}
-                    <tr><td colspan="7" class="text-center py-4 text-muted">No orders found.</td></tr>
+                    <tr><td colspan="8" class="text-center py-4 text-muted">No orders found.</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -85,7 +94,7 @@
 
 {% block scripts %}
 <script nonce="{{ csp_nonce }}">
-document.querySelectorAll('.status-form').forEach(function(form) {
+document.querySelectorAll('.status-form, .delete-form').forEach(function(form) {
     form.addEventListener('submit', function(e) {
         if (!confirm(this.dataset.confirm)) e.preventDefault();
     });

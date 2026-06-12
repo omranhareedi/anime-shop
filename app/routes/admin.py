@@ -181,6 +181,23 @@ def order_detail(order_id):
     return resp
 
 
+@admin_bp.route('/orders/<int:order_id>/delete', methods=['POST'])
+@admin_required
+def delete_order(order_id):
+    order = db.session.get(Order, order_id)
+    if not order:
+        abort(404)
+    csrf_token = request.form.get('csrf_token', '')
+    if not csrf_token or csrf_token != request.cookies.get('csrf_token'):
+        flash('Security token invalid.', 'danger')
+        return redirect(url_for('admin.order_detail', order_id=order.id))
+    order_num = order.order_number
+    db.session.delete(order)
+    db.session.commit()
+    flash(f'Order #{order_num} deleted.', 'success')
+    return redirect(url_for('admin.order_list'))
+
+
 @admin_bp.route('/orders/<int:order_id>/status', methods=['POST'])
 @admin_required
 def update_order_status(order_id):
