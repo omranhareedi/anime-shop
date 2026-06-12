@@ -3,84 +3,223 @@
 {% block title %}Our Division — Narmo{% endblock %}
 
 {% block content %}
-<section class="hero" style="min-height:50vh;">
+<section class="hero" style="min-height:100vh;">
+    <div class="hero-overlay"></div>
     <div class="ember-container">
         <div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div>
+        <div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div>
     </div>
-    <div class="hero-overlay"></div>
     <div class="hero-accent-line"></div>
     <div class="container">
-        <div class="hero-content" style="max-width:700px;text-align:center;margin:0 auto;">
-            <div class="hero-badge"><i class="bi bi-shield-fill"></i> Survey Corps Division</div>
-            <h1>Our <span class="highlight">Mission</span></h1>
-            <p class="slogan">For humanity's finest — from passion to purpose.</p>
-            <p class="creed-text text-center mx-auto mt-3">"That day, humanity remembered the fear of being dominated by <strong>mediocre merch</strong>."</p>
+        <div class="hero-content" style="max-width:760px;text-align:center;margin:0 auto;">
+            <div class="hero-badge"><i class="bi bi-shield-fill"></i> Survey Corps Division — 845</div>
+            <h1>The <span class="highlight">Scouting Legion</span> Supply Depot</h1>
+            <p class="slogan">Beyond the walls of ordinary commerce — forged for humanity's finest.</p>
+            <p class="creed-text mt-3">"That day, humanity remembered the fear of being dominated by <strong>mediocre merch</strong>."</p>
+            <div class="hero-actions justify-content-center" style="gap:0.75rem;">
+                <a href="{{ url_for('products.product_list') }}" class="btn-primary-narmo">
+                    Join the Corps <i class="bi bi-arrow-right"></i>
+                </a>
+                <a href="{{ url_for('vendors.vendor_list') }}" class="btn-outline-narmo">
+                    Scout Vendors <i class="bi bi-shop"></i>
+                </a>
+            </div>
+            <div class="hero-stats justify-content-center">
+                <div>
+                    <div class="hero-stat-value"><span class="counter" data-target="4">0</span></div>
+                    <div class="hero-stat-label"><span class="status-dot live"></span> Walls Established</div>
+                </div>
+                <div>
+                    <div class="hero-stat-value">100%</div>
+                    <div class="hero-stat-label"><span class="status-dot live"></span> Authentic Gear</div>
+                </div>
+                <div>
+                    <div class="hero-stat-value">∞</div>
+                    <div class="hero-stat-label"><span class="status-dot warning"></span> Dedicated Hearts</div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-lg-10">
             <div class="section-title">
                 <span class="accent-bar"></span>
-                <h2>Who We Are</h2>
+                <h2>Our <span class="highlight">Division</span></h2>
+                <span class="rec-badge ms-2"><i class="bi bi-shield-fill-check"></i> Survey Corps Intel</span>
             </div>
-            <p style="font-size:1.05rem;line-height:1.8;color:var(--text);">
-                The Survey Corps Supply Depot was established within the walls of Akihabara —
-                a hub for collectors and fans who refuse to live in cages. What started as a small
-                squad of passionate otaku hunting for rare figures has grown into a curated division
-                connecting humanity's finest with authentic, high-quality anime gear.
-            </p>
-            <p style="font-size:1.05rem;line-height:1.8;color:var(--text);">
-                Every item in our depot is hand-selected from trusted vendors across Japan and beyond.
-                From limited-edition 3D Maneuver Gear statues to streetwear that turns titans' heads,
-                we bring the best of otaku culture within the walls.
-            </p>
+            <p class="section-sub"><i class="bi bi-eye"></i> Established within the walls of Akihabara — a depot forged by collectors, for collectors.</p>
 
-            <div class="section-title mt-5">
-                <span class="accent-bar"></span>
-                <h2>Our Core Values</h2>
+            <div class="row g-4 mt-3">
+                <div class="col-md-6">
+                    <div class="category-card colossal-hover h-100 p-4" style="position:relative;overflow:hidden;">
+                        <div class="titan-steam" style="position:absolute;inset:0;border-radius:inherit;"></div>
+                        <div class="position-relative" style="z-index:1;">
+                            <span class="rec-badge mb-2 d-inline-block"><i class="bi bi-building"></i> Wall Rose Territory</span>
+                            <h6>Our Origin</h6>
+                            <small style="line-height:1.7;">The Survey Corps Supply Depot was established within the walls of Akihabara — a hub for collectors and fans who refuse to live in cages. What started as a small squad of passionate otaku hunting for rare figures has grown into a curated division connecting humanity's finest with authentic, high-quality anime gear.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="category-card colossal-hover h-100 p-4" style="position:relative;overflow:hidden;">
+                        <div class="titan-steam" style="position:absolute;inset:0;border-radius:inherit;"></div>
+                        <div class="position-relative" style="z-index:1;">
+                            <span class="rec-badge mb-2 d-inline-block"><i class="bi bi-gem"></i> Wall Sina Standard</span>
+                            <h6>Our Promise</h6>
+                            <small style="line-height:1.7;">Every item in our depot is hand-selected from trusted vendors across Japan and beyond. From limited-edition 3D Maneuver Gear statues to streetwear that turns titans' heads — we bring the best of otaku culture within the walls. Authenticity isn't just our policy; it's our creed.</small>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="section-divider">
+    <span class="wings"><i class="bi bi-flower2"></i> &#10022; <i class="bi bi-flower2"></i></span>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="section-title">
+                <span class="accent-bar"></span>
+                <h2>Our <span class="highlight">Core Values</span></h2>
+                <span class="rec-badge ms-2"><i class="bi bi-heart-pulse"></i> Scouting Legion Creed</span>
+            </div>
+            <p class="section-sub"><i class="bi bi-shield-check"></i> The principles that guide our survey beyond the walls.</p>
 
             <div class="row g-4 mt-2">
                 <div class="col-md-4">
-                    <div class="category-card h-100 text-center p-4">
-                        <div class="icon mb-2"><i class="bi bi-shield-check" style="font-size:2rem;color:var(--accent);"></i></div>
-                        <h6>Authenticity</h6>
-                        <small>Every item verified genuine. No bootlegs, no compromises — humanity depends on it.</small>
+                    <div class="category-card colossal-hover h-100 text-center p-4" style="position:relative;overflow:hidden;">
+                        <div class="titan-steam" style="position:absolute;inset:0;border-radius:inherit;"></div>
+                        <div class="position-relative" style="z-index:1;">
+                            <div class="icon mb-3"><i class="bi bi-shield-check" style="font-size:2.5rem;color:var(--accent);"></i></div>
+                            <span class="rec-badge mb-2 d-inline-block"><i class="bi bi-droplet"></i> Wall Rose</span>
+                            <h6>Authenticity</h6>
+                            <small>Every item verified genuine. No bootlegs, no compromises — humanity depends on it.</small>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="category-card h-100 text-center p-4">
-                        <div class="icon mb-2"><i class="bi bi-globe2" style="font-size:2rem;color:var(--accent);"></i></div>
-                        <h6>Beyond the Walls</h6>
-                        <small>Shipping worldwide from our divisions in Tokyo, Osaka, and Accra.</small>
+                    <div class="category-card colossal-hover h-100 text-center p-4" style="position:relative;overflow:hidden;">
+                        <div class="titan-steam" style="position:absolute;inset:0;border-radius:inherit;"></div>
+                        <div class="position-relative" style="z-index:1;">
+                            <div class="icon mb-3"><i class="bi bi-globe2" style="font-size:2.5rem;color:var(--accent);"></i></div>
+                            <span class="rec-badge mb-2 d-inline-block"><i class="bi bi-droplet"></i> Wall Sina</span>
+                            <h6>Beyond the Walls</h6>
+                            <small>Shipping worldwide from our divisions in Tokyo, Osaka, and Accra. No wall can contain great gear.</small>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="category-card h-100 text-center p-4">
-                        <div class="icon mb-2"><i class="bi bi-people" style="font-size:2rem;color:var(--accent);"></i></div>
-                        <h6>Dedicated Community</h6>
-                        <small>Built by fans, for fans. Your collection fuels our survey.</small>
+                    <div class="category-card colossal-hover h-100 text-center p-4" style="position:relative;overflow:hidden;">
+                        <div class="titan-steam" style="position:absolute;inset:0;border-radius:inherit;"></div>
+                        <div class="position-relative" style="z-index:1;">
+                            <div class="icon mb-3"><i class="bi bi-people" style="font-size:2.5rem;color:var(--accent);"></i></div>
+                            <span class="rec-badge mb-2 d-inline-block"><i class="bi bi-droplet"></i> Wall Maria</span>
+                            <h6>Dedicated Community</h6>
+                            <small>Built by fans, for fans. Your collection fuels our survey. We dedicate our hearts to the cause.</small>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
 
-            <div class="section-title mt-5">
+<div class="section-divider">
+    <span class="wings"><i class="bi bi-flower2"></i> &#10022; <i class="bi bi-flower2"></i></span>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="section-title">
                 <span class="accent-bar"></span>
-                <h2>Meet the Vendors</h2>
+                <h2>The <span class="highlight">Expedition</span> Log</h2>
+                <span class="rec-badge ms-2"><i class="bi bi-journal"></i> Survey Records</span>
             </div>
-            <p style="font-size:1.05rem;line-height:1.8;color:var(--text);">
-                Our depot is powered by independent vendors who share our love for anime.
-                <a href="{{ url_for('vendors.vendor_list') }}">Browse our vendors</a> and discover
-                unique pieces from master artisans, indie creators, and officially licensed stores.
-            </p>
+            <p class="section-sub"><i class="bi bi-clock-history"></i> Key milestones in our journey beyond the walls.</p>
 
-            <div class="text-center mt-5">
-                <a href="{{ url_for('products.product_list') }}" class="btn-primary-narmo">
-                    Join the Corps <i class="bi bi-arrow-right"></i>
+            <div class="row g-4 mt-3">
+                <div class="col-md-4">
+                    <div class="category-card colossal-hover h-100 p-4" style="position:relative;overflow:hidden;">
+                        <div class="titan-steam" style="position:absolute;inset:0;border-radius:inherit;"></div>
+                        <div class="position-relative" style="z-index:1;">
+                            <span class="rec-badge mb-2 d-inline-block" style="background:var(--danger);"><i class="bi bi-exclamation-triangle"></i> 842</span>
+                            <h6>The Founding</h6>
+                            <small>A small squad of collectors unite in Akihabara, driven by the lack of authentic imported anime gear. The survey begins.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="category-card colossal-hover h-100 p-4" style="position:relative;overflow:hidden;">
+                        <div class="titan-steam" style="position:absolute;inset:0;border-radius:inherit;"></div>
+                        <div class="position-relative" style="z-index:1;">
+                            <span class="rec-badge mb-2 d-inline-block" style="background:var(--accent);"><i class="bi bi-droplet"></i> 843</span>
+                            <h6>Wall Rose Established</h6>
+                            <small>First warehouse secured. Vendor network expanded beyond Tokyo — figures, apparel, and manga now within reach.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="category-card colossal-hover h-100 p-4" style="position:relative;overflow:hidden;">
+                        <div class="titan-steam" style="position:absolute;inset:0;border-radius:inherit;"></div>
+                        <div class="position-relative" style="z-index:1;">
+                            <span class="rec-badge mb-2 d-inline-block" style="background:var(--accent);"><i class="bi bi-gem"></i> 846</span>
+                            <h6>Wall Sina Standard</h6>
+                            <small>Global shipping launched. HQ established in Accra. Narmo becomes the definitive Survey Corps Supply Depot.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section-divider">
+    <span class="wings"><i class="bi bi-flower2"></i> &#10022; <i class="bi bi-flower2"></i></span>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="section-title">
+                <span class="accent-bar"></span>
+                <h2>Meet the <span class="highlight">Vendors</span></h2>
+                <span class="rec-badge ms-2"><i class="bi bi-shop"></i> Supply Chain Intel</span>
+            </div>
+            <p class="section-sub"><i class="bi bi-box-seam"></i> Our depot is powered by independent vendors who share our love for anime.</p>
+            <div class="text-center mt-4">
+                <a href="{{ url_for('vendors.vendor_list') }}" class="btn-outline-narmo">
+                    Browse All Vendors <i class="bi bi-shop"></i>
                 </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="category-card text-center p-5" style="position:relative;overflow:hidden;border-color:var(--accent);border-width:2px;">
+                <div class="ember-container" style="position:absolute;inset:0;z-index:0;">
+                    <div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div>
+                </div>
+                <div class="position-relative" style="z-index:1;">
+                    <span class="rec-badge mb-3 d-inline-block" style="font-size:0.85rem;">&#127745; Scouting Legion — Final Command</span>
+                    <h3 class="mb-3">Dedicate Your <span class="highlight">Heart</span></h3>
+                    <p class="creed-text" style="font-size:1.1rem;">"If you don't sacrifice your <strong>wallet</strong>, you cannot win. Gear up. Collect on. <strong>Shinzou wo Sasageyo</strong>."</p>
+                    <div class="mt-4">
+                        <a href="{{ url_for('products.product_list') }}" class="btn-primary-narmo">
+                            Join the Expedition <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
