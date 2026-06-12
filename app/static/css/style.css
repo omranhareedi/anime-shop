@@ -2060,18 +2060,29 @@ a:hover .stat-card { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,
     color: var(--gray);
 }
 
-/* ---- Vendors ---- */
+/* ---- Vendors / Scouting Divisions ---- */
 .vendor-card {
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     overflow: hidden;
     transition: var(--transition);
+    position: relative;
+    isolation: isolate;
 }
-
+.vendor-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--gold), var(--accent));
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.vendor-card:hover::before { opacity: 1; }
 .vendor-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(45,138,118,0.15);
     border-color: var(--accent);
 }
 
@@ -2079,36 +2090,67 @@ a:hover .stat-card { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 1.25rem 1.25rem 0.75rem;
+    padding: 1.5rem 1.25rem 0.75rem;
+    position: relative;
 }
 
 .vendor-avatar {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
-    background: var(--accent);
+    background: linear-gradient(135deg, var(--accent), #1a6b5a);
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 800;
-    font-size: 1.25rem;
+    font-size: 1.35rem;
     flex-shrink: 0;
+    box-shadow: 0 3px 10px rgba(45,138,118,0.25);
+    position: relative;
 }
+.vendor-avatar::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 2px solid rgba(45,138,118,0.15);
+    animation: authRing 3s ease-in-out infinite;
+}
+
+.vendor-division-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.15rem 0.6rem;
+    border-radius: 100px;
+    margin-top: 0.25rem;
+}
+.vendor-division-badge.rose { background: rgba(201,149,43,0.1); color: var(--gold); }
+.vendor-division-badge.sina { background: rgba(45,138,118,0.1); color: var(--accent); }
+.vendor-division-badge.maria { background: rgba(168,50,50,0.1); color: var(--danger); }
 
 .vendor-location {
     font-size: 0.8rem;
     color: var(--gray);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
 }
 
 .vendor-card-body { padding: 0 1.25rem; }
-.vendor-card-body p { font-size: 0.85rem; color: var(--text); }
+.vendor-card-body p { font-size: 0.85rem; color: var(--text); line-height: 1.6; }
 
 .vendor-card-footer {
     padding: 0.75rem 1.25rem;
     border-top: 1px solid var(--border);
     display: flex;
     gap: 1rem;
+    align-items: center;
 }
 
 .vendor-badge {
@@ -2124,24 +2166,56 @@ a:hover .stat-card { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,
     gap: 1.5rem;
     align-items: flex-start;
     padding: 1.5rem 0;
+    position: relative;
 }
 
 .vendor-store-avatar {
-    width: 72px;
-    height: 72px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
-    background: var(--accent);
+    background: linear-gradient(135deg, var(--accent), #1a6b5a);
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 800;
-    font-size: 2rem;
+    font-size: 2.25rem;
     flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(45,138,118,0.3);
+    position: relative;
+}
+.vendor-store-avatar::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid rgba(45,138,118,0.2);
+    animation: authRing 3s ease-in-out infinite;
 }
 
 .vendor-store-info h1 { margin: 0; }
 .vendor-store-info p { font-size: 0.9rem; }
+
+.vendor-store-hero {
+    position: relative;
+    background: linear-gradient(135deg, var(--dark), #1a1a2e);
+    padding: 3rem 0;
+    margin-top: -1.5rem;
+    overflow: hidden;
+}
+.vendor-store-hero .container { position: relative; z-index: 1; }
+.vendor-store-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at 30% 50%, rgba(45,138,118,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 50%, rgba(201,149,43,0.05) 0%, transparent 60%);
+    pointer-events: none;
+}
+.vendor-store-hero .breadcrumb-custom { margin-bottom: 1.5rem; }
+.vendor-store-hero .breadcrumb-custom a { color: var(--gray); }
+.vendor-store-hero .breadcrumb-custom .current { color: var(--gray-light); }
 
 /* ---- Recommendations ---- */
 .rec-badge {

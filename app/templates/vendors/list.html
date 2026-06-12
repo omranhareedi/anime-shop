@@ -3,32 +3,57 @@
 {% block title %}Scouting Divisions — Narmo{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="section-title">
-        <span class="accent-bar"></span>
-        <h2>Scouting Divisions</h2>
+<section class="vendor-store-hero">
+    <div class="ember-container">
+        <div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div>
+        <div class="ember"></div><div class="ember"></div>
     </div>
-    <p class="section-sub">Trusted merchant divisions reporting to the Survey Corps</p>
+    <div class="container">
+        <div class="hero-content" style="max-width:700px;">
+            <div class="hero-badge"><i class="bi bi-shop"></i> Scouting Divisions</div>
+            <h1 style="font-size:clamp(2rem,4vw,3rem);font-weight:900;color:#fff;line-height:1.1;letter-spacing:-0.03em;">
+                Merchant <span class="highlight">Divisions</span>
+            </h1>
+            <p class="slogan" style="font-size:1.05rem;color:var(--gray-light);">
+                Trusted suppliers stationed within the walls — supplying humanity's finest gear.
+            </p>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <p class="creed-text mb-0">"We fight together, we supply together." — <strong>Survey Corps Quartermaster</strong></p>
+        </div>
+        <a href="{{ url_for('vendors.vendor_register') }}" class="btn-primary-narmo" style="white-space:nowrap;">
+            <i class="bi bi-shop"></i> Open Your Store
+        </a>
+    </div>
 
     <div class="row g-4">
         {% for vendor in vendors %}
+        {% set territory = 'rose' if loop.index is odd else 'sina' %}
         <div class="col-md-6 col-lg-4">
             <a href="{{ url_for('vendors.vendor_store', slug=vendor.slug) }}" class="text-decoration-none">
-                <div class="vendor-card h-100">
+                <div class="vendor-card colossal-hover h-100">
                     <div class="vendor-card-header">
                         <div class="vendor-avatar">{{ vendor.name[0] }}</div>
                         <div>
-                            <h5 class="mb-1">{{ vendor.name }}</h5>
+                            <h5 class="mb-1" style="color:var(--text);">{{ vendor.name }}</h5>
                             {% if vendor.location %}
                             <span class="vendor-location"><i class="bi bi-geo-alt"></i> {{ vendor.location }}</span>
                             {% endif %}
+                            <div class="vendor-division-badge {{ territory }}">
+                                <i class="bi bi-shield-fill-check"></i> Wall {{ territory|capitalize }} Division
+                            </div>
                         </div>
                     </div>
                     <div class="vendor-card-body">
                         <p>{{ vendor.description[:120] }}{% if vendor.description|length > 120 %}…{% endif %}</p>
                     </div>
                     <div class="vendor-card-footer">
-                        <span class="vendor-badge"><i class="bi bi-box-seam"></i> {{ vendor.product_count }} products</span>
+                        <span class="vendor-badge"><i class="bi bi-box-seam"></i> {{ vendor.product_count }} supplies</span>
                         <span class="vendor-badge"><i class="bi bi-shield-check"></i> Verified</span>
                         {% set r = vendor.rating or 4.5 %}
                         <span class="vendor-rating ms-auto">
@@ -53,8 +78,8 @@
         <div class="col-12">
             <div class="empty-state">
                 <div class="icon"><i class="bi bi-shop"></i></div>
-                <h4>No vendors yet</h4>
-                <p>Be the first to open a store!</p>
+                <h4>No divisions established yet</h4>
+                <p>The walls need suppliers — be the first to open a store!</p>
                 <a href="{{ url_for('vendors.vendor_register') }}" class="btn-primary-narmo mt-3">
                     <i class="bi bi-plus-circle"></i> Register as Vendor
                 </a>
@@ -63,9 +88,16 @@
         {% endfor %}
     </div>
 
-    <div class="text-center mt-5">
-        <a href="{{ url_for('vendors.vendor_register') }}" class="btn-primary-narmo">
-            <i class="bi bi-shop"></i> Open Your Store
+    <div class="section-divider mt-5">
+        <span class="wings">&#10022;</span>
+    </div>
+
+    <div class="text-center">
+        <p class="creed-text mx-auto" style="max-width:400px;">
+            "Suppliers are the backbone of the Survey Corps. Without <strong>you</strong>, humanity cannot push beyond the walls."
+        </p>
+        <a href="{{ url_for('vendors.vendor_register') }}" class="btn-primary-narmo mt-3">
+            <i class="bi bi-shop"></i> Open Your Division Today
         </a>
     </div>
 </div>
