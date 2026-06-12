@@ -17,8 +17,10 @@ def save_upload(file):
             file.save(os.path.join(folder, filename))
             return filename
         except OSError:
-            current_app.logger.warning('Read-only filesystem — upload skipped')
-            return False
+            tmp_dir = '/tmp/narmo-uploads'
+            os.makedirs(tmp_dir, exist_ok=True)
+            file.save(os.path.join(tmp_dir, filename))
+            return '/uploads/' + filename
     return None
 
 admin_bp = Blueprint('admin', __name__)

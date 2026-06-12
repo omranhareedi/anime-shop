@@ -72,7 +72,7 @@ def create_app(config_class=Config, testing=False):
     @app.context_processor
     def inject_globals():
         def product_img(url):
-            if url and url.startswith(('http://', 'https://', '//')):
+            if url and url.startswith(('http://', 'https://', '//', '/')):
                 return url
             return url_for('static', filename='images/products/' + (url or ''))
         return dict(product_img=product_img)
@@ -88,6 +88,15 @@ def create_app(config_class=Config, testing=False):
     def add_security_headers(response):
         nonce = getattr(g, 'csp_nonce', None)
         return apply_security_headers(response, nonce=nonce)
+
+    @app.route('/uploads/<path:filename>')
+    def serve_upload(filename):
+        from flask import send_from_directory
+        import os
+        tmp_dir = '/tmp/narmo-uploads'
+        if os.path.exists(os.path.join(tmp_dir, filename)):
+            return send_from_directory(tmp_dir, filename)
+        return send_from_directory(os.path.join(current_app.static_folder, 'images', 'products'), filename)
 
     @app.errorhandler(404)
     def not_found(e):
