@@ -18,6 +18,7 @@ def save_upload(file):
             return filename
         except OSError:
             current_app.logger.warning('Read-only filesystem — upload skipped')
+            return False
     return None
 
 admin_bp = Blueprint('admin', __name__)
@@ -88,6 +89,8 @@ def product_add():
             product.image_url = uploaded
         elif request.form.get('image_url'):
             product.image_url = request.form.get('image_url').strip()
+        elif uploaded is False:
+            flash('File upload failed (read-only filesystem). Use the URL field instead.', 'warning')
 
         db.session.add(product)
         db.session.commit()
@@ -140,6 +143,8 @@ def product_edit(product_id):
             product.image_url = uploaded
         elif request.form.get('image_url'):
             product.image_url = request.form.get('image_url').strip()
+        elif uploaded is False:
+            flash('File upload failed (read-only filesystem). Use the URL field instead.', 'warning')
 
         product.price = float(request.form.get('price', product.price))
         product.stock = int(request.form.get('stock', product.stock))
