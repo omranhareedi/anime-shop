@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initButtonRipple();
     initCounterAnimation();
     initCartGlowCheck();
+    initSearchToggle();
 });
 
 function initPageLoader() {
@@ -382,5 +383,32 @@ function initSeasonalBanner() {
     banner.querySelector('.dismiss-banner').addEventListener('click', function () {
         banner.style.display = 'none';
         localStorage.setItem('narmo-banner-dismissed', '1');
+    });
+}
+
+function initSearchToggle() {
+    var toggle = document.getElementById('nav-search-toggle');
+    var form = document.querySelector('.nav-search-form');
+    var input = form ? form.querySelector('.nav-search-input') : null;
+    if (!toggle || !form) return;
+    toggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        form.classList.toggle('open');
+        if (form.classList.contains('open') && input) {
+            input.focus();
+        }
+    });
+    if (input) {
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                form.classList.remove('open');
+                input.blur();
+            }
+        });
+    }
+    document.addEventListener('click', function (e) {
+        if (form.classList.contains('open') && !form.contains(e.target) && !toggle.contains(e.target)) {
+            form.classList.remove('open');
+        }
     });
 }

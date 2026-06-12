@@ -30,6 +30,14 @@
                 <img src="{{ url_for('static', filename='images/products/logo.png') }}" alt="Narmo" class="brand-logo">
             </a>
             <div class="d-flex align-items-center gap-1 order-lg-3">
+                <div class="nav-search-wrap d-none d-lg-flex align-items-center">
+                    <form action="{{ url_for('products.product_list') }}" method="GET" class="nav-search-form" role="search">
+                        <input type="text" name="q" class="nav-search-input" placeholder="Search…" aria-label="Search" autocomplete="off">
+                    </form>
+                    <button id="nav-search-toggle" class="nav-icon-btn" aria-label="Toggle search">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
                 <button id="dark-toggle" class="nav-icon-btn d-none d-lg-flex position-relative" aria-label="Toggle dark mode">
                     <i class="bi bi-moon-stars-fill"></i>
                 </button>
@@ -138,12 +146,6 @@
                     </li>
                     {% endif %}
                 </ul>
-                <form action="{{ url_for('products.product_list') }}" method="GET" class="navbar-search d-none d-lg-flex ms-lg-3" role="search">
-                    <div class="input-group">
-                        <input type="text" name="q" class="form-control" placeholder="Search products…" aria-label="Search">
-                        <button type="submit" class="search-btn"><i class="bi bi-search"></i></button>
-                    </div>
-                </form>
             </div>
         </div>
     </nav>
