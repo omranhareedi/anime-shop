@@ -229,27 +229,6 @@ body::before {
     50% { transform: scale(1.3); opacity: 1; }
 }
 
-/* -- Marquee energy ticker -- */
-.energy-ticker {
-    overflow: hidden;
-    white-space: nowrap;
-    font-size: 0.7rem;
-    color: var(--gray);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-}
-.energy-ticker span {
-    display: inline-block;
-    animation: ticker 20s linear infinite;
-}
-.energy-ticker span::after {
-    content: ' ⚔  ★  ⚔  ★  ⚔  ★  ⚔  ★  ⚔  ★  ⚔  ★  ⚔  ★  ⚔  ★  ⚔  ★  ⚔  ★  ';
-}
-@keyframes ticker {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-}
-
 /* ================================================
    🗡️  AOT CRAZY EFFECTS — Prepare for Titanfall  🗡️
    ================================================ */
