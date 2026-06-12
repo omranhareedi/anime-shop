@@ -127,7 +127,7 @@ function updateQuantity(input) {
     });
 }
 
-function updateCartCount() {
+function updateCartCount(suppressShake) {
     fetch('/cart/count')
     .then(r => r.json())
     .then(data => {
@@ -135,6 +135,17 @@ function updateCartCount() {
         if (el) el.textContent = data.count;
     })
     .catch(() => {});
+}
+
+function triggerTitanShake(el) {
+    if (!el) return;
+    el.classList.add('shake-titan');
+    setTimeout(function () { el.classList.remove('shake-titan'); }, 500);
+}
+
+function triggerStomp() {
+    document.body.classList.add('titan-stomp');
+    setTimeout(function () { document.body.classList.remove('titan-stomp'); }, 800);
 }
 
 function showToast(message, type) {
@@ -295,6 +306,7 @@ function initQuickAddToCart() {
             if (data.status === 'ok') {
                 updateCartCount();
                 pulseCartBadge();
+                triggerTitanShake(document.querySelector('.cart-badge'));
                 showToast('Added to cart!', 'success');
             }
         });

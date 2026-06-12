@@ -5,18 +5,23 @@
 {% block content %}
 {% set hero_img = url_for('static', filename='images/products/hero-bg.jpg') %}
 <style nonce="{{ csp_nonce }}">.hero-bg{background-image:url('{{ hero_img }}')}</style>
-<section class="hero">
+<section class="hero" id="hero-section">
     <div class="hero-bg"></div>
     <div class="hero-overlay"></div>
+    <div class="ember-container">
+        <div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div>
+        <div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div>
+    </div>
     <div class="hero-accent-line"></div>
     <div class="container">
         <div class="hero-content">
             <div class="hero-badge">
                 <i class="bi bi-shield-fill"></i> Survey Corps Approved
             </div>
-                <h1><span class="highlight typing-text">Shinzou wo Sasageyo!</span> <span style="font-size:0.4em;vertical-align:middle;">🕊️</span></h1>
+                <h1><span class="highlight typing-text">Shinzou wo Sasageyo!</span></h1>
             <p class="slogan">Premium gear, figures & apparel for humanity's finest.</p>
             <p class="sub-slogan">Beyond the walls of ordinary shopping — Survey Corps approved supplies await.</p>
+            <p class="creed-text mt-3">We fight to reclaim <strong>freedom</strong>. We dedicate our <strong>hearts</strong>. We are the <strong>Scouting Legion</strong>.</p>
             <div class="hero-actions">
                 <a href="{{ url_for('products.product_list') }}" class="btn-primary-narmo">
                     Join the Corps <i class="bi bi-arrow-right"></i>
@@ -58,8 +63,8 @@
     <div class="row g-4 product-grid">
         {% for product in trending %}
         <div class="col-6 col-md-4 col-lg-3">
-            <div class="product-card h-100">
-                <div class="position-relative">
+            <div class="product-card colossal-hover h-100">
+                <div class="position-relative titan-steam">
                     <a href="{{ url_for('products.product_detail', slug=product.slug) }}">
                         <img src="{{ url_for('static', filename='images/products/' + product.image_url) }}"
                              class="card-img-top"
@@ -97,8 +102,8 @@
     <div class="row g-4 product-grid">
         {% for product in featured %}
         <div class="col-6 col-md-4 col-lg-3">
-                <div class="product-card h-100">
-                     <div class="position-relative">
+                <div class="product-card colossal-hover h-100">
+                     <div class="position-relative titan-steam">
                         <span class="sc-badge"><i class="bi bi-shield-fill-check"></i> Survey Corps</span>
                         <a href="{{ url_for('products.product_detail', slug=product.slug) }}">
                             <img src="{{ url_for('static', filename='images/products/' + product.image_url) }}"
@@ -131,8 +136,8 @@
     </div>
     <div class="recent-scroll">
         {% for product in recently_viewed %}
-        <div class="product-card">
-            <div class="position-relative">
+        <div class="product-card colossal-hover">
+            <div class="position-relative titan-steam">
                 <a href="{{ url_for('products.product_detail', slug=product.slug) }}">
                     <img src="{{ url_for('static', filename='images/products/' + product.image_url) }}"
                          class="card-img-top" alt="{{ product.name }}" loading="lazy"
@@ -165,8 +170,8 @@
     <div class="row g-4 product-grid">
         {% for product in recommendations %}
         <div class="col-6 col-md-3">
-            <div class="product-card h-100">
-                <div class="position-relative">
+            <div class="product-card colossal-hover h-100">
+                <div class="position-relative titan-steam">
                     <a href="{{ url_for('products.product_detail', slug=product.slug) }}">
                         <img src="{{ url_for('static', filename='images/products/' + product.image_url) }}"
                              class="card-img-top"

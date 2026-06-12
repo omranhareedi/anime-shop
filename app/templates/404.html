@@ -6,11 +6,15 @@
 <div class="container py-5" style="min-height:70vh;display:flex;align-items:center;">
     <div class="row justify-content-center w-100">
         <div class="col-lg-6 text-center">
-            <div style="font-size:8rem;font-weight:900;line-height:1;color:var(--accent);opacity:0.3;letter-spacing:-0.06em;">404</div>
-            <div style="font-size:2rem;font-weight:800;margin-bottom:0.5rem;color:var(--dark);">You've wandered beyond the Walls</div>
-            <p style="color:var(--gray);font-size:1.05rem;margin-bottom:2rem;">
-                This page doesn't exist. A Titan must have gotten it.
+            <div style="position:relative;display:inline-block;">
+                <div style="font-size:8rem;font-weight:900;line-height:1;color:var(--danger);opacity:0.25;letter-spacing:-0.06em;animation:titanShake 3s ease-in-out infinite;">404</div>
+                <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--danger),transparent);opacity:0.3;"></div>
+            </div>
+            <div style="font-size:2rem;font-weight:800;margin-bottom:0.5rem;color:var(--dark);">You've wandered <span style="color:var(--danger);">beyond the Walls</span></div>
+            <p style="color:var(--gray);font-size:1.05rem;margin-bottom:0.5rem;">
+                This page doesn't exist. A Titan must have breached this route.
             </p>
+            <p class="creed-text text-center mx-auto mb-4">"On that day, humanity received a grim reminder — <strong>404</strong>."</p>
             <div class="d-flex justify-content-center gap-3 flex-wrap">
                 <a href="{{ url_for('main.index') }}" class="btn-primary-narmo">
                     <i class="bi bi-house"></i> Retreat to Safety

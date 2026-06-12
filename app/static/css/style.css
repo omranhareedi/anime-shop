@@ -52,6 +52,369 @@
     50% { transform: scale(1.1); opacity: 1; }
 }
 
+/* ================================================
+   🗡️  AOT CRAZY EFFECTS — Prepare for Titanfall  🗡️
+   ================================================ */
+
+/* -- Text Selection: AOT-branded blue-green -- */
+::selection { background: rgba(45,138,118,0.35); color: #fff; }
+::-moz-selection { background: rgba(45,138,118,0.35); color: #fff; }
+
+/* -- Focus ring (AOT teal blaze) -- */
+*:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* -- Screen Shake (triggered via JS) -- */
+.shake-titan {
+    animation: titanShake 0.5s cubic-bezier(0.36,0.07,0.19,0.97) both;
+}
+@keyframes titanShake {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    10% { transform: translateX(-8px) rotate(-1deg); }
+    20% { transform: translateX(8px) rotate(1deg); }
+    30% { transform: translateX(-6px) rotate(-0.5deg); }
+    40% { transform: translateX(6px) rotate(0.5deg); }
+    50% { transform: translateX(-4px) rotate(-0.3deg); }
+    60% { transform: translateX(4px) rotate(0.3deg); }
+    70% { transform: translateX(-2px); }
+    80% { transform: translateX(2px); }
+    90% { transform: translateX(-1px); }
+}
+
+/* -- Massive Titan Stomp (full page) -- */
+.titan-stomp {
+    animation: titanStomp 0.8s ease-out;
+}
+@keyframes titanStomp {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.01) translateY(-2px); }
+    50% { transform: scale(0.99) translateY(4px); }
+    75% { transform: scale(1.005); }
+    100% { transform: scale(1); }
+}
+
+/* -- Blood Drip danger button (for delete/remove) -- */
+.blood-drip {
+    position: relative;
+    overflow: visible !important;
+}
+.blood-drip::before,
+.blood-drip::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 30%;
+    width: 4px;
+    height: 0;
+    background: linear-gradient(to bottom, var(--danger), transparent);
+    border-radius: 0 0 2px 2px;
+    animation: bloodDrip 2s ease-in-out infinite;
+    pointer-events: none;
+}
+.blood-drip::after {
+    left: 60%;
+    animation-delay: 0.8s;
+    width: 3px;
+}
+@keyframes bloodDrip {
+    0% { height: 0; opacity: 1; }
+    50% { height: 14px; opacity: 0.8; }
+    100% { height: 0; opacity: 0; }
+}
+
+/* -- Wall Texture Pattern for section backgrounds -- */
+.wall-pattern {
+    position: relative;
+}
+.wall-pattern::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 41px),
+        repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.01) 40px, rgba(255,255,255,0.01) 41px);
+    pointer-events: none;
+}
+
+/* -- Wall Rose, Wall Sina, Wall Maria decorative badges -- */
+.wall-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.65rem;
+    border-radius: 100px;
+}
+.wall-badge.rose { background: rgba(201,149,43,0.12); color: var(--gold); }
+.wall-badge.sina { background: rgba(45,138,118,0.12); color: var(--accent); }
+.wall-badge.maria { background: rgba(168,50,50,0.12); color: var(--danger); }
+
+/* -- Floating Embers (hero particle effect) -- */
+.ember-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+.ember {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--gold);
+    border-radius: 50%;
+    opacity: 0;
+    animation: emberFloat 6s ease-in-out infinite;
+    box-shadow: 0 0 6px 2px rgba(201,149,43,0.3);
+}
+.ember:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 7s; }
+.ember:nth-child(2) { left: 25%; animation-delay: 1.2s; animation-duration: 5.5s; width: 3px; height: 3px; }
+.ember:nth-child(3) { left: 45%; animation-delay: 0.6s; animation-duration: 8s; width: 5px; height: 5px; }
+.ember:nth-child(4) { left: 65%; animation-delay: 2.1s; animation-duration: 6s; }
+.ember:nth-child(5) { left: 80%; animation-delay: 0.3s; animation-duration: 7.5s; width: 3px; height: 3px; }
+.ember:nth-child(6) { left: 35%; animation-delay: 3s; animation-duration: 5s; width: 5px; height: 5px; }
+.ember:nth-child(7) { left: 55%; animation-delay: 1.8s; animation-duration: 6.5s; }
+.ember:nth-child(8) { left: 90%; animation-delay: 0.9s; animation-duration: 8.5s; width: 3px; height: 3px; }
+@keyframes emberFloat {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 0.8; }
+    50% { opacity: 0.4; }
+    90% { opacity: 0.2; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+/* -- Titan Steam effect (for cards on hover) -- */
+.titan-steam {
+    position: relative;
+    overflow: hidden;
+}
+.titan-steam::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 120%, rgba(200,200,200,0.06) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.5s;
+    pointer-events: none;
+}
+.titan-steam:hover::before {
+    opacity: 1;
+    animation: steamRise 2s ease-out infinite;
+}
+@keyframes steamRise {
+    0% { transform: translateY(0) scale(1); opacity: 0.1; }
+    50% { transform: translateY(-10px) scale(1.05); opacity: 0.2; }
+    100% { transform: translateY(0) scale(1); opacity: 0.1; }
+}
+
+/* -- 3DMG Cable effect for decorative accent lines -- */
+.cable-line {
+    position: relative;
+}
+.cable-line::after {
+    content: '';
+    position: absolute;
+    top: 50%; right: -30px;
+    width: 24px; height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    transform: translateY(-50%) rotate(-15deg);
+    border-radius: 1px;
+}
+.cable-line::before {
+    content: '⚔';
+    position: absolute;
+    top: 50%; right: -38px;
+    transform: translateY(-50%) rotate(45deg);
+    font-size: 0.5rem;
+    color: var(--gray);
+    opacity: 0.4;
+}
+
+/* -- Wings of Freedom (CSS emblem) -- */
+.wings-of-freedom {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    position: relative;
+    width: 48px; height: 48px;
+}
+.wings-of-freedom .wing {
+    position: absolute;
+    width: 22px; height: 28px;
+    border: 2px solid var(--gold);
+    border-radius: 50% 50% 50% 0;
+    opacity: 0.7;
+}
+.wings-of-freedom .wing.left {
+    right: 50%; margin-right: 2px;
+    transform: rotate(15deg) skewX(-5deg);
+    border-right: none;
+    border-bottom: none;
+    border-radius: 50% 0 0 50%;
+    animation: wingLeft 2s ease-in-out infinite alternate;
+}
+.wings-of-freedom .wing.right {
+    left: 50%; margin-left: 2px;
+    transform: rotate(-15deg) skewX(5deg);
+    border-left: none;
+    border-bottom: none;
+    border-radius: 0 50% 50% 0;
+    animation: wingRight 2s ease-in-out infinite alternate;
+}
+.wings-of-freedom .center-emblem {
+    width: 14px; height: 14px;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+    z-index: 1;
+    animation: emblemGlow 2s ease-in-out infinite alternate;
+}
+@keyframes wingLeft {
+    0% { transform: rotate(10deg) skewX(-5deg) scaleX(1); }
+    100% { transform: rotate(20deg) skewX(-5deg) scaleX(1.1); }
+}
+@keyframes wingRight {
+    0% { transform: rotate(-10deg) skewX(5deg) scaleX(1); }
+    100% { transform: rotate(-20deg) skewX(5deg) scaleX(1.1); }
+}
+@keyframes emblemGlow {
+    0% { box-shadow: 0 0 4px rgba(201,149,43,0.3); }
+    100% { box-shadow: 0 0 12px rgba(201,149,43,0.6); }
+}
+
+/* -- Colossal Reveal: dramatic card hover that "breaks the wall" -- */
+.colossal-hover {
+    position: relative;
+    isolation: isolate;
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+.colossal-hover:hover {
+    transform: scale(1.03);
+}
+.colossal-hover::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: conic-gradient(
+        var(--accent),
+        var(--gold),
+        var(--danger),
+        var(--accent)
+    );
+    z-index: -2;
+    opacity: 0;
+    transition: opacity 0.4s;
+    animation: colossalSpin 3s linear infinite;
+}
+.colossal-hover:hover::before {
+    opacity: 0.6;
+}
+.colossal-hover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--card-bg);
+    z-index: -1;
+}
+@keyframes colossalSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* -- Survey Corps Creed reveal (cinematic text) -- */
+.creed-text {
+    font-size: 0.75rem;
+    color: var(--gray);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+    line-height: 1.6;
+    opacity: 0.6;
+    max-width: 480px;
+}
+.creed-text strong {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+/* -- Titan Rage Mode (for admin danger zones) -- */
+.rage-zone {
+    border: 2px solid rgba(168,50,50,0.2);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    background: rgba(168,50,50,0.03);
+    position: relative;
+    animation: ragePulse 3s ease-in-out infinite;
+}
+.rage-zone::before {
+    content: '⚠ TITAN DANGER ZONE ⚠';
+    position: absolute;
+    top: -0.6rem; left: 1rem;
+    background: var(--danger);
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    padding: 0.15rem 0.7rem;
+    border-radius: 3px;
+}
+@keyframes ragePulse {
+    0%, 100% { border-color: rgba(168,50,50,0.2); box-shadow: 0 0 0 0 rgba(168,50,50,0.05); }
+    50% { border-color: rgba(168,50,50,0.5); box-shadow: 0 0 20px 0 rgba(168,50,50,0.1); }
+}
+
+/* -- Hero Kinetic Typography -- */
+.kinetic-text {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 3px solid var(--accent);
+    animation:
+        kineticType 3s steps(30) 0.5s forwards,
+        kineticBlink 0.8s step-end 3.5s infinite;
+    width: 0;
+}
+@keyframes kineticType {
+    from { width: 0; }
+    to { width: 100%; }
+}
+@keyframes kineticBlink {
+    50% { border-color: transparent; }
+}
+
+/* -- AOT Corner Flourish (decorative corner brackets) -- */
+.corner-flourish {
+    position: relative;
+}
+.corner-flourish::before,
+.corner-flourish::after {
+    content: '';
+    position: absolute;
+    width: 16px; height: 16px;
+    border-color: var(--gold);
+    border-style: solid;
+    opacity: 0.3;
+}
+.corner-flourish::before {
+    top: -4px; left: -4px;
+    border-width: 2px 0 0 2px;
+    border-radius: 3px 0 0 0;
+}
+.corner-flourish::after {
+    bottom: -4px; right: -4px;
+    border-width: 0 2px 2px 0;
+    border-radius: 0 0 3px 0;
+}
+
+/* ================================================
+   End of AOT CRAZY EFFECTS
+   ================================================ */
+
 /* ---- Animated Navbar Border (Scouting Legion cape edge) ---- */
 .navbar::after {
     content: '';
@@ -1093,12 +1456,27 @@ a:hover { color: var(--accent-hover); }
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
+    position: relative;
+    overflow: visible;
+}
+.btn-titan::after {
+    content: '';
+    position: absolute;
+    bottom: -6px; left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid var(--danger);
+    opacity: 0;
+    transition: opacity 0.3s;
 }
 .btn-titan:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 15px rgba(168,50,50,0.4);
     color: #fff;
 }
+.btn-titan:hover::after { opacity: 1; }
 
 /* ---- Checkout ---- */
 .checkout-card {
