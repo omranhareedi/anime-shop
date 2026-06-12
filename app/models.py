@@ -111,7 +111,7 @@ class Order(db.Model):
     __tablename__ = 'orders'
 
     id = db.Column(db.Integer, primary_key=True)
-    order_number = db.Column(db.String(20), unique=True, nullable=False)
+    order_number = db.Column(db.String(30), unique=True, nullable=False)
     order_date = db.Column(db.DateTime, default=_utcnow)
     total_amount = db.Column(db.Float, nullable=False, default=0.0)
     status = db.Column(db.String(20), nullable=False, default='Pending')

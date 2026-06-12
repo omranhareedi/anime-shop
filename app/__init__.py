@@ -49,6 +49,12 @@ def create_app(config_class=Config, testing=False):
         except Exception:
             db.session.rollback()
 
+        try:
+            db.session.execute(sa.text("ALTER TABLE orders ALTER COLUMN order_number TYPE VARCHAR(30)"))
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+
         admin = db.session.query(User).filter_by(username='admin').first()
         if admin:
             if not admin.is_admin:

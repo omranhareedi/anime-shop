@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS customers (
 -- Orders table: one per checkout transaction
 CREATE TABLE IF NOT EXISTS orders (
     id                    SERIAL PRIMARY KEY,
-    order_number          VARCHAR(20) NOT NULL UNIQUE,
+    order_number          VARCHAR(30) NOT NULL UNIQUE,
     order_date            TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
     total_amount          FLOAT       NOT NULL DEFAULT 0.0 CHECK (total_amount >= 0),
     status                VARCHAR(20) NOT NULL DEFAULT 'Pending',
