@@ -206,11 +206,19 @@
     </div>
     <p class="section-sub"><i class="bi bi-layers"></i> Browse by division — from Garrison to Survey Corps</p>
     <div class="row g-3">
+        {% set icons = {
+            'figures': 'bi bi-person-arms-up',
+            'apparel': 'bi bi-hoodie',
+            'posters': 'bi bi-image',
+            'accessories': 'bi bi-watch',
+            'manga': 'bi bi-book',
+            'default': 'bi bi-box-seam'
+        } %}
         {% for cat in categories %}
         <div class="col-6 col-md-4 col-lg">
             <a href="{{ url_for('products.product_list', category=cat.slug) }}" class="text-decoration-none">
                 <div class="category-card h-100">
-                    <div class="icon"><i class="bi bi-box-seam"></i></div>
+                    <div class="icon"><i class="{{ icons.get(cat.slug, icons['default']) }}"></i></div>
                     <h6>{{ cat.name }}</h6>
                     <small>{{ cat.description[:40] }}</small>
                 </div>
