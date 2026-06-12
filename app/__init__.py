@@ -93,11 +93,14 @@ def create_app(config_class=Config, testing=False):
     def serve_upload(filename):
         from flask import send_file, abort
         import os
-        tmp_dir = '/tmp/narmo-uploads'
-        filepath = os.path.join(tmp_dir, filename)
-        filepath = os.path.normpath(filepath)
-        if filepath.startswith(tmp_dir) and os.path.exists(filepath):
-            return send_file(filepath)
+        paths = [
+            '/tmp/narmo-uploads',
+            os.path.join(current_app.static_folder, 'images', 'products'),
+        ]
+        for base in paths:
+            filepath = os.path.normpath(os.path.join(base, filename))
+            if filepath.startswith(os.path.normpath(base)) and os.path.exists(filepath):
+                return send_file(filepath)
         abort(404)
 
     @app.errorhandler(404)

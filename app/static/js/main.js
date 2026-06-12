@@ -1,3 +1,5 @@
+initImageFallback();
+
 document.addEventListener('DOMContentLoaded', function () {
     initDarkMode();
     updateCartCount();
@@ -15,10 +17,16 @@ document.addEventListener('DOMContentLoaded', function () {
     initCounterAnimation();
     initCartGlowCheck();
     initSearchToggle();
-    initImageFallback();
 });
 
 function initImageFallback() {
+    document.querySelectorAll('img').forEach(function (img) {
+        if (img.complete && img.naturalWidth === 0 && !img.dataset.errorHandled) {
+            img.dataset.errorHandled = '1';
+            var text = img.getAttribute('alt') || 'Image';
+            img.src = 'https://placehold.co/400x400/F1F5F9/64748B?text=' + encodeURIComponent(text);
+        }
+    });
     document.addEventListener('error', function (e) {
         var img = e.target;
         if (img.tagName !== 'IMG' || img.dataset.errorHandled) return;
