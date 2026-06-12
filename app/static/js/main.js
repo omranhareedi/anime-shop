@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     initDarkMode();
     updateCartCount();
+    initPageLoader();
     initPageTransition();
     initBackToTop();
     initTypingEffect();
@@ -11,6 +12,22 @@ document.addEventListener('DOMContentLoaded', function () {
     initRemoveItem();
     initQuickAddToCart();
 });
+
+function initPageLoader() {
+    var loader = document.getElementById('page-loader');
+    var bar = document.getElementById('narmo-loading-bar');
+    if (loader) {
+        loader.classList.add('hidden');
+        setTimeout(function () { loader.style.display = 'none'; }, 700);
+    }
+    if (bar) {
+        bar.classList.add('active');
+        setTimeout(function () { bar.classList.remove('active'); }, 600);
+    }
+    window.addEventListener('beforeunload', function () {
+        if (bar) bar.classList.add('active');
+    });
+}
 
 function initAddToCart() {
     const form = document.getElementById('add-to-cart-form');
@@ -232,7 +249,7 @@ function initCartPreview() {
         .then(r => r.json())
         .then(function (data) {
             if (data.count === 0) {
-                dropdown.innerHTML = '<div class="cart-preview-empty"><i class="bi bi-bag" style="font-size:1.5rem;display:block;margin-bottom:0.5rem;"></i>Your cart is empty</div>';
+                dropdown.innerHTML = '<div class="cart-preview-empty"><i class="bi bi-bag-fill" style="font-size:1.5rem;display:block;margin-bottom:0.5rem;color:var(--gray);"></i>Your cart is empty</div>';
             } else {
                 var html = '';
                 data.items.forEach(function (item) {

@@ -14,8 +14,13 @@
     <style nonce="{{ csp_nonce }}">@keyframes spin { to { transform: rotate(360deg); } }</style>
 </head>
 <body>
+    <div id="narmo-loading-bar"></div>
+    <div class="page-loader" id="page-loader">
+        <div class="emblem"><i class="bi bi-flower2"></i></div>
+        <div class="loader-text">Dedicating your heart...</div>
+    </div>
     <div id="seasonal-banner" class="seasonal-banner">
-        <span><i class="bi bi-megaphone"></i> The Scouting Legion restocks its supplies — new gear arriving daily!</span>
+        <span><i class="bi bi-megaphone"></i> &#127745; The Scouting Legion has returned from beyond the walls — new supplies have arrived!</span>
         <button class="dismiss-banner" aria-label="Dismiss"><i class="bi bi-x-lg"></i></button>
     </div>
 
@@ -30,7 +35,7 @@
                 </button>
                 <div class="cart-preview-wrap">
                     <a href="{{ url_for('cart.view_cart') }}" class="nav-icon-btn position-relative">
-                        <i class="bi bi-bag"></i>
+                        <i class="bi bi-bag-fill"></i>
                         <span id="cart-count" class="cart-badge">0</span>
                     </a>
                     <div class="cart-preview-dropdown"></div>
@@ -186,6 +191,10 @@
                         {% endif %}
                     </ul>
                 </div>
+            </div>
+            <div class="footer-quote">
+                <span class="emblem"><i class="bi bi-flower2"></i></span>
+                "Dedicate your heart — <strong>Shinzou wo Sasageyo</strong>"
             </div>
             <div class="footer-bottom">
                 <p>&copy; 2026 Narmo. Crafted with purpose.</p>

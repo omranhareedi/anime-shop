@@ -1,7 +1,77 @@
 /* ================================================
-   Narmo — Attack on Titan Edition
-   Palette: #0f0f1a | #2d8a76 | #c9952b | #e8e0d0
+   Narmo — Survey Corps Supply Depot
+   Palette: #0f0f1a | #2d8a76 | #c9952b | #a83232 | #e8e0d0
+   Theme: Attack on Titan / Shingeki no Kyojin
    ================================================ */
+
+/* ---- Custom Scrollbar ---- */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--dark); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; border: 2px solid var(--dark); }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-hover); }
+::-webkit-scrollbar-corner { background: var(--dark); }
+
+/* ---- Loading Bar (AOT-style top progress) ---- */
+#narmo-loading-bar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 3px; z-index: 999999;
+    background: linear-gradient(90deg, var(--accent), var(--gold), var(--accent));
+    background-size: 200% 100%;
+    animation: loadingBar 1.5s ease-in-out infinite;
+    transform-origin: left;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+#narmo-loading-bar.active { opacity: 1; }
+@keyframes loadingBar {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ---- Page Loading Screen ---- */
+.page-loader {
+    position: fixed; inset: 0; z-index: 99999;
+    background: var(--dark);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    transition: opacity 0.6s, visibility 0.6s;
+}
+.page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.page-loader .emblem {
+    font-size: 3rem; color: var(--accent);
+    animation: emblemPulse 1.2s ease-in-out infinite;
+}
+.page-loader .loader-text {
+    margin-top: 1rem; font-size: 0.8rem;
+    color: var(--gray); font-weight: 500;
+    letter-spacing: 0.15em; text-transform: uppercase;
+}
+@keyframes emblemPulse {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.1); opacity: 1; }
+}
+
+/* ---- Animated Navbar Border (Scouting Legion cape edge) ---- */
+.navbar::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        var(--accent) 20%,
+        var(--gold) 50%,
+        var(--accent) 80%,
+        transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: navBorderShimmer 4s ease-in-out infinite;
+}
+@keyframes navBorderShimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
 
 :root {
     --dark: #0f0f1a;
@@ -317,10 +387,26 @@ a:hover { color: var(--accent-hover); }
 .hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg,
-        rgba(15,15,26,0.95) 0%,
-        rgba(15,15,26,0.7) 40%,
-        rgba(45,138,118,0.15) 100%);
+    background:
+        radial-gradient(ellipse at 20% 50%, rgba(45,138,118,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 50%, rgba(201,149,43,0.08) 0%, transparent 60%),
+        linear-gradient(135deg,
+            rgba(15,15,26,0.97) 0%,
+            rgba(15,15,26,0.75) 40%,
+            rgba(15,15,26,0.5) 100%);
+}
+.hero-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.015) 2px,
+        rgba(255,255,255,0.015) 4px
+    );
+    pointer-events: none;
 }
 
 .hero-accent-line {
@@ -407,6 +493,23 @@ a:hover { color: var(--accent-hover); }
     text-decoration: none;
 }
 
+.btn-primary-narmo {
+    position: relative;
+    overflow: hidden;
+}
+.btn-primary-narmo::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.1) 45%, rgba(255,255,255,0.1) 55%, transparent 60%);
+    transform: translateX(-100%) rotate(25deg);
+    transition: transform 0.6s;
+    pointer-events: none;
+}
+.btn-primary-narmo:hover::after {
+    transform: translateX(100%) rotate(25deg);
+}
 .btn-primary-narmo:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 30px rgba(45,138,118,0.4);
@@ -427,8 +530,22 @@ a:hover { color: var(--accent-hover); }
     font-size: 0.9rem;
     transition: var(--transition);
     text-decoration: none;
+    position: relative;
+    overflow: hidden;
 }
-
+.btn-outline-narmo::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.05) 45%, rgba(255,255,255,0.05) 55%, transparent 60%);
+    transform: translateX(-100%) rotate(25deg);
+    transition: transform 0.6s;
+    pointer-events: none;
+}
+.btn-outline-narmo:hover::after {
+    transform: translateX(100%) rotate(25deg);
+}
 .btn-outline-narmo:hover {
     border-color: var(--accent);
     color: var(--accent);
@@ -514,7 +631,7 @@ a:hover { color: var(--accent-hover); }
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.75rem;
 }
 
 .section-title h2 { font-size: 1.5rem; margin: 0; }
@@ -528,9 +645,55 @@ a:hover { color: var(--accent-hover); }
 .section-sub {
     color: var(--gray);
     font-size: 0.9rem;
-    margin-top: -1.5rem;
+    margin-top: -1.25rem;
     margin-bottom: 2rem;
 }
+
+.section-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 2.5rem 0;
+    color: var(--gray);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+}
+.section-divider::before,
+.section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+.section-divider .wings {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--gold);
+}
+
+/* ---- Survey Corps Featured Badge ---- */
+.sc-badge {
+    position: absolute;
+    top: 0.75rem; left: 0.75rem;
+    z-index: 2;
+    background: linear-gradient(135deg, var(--accent), #1a6b5a);
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 2px 8px rgba(45,138,118,0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.sc-badge i { font-size: 0.55rem; }
+[data-theme="dark"] .sc-badge { box-shadow: 0 2px 8px rgba(45,138,118,0.2); }
 
 /* ---- Product Cards ---- */
 .product-grid { --gap: 1.25rem; }
@@ -542,6 +705,7 @@ a:hover { color: var(--accent-hover); }
     overflow: hidden;
     transition: var(--transition);
     box-shadow: var(--shadow-sm);
+    position: relative;
 }
 
 .product-card:hover {
@@ -622,6 +786,21 @@ a:hover { color: var(--accent-hover); }
     cursor: pointer;
 }
 
+.category-card {
+    position: relative;
+    isolation: isolate;
+}
+.category-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, rgba(45,138,118,0.03), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+.category-card:hover::before { opacity: 1; }
 .category-card:hover {
     transform: translateY(-3px);
     box-shadow: var(--shadow-lg);
@@ -814,8 +993,22 @@ a:hover { color: var(--accent-hover); }
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
 }
-
+.btn-add-cart::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.08) 45%, rgba(255,255,255,0.08) 55%, transparent 60%);
+    transform: translateX(-100%) rotate(25deg);
+    transition: transform 0.6s;
+    pointer-events: none;
+}
+.btn-add-cart:hover::after {
+    transform: translateX(100%) rotate(25deg);
+}
 .btn-add-cart:hover {
     background: var(--accent);
     transform: translateY(-1px);
@@ -887,6 +1080,25 @@ a:hover { color: var(--accent-hover); }
 }
 
 .btn-remove:hover { color: #dc2626; background: rgba(220,38,38,0.06); }
+
+.btn-titan {
+    background: linear-gradient(135deg, var(--danger), #8b2020);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 0.55rem 1.75rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.btn-titan:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(168,50,50,0.4);
+    color: #fff;
+}
 
 /* ---- Checkout ---- */
 .checkout-card {
@@ -1439,9 +1651,31 @@ a:hover .stat-card { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,
 .footer ul li a:hover { color: #fff; }
 .admin-link { font-size: 0.75rem !important; opacity: 0.5; }
 
+.footer-quote {
+    text-align: center;
+    padding: 2rem 0 1.5rem;
+    margin-top: 2rem;
+    border-top: 1px solid var(--footer-border);
+    font-size: 0.85rem;
+    color: var(--gray);
+    font-style: italic;
+    letter-spacing: 0.02em;
+}
+.footer-quote strong {
+    color: var(--gold);
+    font-style: normal;
+    font-weight: 700;
+}
+.footer-quote .emblem {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    color: var(--accent);
+}
+
 .footer-bottom {
     border-top: 1px solid var(--footer-border);
-    margin-top: 3rem;
+    margin-top: 1rem;
     padding-top: 1.5rem;
     text-align: center;
     font-size: 0.8rem;
@@ -1794,10 +2028,6 @@ body.page-ready { opacity: 1; transition: opacity 0.35s; }
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--gold), transparent);
 }
-.timeline-step.done .timeline-label { color: var(--accent); font-weight: 700; }
-.timeline-step.done .timeline-dot { background: var(--accent); }
-.timeline-step.active .timeline-label { color: var(--gold); font-weight: 700; }
-
 /* ---- Titan red for danger/action badges ---- */
 .titan-badge { background: rgba(168,50,50,0.12); color: var(--danger); }
 [data-theme="dark"] .titan-badge { background: rgba(168,50,50,0.2); color: #ef4444; }
