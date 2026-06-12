@@ -4,7 +4,7 @@
 <div class="container py-4">
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
         <div>
-            <h4 class="fw-800 mb-0 text-accent"><i class="bi bi-pencil-square"></i> Edit Product</h4>
+            <h4 class="fw-800 mb-0 text-accent"><i class="bi bi-pencil-square"></i> Edit Product <span class="rec-badge ms-2 d-inline-block" style="font-size:0.65rem;"><i class="bi bi-shield-fill-check"></i> Inventory Update</span></h4>
             <p class="text-gray text-sm mb-0">#{{ product.id }} &middot; {{ product.name }}</p>
         </div>
         <a href="{{ url_for('admin.product_list') }}" class="btn-back">&larr; All Products</a>

@@ -155,7 +155,11 @@
         {% if messages %}
         <div class="container mt-3">
             {% for category, message in messages %}
-            <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show">
+            <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show narmo-alert">
+                {% if category == 'success' %}<i class="bi bi-shield-fill-check me-1"></i>
+                {% elif category == 'danger' or category == 'error' %}<i class="bi bi-exclamation-triangle-fill me-1"></i>
+                {% elif category == 'warning' %}<i class="bi bi-exclamation-circle-fill me-1"></i>
+                {% else %}<i class="bi bi-info-circle-fill me-1"></i>{% endif %}
                 {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>

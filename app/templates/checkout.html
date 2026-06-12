@@ -6,8 +6,10 @@
 <div class="container py-4">
     <div class="section-title">
         <span class="accent-bar"></span>
-        <h2>Checkout</h2>
+        <h2>Checkout <span class="highlight">Expedition</span></h2>
+        <span class="rec-badge ms-2"><i class="bi bi-shield-fill-check"></i> Supply Requisition</span>
     </div>
+    <p class="section-sub"><i class="bi bi-pencil"></i> Complete your requisition form to finalize the expedition supplies.</p>
 
     <div class="row g-5">
         <div class="col-md-7">
@@ -15,7 +17,7 @@
                 <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                 <div class="checkout-card mb-4">
                     <div class="card-header">
-                        <h5><i class="bi bi-person"></i> Customer Details</h5>
+                        <h5><i class="bi bi-person"></i> Soldier Details</h5>
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
@@ -147,7 +149,7 @@
         <div class="col-md-5">
             <div class="checkout-card">
                 <div class="card-header">
-                    <h5><i class="bi bi-receipt"></i> Order Summary</h5>
+                    <h5><i class="bi bi-receipt"></i> Requisition Summary</h5>
                 </div>
                 <div class="card-body">
                     {% for item in items %}
@@ -164,6 +166,12 @@
                         <span style="font-weight:700;font-size:1.1rem;">Total</span>
                         <span style="font-weight:800;font-size:1.3rem;">${{ "%.2f"|format(total) }}</span>
                     </div>
+                </div>
+            </div>
+
+            <div class="checkout-card mt-3">
+                <div class="card-body">
+                    <p class="creed-text text-center mb-0" style="max-width:none;font-size:0.7rem;">"If you don't sacrifice your <strong>wallet</strong>, you cannot win."</p>
                 </div>
             </div>
 

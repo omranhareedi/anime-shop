@@ -14,14 +14,21 @@
 
     <div class="row g-5 align-items-start">
         <div class="col-md-6">
-            <img src="{{ url_for('static', filename='images/products/' + product.image_url) }}"
-                 class="product-detail-img"
-                 alt="{{ product.name }}"
-                 onerror="this.src='https://placehold.co/600x600/F1F5F9/64748B?text={{ product.name|urlencode }}'">
+            <div class="colossal-hover" style="border-radius:var(--radius-lg);overflow:hidden;">
+                <div class="titan-steam" style="border-radius:inherit;">
+                    <img src="{{ url_for('static', filename='images/products/' + product.image_url) }}"
+                         class="product-detail-img"
+                         alt="{{ product.name }}"
+                         style="width:100%;display:block;"
+                         onerror="this.src='https://placehold.co/600x600/F1F5F9/64748B?text={{ product.name|urlencode }}'">
+                </div>
+            </div>
+            <p class="creed-text text-center mx-auto mt-3" style="max-width:none;">"On that day, humanity received a grim reminder — we lived in fear of <strong>ordinary gear</strong>."</p>
         </div>
         <div class="col-md-6">
             <div class="detail-badges">
-                <span class="detail-badge">{{ product.category.name }}</span>
+                {% set cat_icons = {'figures':'bi-person-arms-up','apparel':'bi-tags','posters':'bi-image','accessories':'bi-watch','manga':'bi-book'} %}
+                <span class="detail-badge"><i class="bi {{ cat_icons.get(product.category.slug, 'bi-dot') }} me-1"></i>{{ product.category.name }}</span>
                 {% if product.genre %}<span class="detail-badge genre">{{ product.genre }}</span>{% endif %}
                 {% if product.vendor %}
                 <a href="{{ url_for('vendors.vendor_store', slug=product.vendor.slug) }}" class="text-decoration-none">
@@ -33,6 +40,16 @@
             </div>
             <h1 class="detail-title">{{ product.name }}</h1>
             <div class="detail-price">${{ "%.2f"|format(product.price) }}</div>
+
+            {% if product.vendor %}
+            <div class="mt-2 mb-3">
+                <span class="rec-badge d-inline-block"><i class="bi bi-shop"></i> Supplied by {{ product.vendor.name }}</span>
+                {% if product.vendor.rating %}
+                <span class="rec-badge d-inline-block ms-1"><i class="bi bi-star-fill"></i> {{ product.vendor.rating }}/5</span>
+                {% endif %}
+            </div>
+            {% endif %}
+
             <p class="detail-desc mt-3">{{ product.description }}</p>
 
             <div class="mb-3">
@@ -60,24 +77,27 @@
             <hr class="my-4">
             <div style="font-size:0.85rem;line-height:2;">
                 <strong>Product ID</strong> #{{ product.id }}<br>
-                <strong>Category</strong> {{ product.category.name }}<br>
+                <strong>Division</strong> {{ product.category.name }}<br>
                 <strong>Genre</strong> {{ product.genre or 'General' }}
             </div>
         </div>
     </div>
 
     {% if related %}
-    <div class="section-title mt-5">
+    <div class="section-divider mt-5">
+        <span class="wings"><i class="bi bi-flower2"></i> &#10022; <i class="bi bi-flower2"></i></span>
+    </div>
+    <div class="section-title mt-4">
         <span class="accent-bar"></span>
         <h2>Similar Items</h2>
-        <span class="rec-badge ms-2"><i class="bi bi-cpu"></i> AI</span>
+        <span class="rec-badge ms-2"><i class="bi bi-cpu"></i> Scouting Intel</span>
     </div>
     <p class="section-sub"><i class="bi bi-arrow-right-circle"></i> Content-based similarity via TF-IDF + genre analysis</p>
     <div class="row g-4 product-grid">
         {% for rel in related %}
         <div class="col-6 col-md-3">
-            <div class="product-card h-100">
-                <div class="position-relative">
+            <div class="product-card colossal-hover h-100">
+                <div class="position-relative titan-steam">
                     <a href="{{ url_for('products.product_detail', slug=rel.slug) }}">
                         <img src="{{ url_for('static', filename='images/products/' + rel.image_url) }}"
                              class="card-img-top"
@@ -108,17 +128,20 @@
     {% endif %}
 
     {% if collab_recs %}
-    <div class="section-title mt-5">
+    <div class="section-divider mt-5">
+        <span class="wings"><i class="bi bi-flower2"></i> &#10022; <i class="bi bi-flower2"></i></span>
+    </div>
+    <div class="section-title mt-4">
         <span class="accent-bar"></span>
         <h2>Frequently Bought Together</h2>
-        <span class="rec-badge ms-2"><i class="bi bi-people"></i> AI</span>
+        <span class="rec-badge ms-2"><i class="bi bi-people"></i> Intelligence</span>
     </div>
-    <p class="section-sub"><i class="bi bi-arrow-right-circle"></i> Collaborative filtering: customers who bought this also bought</p>
+    <p class="section-sub"><i class="bi bi-arrow-right-circle"></i> Collaborative filtering: soldiers who bought this also requisitioned</p>
     <div class="row g-4 product-grid">
         {% for rel in collab_recs %}
         <div class="col-6 col-md-3">
-            <div class="product-card h-100" style="border-color:var(--accent);">
-                <div class="position-relative">
+            <div class="product-card colossal-hover h-100" style="border-color:var(--accent);">
+                <div class="position-relative titan-steam">
                     <a href="{{ url_for('products.product_detail', slug=rel.slug) }}">
                         <img src="{{ url_for('static', filename='images/products/' + rel.image_url) }}"
                              class="card-img-top"

@@ -15,13 +15,13 @@
             <div class="form-section">
                 <div class="form-section-header">
                     <i class="bi bi-box-seam"></i>
-                    <span>Order Items</span>
+                    <span>Requisition Items</span>
                 </div>
                 <div class="form-section-body p-0">
                     <table class="dash-table mb-0">
                         <thead>
                             <tr>
-                                <th>Product</th>
+                                <th>Gear</th>
                                 <th>Price</th>
                                 <th>Qty</th>
                                 <th class="text-end pe-3">Subtotal</th>
@@ -99,7 +99,7 @@
 
             <div class="preview-panel mt-3">
                 <div class="preview-panel-header">
-                    <i class="bi bi-person"></i> Customer
+                    <i class="bi bi-person"></i> Soldier
                 </div>
                 <div class="preview-panel-body">
                     <div class="preview-meta-row"><span class="meta-label">Name</span><span class="meta-value">{{ order.customer.first_name }} {{ order.customer.last_name }}</span></div>
@@ -147,7 +147,7 @@
 {% block scripts %}
 <script nonce="{{ csp_nonce }}">
 document.querySelectorAll('.delete-form').forEach(function(form) {
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('click', function(e) {
         if (!confirm(this.dataset.confirm)) e.preventDefault();
     });
 });
