@@ -1,3 +1,4 @@
+import re
 import uuid
 
 
@@ -37,15 +38,16 @@ class MobileMoneyGateway:
 
     def process(self, amount, currency, details):
         provider = details.get('mobile_provider', '').lower()
-        phone = details.get('mobile_phone', '').replace(' ', '').replace('-', '')
+        phone_raw = details.get('mobile_phone', '')
+        digits = re.sub(r'\D', '', phone_raw)
         if provider not in self.PROVIDERS:
             return PaymentResult(False, None, 'Unsupported mobile money provider.')
-        if not phone or len(phone) < 10:
+        if not digits or len(digits) < 10:
             return PaymentResult(False, None, 'Invalid mobile phone number.')
         return PaymentResult(
             True,
             f'momo_{uuid.uuid4().hex[:16]}',
-            f'{provider.upper()} payment of ${amount:.2f} confirmed ({phone}).'
+            f'{provider.upper()} payment of ${amount:.2f} confirmed ({phone_raw}).'
         )
 
 
