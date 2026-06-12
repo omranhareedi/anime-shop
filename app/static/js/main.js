@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', function () {
     initQtyControls();
     initRemoveItem();
     initQuickAddToCart();
+    initButtonRipple();
+    initCounterAnimation();
+    initCartGlowCheck();
 });
 
 function initPageLoader() {
@@ -132,9 +135,65 @@ function updateCartCount(suppressShake) {
     .then(r => r.json())
     .then(data => {
         const el = document.getElementById('cart-count');
-        if (el) el.textContent = data.count;
+        if (el) {
+            el.textContent = data.count;
+            if (parseInt(data.count) > 0) {
+                el.classList.add('has-items');
+            } else {
+                el.classList.remove('has-items');
+            }
+        }
     })
     .catch(() => {});
+}
+
+function initCartGlowCheck() {
+    var el = document.getElementById('cart-count');
+    if (el && parseInt(el.textContent) > 0) {
+        el.classList.add('has-items');
+    }
+}
+
+function initButtonRipple() {
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.btn-primary-narmo, .btn-outline-narmo, .btn-add-cart, .btn-submit, .btn-titan, .btn-ripple');
+        if (!btn) return;
+        var rect = btn.getBoundingClientRect();
+        var ripple = document.createElement('span');
+        ripple.className = 'ripple-effect';
+        var size = Math.max(rect.width, rect.height);
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+        ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+        btn.appendChild(ripple);
+        setTimeout(function () { ripple.remove(); }, 600);
+    });
+}
+
+function initCounterAnimation() {
+    document.querySelectorAll('.hero-stat-value').forEach(function (el) {
+        var text = el.textContent;
+        var num = parseFloat(text);
+        if (isNaN(num)) return;
+        var suffix = text.replace(/[\d.]/g, '');
+        el.textContent = '0' + suffix;
+        var target = num;
+        var duration = 1200;
+        var start = performance.now();
+        function update(now) {
+            var elapsed = now - start;
+            var progress = Math.min(elapsed / duration, 1);
+            var eased = 1 - Math.pow(1 - progress, 3);
+            var current = Math.floor(eased * target);
+            el.textContent = current + suffix;
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            } else {
+                el.textContent = target + suffix;
+            }
+        }
+        requestAnimationFrame(update);
+    });
 }
 
 function triggerTitanShake(el) {
