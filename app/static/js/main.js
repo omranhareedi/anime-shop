@@ -15,7 +15,18 @@ document.addEventListener('DOMContentLoaded', function () {
     initCounterAnimation();
     initCartGlowCheck();
     initSearchToggle();
+    initImageFallback();
 });
+
+function initImageFallback() {
+    document.addEventListener('error', function (e) {
+        var img = e.target;
+        if (img.tagName !== 'IMG' || img.dataset.errorHandled) return;
+        img.dataset.errorHandled = '1';
+        var text = img.getAttribute('alt') || 'Image';
+        img.src = 'https://placehold.co/400x400/F1F5F9/64748B?text=' + encodeURIComponent(text);
+    }, true);
+}
 
 function initPageLoader() {
     var loader = document.getElementById('page-loader');
@@ -325,7 +336,7 @@ function initCartPreview() {
                 var html = '';
                 data.items.forEach(function (item) {
                     html += '<div class="cart-preview-item">' +
-                        '<img src="/static/images/products/' + item.image + '" alt="" onerror="this.src=\'https://placehold.co/44x44/F1F5F9/64748B?text=N\'">' +
+                        '<img src="' + (item.image.startsWith('http') ? item.image : '/static/images/products/' + item.image) + '" alt="' + item.name + '">' +
                         '<div class="name">' + item.name + '</div>' +
                         '<span class="qty">x' + item.quantity + '</span>' +
                         '<span class="subtotal">$' + item.subtotal.toFixed(2) + '</span>' +
