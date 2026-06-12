@@ -399,7 +399,7 @@ def test_search_results(client):
 def test_search_no_results(client):
     resp = client.get('/products/?q=xyznonexistent')
     assert resp.status_code == 200
-    assert b'No matches' in resp.data
+    assert b'No Intelligence Found' in resp.data
 
 
 def test_admin_product_edit_submit(admin_client):
