@@ -86,6 +86,13 @@ def create_app(config_class=Config, testing=False):
         from flask import jsonify
         return jsonify(error='Too many requests. Please slow down.'), 429
 
+    @app.errorhandler(500)
+    def server_error(e):
+        import traceback
+        from flask import jsonify
+        tb = traceback.format_exc()
+        return jsonify(error='Internal server error', traceback=tb), 500
+
     @app.context_processor
     def inject_globals():
         from app.models import Category
