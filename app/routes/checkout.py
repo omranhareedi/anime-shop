@@ -38,6 +38,7 @@ def checkout():
             address=sanitized['address'],
             city=sanitized['city'],
             postal_code=sanitized['postal_code'],
+            user_id=session.get('user_id'),
         )
         db.session.add(customer)
         db.session.flush()

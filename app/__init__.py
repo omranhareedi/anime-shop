@@ -25,6 +25,7 @@ def create_app(config_class=Config, testing=False):
     from app.routes.admin import admin_bp
     from app.routes.vendors import vendors_bp
     from app.routes.auth import auth_bp
+    from app.routes.customer import customer_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(products_bp, url_prefix='/products')
@@ -33,6 +34,7 @@ def create_app(config_class=Config, testing=False):
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(vendors_bp, url_prefix='/vendors')
     app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(customer_bp, url_prefix='/account')
 
     from app.security import configure_session, apply_security_headers, limiter
     configure_session(app)
@@ -51,6 +53,12 @@ def create_app(config_class=Config, testing=False):
 
         try:
             db.session.execute(sa.text("ALTER TABLE orders ALTER COLUMN order_number TYPE VARCHAR(30)"))
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+
+        try:
+            db.session.execute(sa.text("ALTER TABLE customers ADD COLUMN user_id INTEGER REFERENCES users(id)"))
             db.session.commit()
         except Exception:
             db.session.rollback()

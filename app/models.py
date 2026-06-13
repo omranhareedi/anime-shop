@@ -100,6 +100,7 @@ class Customer(db.Model):
     address = db.Column(db.Text, nullable=False)
     city = db.Column(db.String(100), nullable=False)
     postal_code = db.Column(db.String(20), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     created_at = db.Column(db.DateTime, default=_utcnow)
     orders = db.relationship('Order', backref='customer', lazy=True)
 
