@@ -15,4 +15,10 @@ class Config:
     WTF_CSRF_ENABLED = True
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max upload
     PRODUCTS_PER_PAGE = 12
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_pre_ping': True,
+        'pool_recycle': 300,
+    }
+    if 'postgres' in SQLALCHEMY_DATABASE_URI or 'psycopg2' in SQLALCHEMY_DATABASE_URI:
+        SQLALCHEMY_ENGINE_OPTIONS['connect_args'] = {'sslmode': 'require'}
 
