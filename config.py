@@ -19,6 +19,4 @@ class Config:
         'pool_pre_ping': True,
         'pool_recycle': 300,
     }
-    if 'postgres' in SQLALCHEMY_DATABASE_URI or 'psycopg2' in SQLALCHEMY_DATABASE_URI:
-        SQLALCHEMY_ENGINE_OPTIONS['connect_args'] = {'sslmode': 'require'}
 
