@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Narmo — Survey Corps Supply Depot{% endblock %}</title>
+    {% block meta %}
+    <meta name="description" content="{% block description %}Survey Corps Supply Depot — premium anime gear, figures, apparel, and manga. Dedicate your heart to the culture.{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}Narmo — Survey Corps Supply Depot{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Premium anime gear, figures, apparel & manga for humanity's finest. Shop the Survey Corps Supply Depot.{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ url_for('static', filename='images/products/logo.png', _external=True) }}{% endblock %}">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="{% block canonical %}{{ request.url }}{% endblock %}">
+    {% endblock %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -12,6 +22,16 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/products/favicon.png') }}">
     <style nonce="{{ csp_nonce }}">@keyframes spin { to { transform: rotate(360deg); } }</style>
+    <script type="application/ld+json" nonce="{{ csp_nonce }}">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Narmo",
+        "alternateName": "Survey Corps Supply Depot",
+        "url": "https://narmostore.live/",
+        "description": "Survey Corps Supply Depot — premium anime gear, figures, apparel & manga."
+    }
+    </script>
 </head>
 <body>
     <div id="narmo-loading-bar"></div>
@@ -24,7 +44,7 @@
         <button class="dismiss-banner" aria-label="Dismiss"><i class="bi bi-x-lg"></i></button>
     </div>
 
-    <nav class="navbar navbar-expand-lg sticky-top">
+    <header><nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('main.index') }}">
                 <img src="{{ url_for('static', filename='images/products/logo.png') }}" alt="Narmo" class="brand-logo">
@@ -156,7 +176,7 @@
                 </ul>
             </div>
         </div>
-    </nav>
+    </nav></header>
 
     <main>
         {% with messages = get_flashed_messages(with_categories=true) %}

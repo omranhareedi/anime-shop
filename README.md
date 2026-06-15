@@ -15,7 +15,7 @@
 
 Narmo (named after the Survey Corps' battle cry "Shinzou wo Sasageyo!") is a full-stack multi-vendor e-commerce marketplace for anime merchandise, built as the capstone project for the final 45/45 rubric. The platform is fully themed around *Attack on Titan*, featuring the Survey Corps teal/gold color palette, AoT-inspired UI elements, and immersive theming throughout.
 
-The application enables customers to browse products by category and genre, add items to a session-based cart, checkout with multiple payment gateways (Stripe, PayPal, Mobile Money), and receive AI-powered product recommendations. Administrators can manage products, view analytics dashboards, and oversee orders. Vendors have dedicated storefronts with ratings.
+The application enables customers to browse products by category and genre, add items to a session-based cart, checkout with multiple payment gateways (Stripe, PayPal, Mobile Money), and receive AI-powered product recommendations. Registered users can view their order history via the customer dashboard. Administrators can manage products, view analytics dashboards, and oversee orders. Vendors have dedicated storefronts with ratings.
 
 ---
 
@@ -41,6 +41,9 @@ Anime merchandise shopping platforms often lack immersion, personalization, and 
 - Include a secure admin dashboard with sales analytics, product CRUD, and image upload
 - Implement user authentication with role-based access (admin vs regular users)
 - Ensure responsive design with dark mode support
+- Provide customer dashboard for order history tracking
+- Implement SEO best practices (sitemap, robots.txt, JSON-LD structured data, OG tags)
+- Deploy on a custom domain (narmostore.live)
 - Containerize with Docker and docker-compose
 - Set up CI/CD pipeline with GitHub Actions
 - Achieve 45/45 on the final project rubric across all 6 deliverables
@@ -57,6 +60,7 @@ Anime merchandise shopping platforms often lack immersion, personalization, and 
 - Order confirmation with timeline tracking (Pending → Paid → Shipped → Delivered)
 - Recently viewed products ("Your Trajectory") with horizontal scroll carousel
 - Dark mode toggle with system preference detection
+- My Orders dashboard: order history list with status badges, detail page with timeline, shipping info, payment details
 - User registration and login with loading spinner, password visibility toggle, remember me
 - Vendor storefronts with star ratings
 - Toast notifications on cart actions
@@ -85,6 +89,15 @@ Anime merchandise shopping platforms often lack immersion, personalization, and 
 - Input sanitization (XSS prevention, HTML escaping, email/phone sanitization)
 - HttpOnly/SameSite session cookies
 - Security headers: X-Frame-Options, X-Content-Type-Options, HSTS, Referrer-Policy, Permissions-Policy
+
+**SEO**
+- Fully dynamic `sitemap.xml` with all products, categories, and static pages
+- `robots.txt` allowing full crawl with sitemap reference
+- Open Graph (OG) meta tags for rich social previews (title, description, image, type)
+- Twitter Card support (`summary_large_image`)
+- Canonical URLs to prevent duplicate content issues
+- JSON-LD structured data: WebSite schema (sitewide), Product + BreadcrumbList schemas (product pages)
+- Semantic HTML5 (`<header>`, `<nav>`, `<main>`, `<footer>`, `<article>`)
 
 **Theming**
 - Attack on Titan full theme: Survey Corps teal (#2d8a76), gold (#c9952b), dark (#0f0f1a)
@@ -192,7 +205,8 @@ The repository contains 55+ meaningful commits with clear commit messages, follo
 
 ### 9. Deployment Link
 
-**Live URL (Vercel):** [https://anime-shop-ten.vercel.app/](https://anime-shop-ten.vercel.app/)  
+**Live URL (Vercel):** [https://narmostore.live/](https://narmostore.live/)  
+**Vercel Fallback URL:** [https://anime-shop-ten.vercel.app/](https://anime-shop-ten.vercel.app/)  
 **Legacy URL (Render):** [https://narmo-store.onrender.com/](https://narmo-store.onrender.com/)
 
 The application is deployed on **Vercel** (serverless) with **Neon Postgres** as the production database:
@@ -226,11 +240,11 @@ Pipeline stages:
 **Jobs:**
 
 1. **test** (runs on `ubuntu-latest`):
-   - Spins up a PostgreSQL 16 service container for testing
+   - Spins up a PostgreSQL 16 service container for integration testing
    - Installs Python dependencies from `requirements.txt`
    - Runs `flake8` linting with error checks (E9, F63, F7, F82)
-   - Runs `pytest` with 46 tests covering all routes, models, cart, checkout, payment gateways, recommendations, vendors, security, and search
-   - Verifies app boots correctly with seed data
+   - Runs `pytest` with 46 passing tests covering all routes, models, cart, checkout, payment gateways, recommendations, vendors, customer dashboard, security, and search
+   - Verifies app boots correctly with seed data against the PostgreSQL service container
 
 2. **build** (runs only on `main`/`master` push, after tests pass):
    - Sets up Docker Buildx
@@ -277,7 +291,22 @@ Pipeline stages:
    Content Security Policy nonces block `onclick`/`onsubmit` HTML attributes. All event handlers were migrated to `addEventListener` in nonced `<script>` blocks, including password toggles, order row clicks, and form confirmation dialogs.
 
 10. **Jinja2 Variable Scoping in Loops**
-   `{% set %}` inside `{% for %}` loops doesn't leak outside the loop scope. The order confirmation timeline used this pattern for `current_index` — fixed with `namespace` object.
+    `{% set %}` inside `{% for %}` loops doesn't leak outside the loop scope. The order confirmation timeline used this pattern for `current_index` — fixed with `namespace` object.
+
+11. **Vercel SSL Connection Drops with Neon Postgres**
+    Neon closes idle SSL connections after a few minutes, causing `SSL connection has been closed unexpectedly` errors. Fixed with `pool_pre_ping: True` and `pool_recycle: 300` in `SQLALCHEMY_ENGINE_OPTIONS`.
+
+12. **Vercel Image Upload Permissions**
+    The serverless filesystem is read-only except for `/tmp/`. Uploads to `static/images/products/` would fail with `OSError`. Caught the exception and redirected to `/tmp/narmo-uploads/`.
+
+13. **Mobile Money Payment Fields Hidden**
+    The checkout JavaScript looked for `#mobile_money-fields` but the HTML had `id="momo-fields"`. The fields stayed hidden, so the phone number was never submitted, causing a validation error. Fixed by aligning the HTML id.
+
+14. **Custom Domain DNS Propagation**
+    After registering `narmostore.live` and adding DNS records on Name.com, the local ISP's DNS cache still returned NXDOMAIN. Fixed by flushing local DNS cache and waiting for router TTL to expire.
+
+15. **Screenshot File Size for README**
+    Initial 2880px screenshots totaled over 36 MB, causing slow README loading. Compressed all 10 screenshots to 1200px max width via Pillow, reducing total to ~1.6 MB.
 
 ---
 
@@ -285,7 +314,7 @@ Pipeline stages:
 
 - **Real Payment Webhooks**: Integrate actual Stripe/PayPal webhook callbacks for asynchronous payment confirmation
 - **Email Notifications**: Send order confirmation and shipping update emails
-- **User Order History**: Allow users to view their past orders and reorder
+- **Order Cancellation**: Allow customers to cancel pending orders from the dashboard
 - **Product Reviews**: Add customer review system with ratings per product
 - **Wishlist**: Allow authenticated users to save products to a wishlist
 - **Inventory Management**: Add low-stock alerts and automated restock notifications
@@ -305,14 +334,16 @@ Narmo successfully demonstrates a complete, production-ready e-commerce platform
 Key achievements:
 - 46 passing automated tests with 0 warnings (pytest with PostgreSQL service container in CI)
 - 7 database models with relationships and constraints
-- 3 payment gateways with simulated transactions
+- Customer dashboard for order history tracking with order timeline, shipping, and payment panels
+- 3 payment gateways with simulated transactions (Stripe, PayPal, Mobile Money)
 - AI-powered recommendation engine with 5 algorithms (TF-IDF, collaborative, trending, popularity, hybrid)
 - Full admin dashboard with analytics, charts, product CRUD, order management
+- SEO best practices: sitemap.xml, robots.txt, JSON-LD structured data, OG tags, canonical URLs
 - Responsive design with dark mode and mobile-first layout
 - Docker containerization with docker-compose + Render Blueprint
 - CI/CD pipeline with automated linting, testing, and Docker building
 - 55+ meaningful Git commits with clear history
-- Deployed on Vercel + Neon Postgres with serverless architecture
+- Deployed on Vercel + Neon Postgres with custom domain (narmostore.live)
 - MySQL support for local development with MySQL Workbench compatibility
 
 The platform is ready for evaluation and can be extended with the future work items listed above.

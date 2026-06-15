@@ -2,8 +2,47 @@
 
 {% block title %}{{ product.name }} — Survey Corps Depot{% endblock %}
 
+{% block description %}{{ product.description[:160] if product.description else product.name }} — available at Survey Corps Supply Depot.{% endblock %}
+{% block og_title %}{{ product.name }} — Narmo{% endblock %}
+{% block og_description %}{{ product.description[:200] if product.description else product.name }}{% endblock %}
+{% block og_image %}{{ product_img(product.image_url) }}{% endblock %}
+{% block og_type %}product{% endblock %}
+{% block canonical %}{{ url_for('products.product_detail', slug=product.slug, _external=True) }}{% endblock %}
+{% block meta %}
+{{ super() }}
+<script type="application/ld+json" nonce="{{ csp_nonce }}">
+{
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "{{ product.name }}",
+    "description": "{{ product.description[:200] if product.description else '' }}",
+    "image": "{{ product_img(product.image_url) }}",
+    "sku": "{{ product.id }}",
+    {% if product.genre %}"category": "{{ product.genre }}",{% endif %}
+    "offers": {
+        "@type": "Offer",
+        "price": "{{ "%.2f"|format(product.price) }}",
+        "priceCurrency": "USD",
+        "availability": "{% if product.stock > 0 %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+        "url": "{{ url_for('products.product_detail', slug=product.slug, _external=True) }}"
+    }
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="container py-4">
+    <script type="application/ld+json" nonce="{{ csp_nonce }}">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type":"ListItem","position":1,"name":"Collection","item":"{{ url_for('products.product_list', _external=True) }}"},
+            {"@type":"ListItem","position":2,"name":"{{ product.category.name }}","item":"{{ url_for('products.product_list', category=product.category.slug, _external=True) }}"},
+            {"@type":"ListItem","position":3,"name":"{{ product.name }}"}
+        ]
+    }
+    </script>
     <ul class="breadcrumb-custom">
         <li><a href="{{ url_for('products.product_list') }}">Collection</a></li>
         <li class="sep">/</li>

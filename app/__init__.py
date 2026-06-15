@@ -36,6 +36,45 @@ def create_app(config_class=Config, testing=False):
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(customer_bp, url_prefix='/account')
 
+    @app.route('/google7fc107fd30238507.html')
+    def google_verify():
+        from flask import Response
+        return Response('google-site-verification: google7fc107fd30238507.html\n', mimetype='text/html')
+
+    @app.route('/robots.txt')
+    def robots():
+        from flask import Response, request
+        base = request.host_url.rstrip('/')
+        return Response(f"User-agent: *\nAllow: /\nSitemap: {base}/sitemap.xml\n", mimetype='text/plain')
+
+    @app.route('/sitemap.xml')
+    def sitemap():
+        from flask import Response, request
+        from app.models import Product, Category
+        import xml.etree.ElementTree as ET
+
+        base = request.host_url.rstrip('/')
+        urls = []
+        urls.append((f'{base}/', '1.0', 'daily'))
+        urls.append((f'{base}/products/', '0.8', 'daily'))
+        urls.append((f'{base}/about', '0.5', 'monthly'))
+        urls.append((f'{base}/vendors/', '0.6', 'weekly'))
+
+        for cat in db.session.query(Category).all():
+            urls.append((f'{base}/products/?category={cat.slug}', '0.7', 'weekly'))
+
+        for product in db.session.query(Product).all():
+            urls.append((f'{base}/products/{product.slug}', '0.9', 'weekly'))
+
+        root = ET.Element('urlset', xmlns='http://www.sitemaps.org/schemas/sitemap/0.9')
+        for loc, priority, changefreq in urls:
+            u = ET.SubElement(root, 'url')
+            ET.SubElement(u, 'loc').text = loc
+            ET.SubElement(u, 'priority').text = priority
+            ET.SubElement(u, 'changefreq').text = changefreq
+
+        return Response(ET.tostring(root, encoding='unicode'), mimetype='application/xml')
+
     from app.security import configure_session, apply_security_headers, limiter
     configure_session(app)
 
