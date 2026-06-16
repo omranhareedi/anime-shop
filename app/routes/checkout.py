@@ -47,6 +47,10 @@ def checkout():
         for product_id, qty in cart.items():
             product = db.session.get(Product, int(product_id))
             if product:
+                if product.stock < qty:
+                    flash(f'Insufficient stock for "{product.name}" — only {product.stock} available.', 'danger')
+                    db.session.rollback()
+                    return redirect(url_for('cart.view_cart'))
                 total += product.price * qty
 
         payment_method = request.form.get('payment_method', 'stripe')
