@@ -169,6 +169,24 @@ def product_edit(product_id):
     return resp
 
 
+@admin_bp.route('/products/<int:product_id>/delete', methods=['POST'])
+@admin_required
+def product_delete(product_id):
+    product = db.session.get(Product, product_id)
+    if not product:
+        abort(404)
+    csrf_token = request.form.get('csrf_token', '')
+    if not csrf_token or csrf_token != request.cookies.get('csrf_token'):
+        flash('Security token invalid.', 'danger')
+        return redirect(url_for('admin.product_list'))
+    name = product.name
+    OrderItem.query.filter_by(product_id=product.id).delete()
+    db.session.delete(product)
+    db.session.commit()
+    flash(f'Product "{name}" deleted.', 'success')
+    return redirect(url_for('admin.product_list'))
+
+
 @admin_bp.route('/orders')
 @admin_required
 def order_list():
