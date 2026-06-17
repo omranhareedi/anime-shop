@@ -43,7 +43,10 @@ def slugify(text):
 @admin_required
 def product_list():
     products = Product.query.order_by(Product.id).all()
-    return render_template('admin/products.html', products=products)
+    token = make_token()
+    resp = make_response(render_template('admin/products.html', products=products, csrf_token=token))
+    resp.set_cookie('csrf_token', token, httponly=True, samesite='Lax')
+    return resp
 
 
 @admin_bp.route('/products/add', methods=['GET', 'POST'])
